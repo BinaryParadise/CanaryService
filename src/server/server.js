@@ -27,4 +27,4 @@ wss.on('connection', function (ws, request) {
     }
 });
 
-console.log('ws server started at port 8081...');
+console.log('ws server started at port '+wss.options.port+'...');

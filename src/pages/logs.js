@@ -40,6 +40,7 @@ export default class LogMonitor extends React.Component {
   }
 
   formatFunc = obj => {
+    return "";//自带函数名称和代码行
     if (obj.function === undefined) {
       return ""
     }

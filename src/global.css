@@ -101,6 +101,11 @@ body {
     color: #969696
 }
 
+.ansi .grey.bold {
+  color: #af8d8d;
+  font-weight: bold;
+}
+
 .log-body .fold {
     position: relative;
     height: 19px;

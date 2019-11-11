@@ -25,7 +25,7 @@ export default class LogMonitor extends React.Component {
 
   logClass = obj => {
     switch (obj.type) {
-      case 0: return 'grey';
+      case 0: return 'grey bold';
       case 1: return 'green';
       case 2: return 'white';
       case 3: return 'yellow';
@@ -40,7 +40,7 @@ export default class LogMonitor extends React.Component {
   }
 
   formatFunc = obj => {
-    return "";//自带函数名称和代码行
+    // return "";//自带函数名称和代码行
     if (obj.function === undefined) {
       return ""
     }

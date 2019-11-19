@@ -1,11 +1,9 @@
+const http = require('http');
 // 导入WebSocket模块:
 const WebSocket = require('ws');
 
-// 引用Server类:
-const WebSocketServer = WebSocket.Server;
-
 // 实例化:
-const wss = new WebSocketServer({ port: 8081 });
+const wss = new WebSocket.Server({port:8081});
 
 //服务端广播消息
 wss.broadcast=function broadcast(message) {
@@ -21,8 +19,8 @@ wss.on('connection', function (ws, request) {
     ws.isWeb = request.url.indexOf('/device/') == -1
     if (!ws.isWeb) {
       ws.on('message', function (message) {
-          console.log(`[SERVER] Received: ${message}`);
-           wss.broadcast(message)
+          // console.log(`[SERVER] Received: ${message}`);
+          wss.broadcast(message)
       })
     }
 });

@@ -4,8 +4,7 @@ export default {
     if (this.sock !== undefined) {
       return this;
     }
-    let host = window.location.hostname + ':8081'
-    this.url = 'ws://'+host + '/ws/web/'+deviceid
+    this.url = 'ws://'+window.location.hostname + ':8081/ws/web/'+deviceid
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)

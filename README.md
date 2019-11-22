@@ -1,17 +1,17 @@
-# How to use
+# 如何使用
 
-install dependency
+安装依赖
 
-```ruby
+```bash
 npm install
 ```
 
-start serve
-```ruby
+启动服务
+```bash
 npm start
 ```
 
-import to you project
+继承到你的项目中
 
 ```objc
 
@@ -24,6 +24,6 @@ pod 'MCLogger', '~> 0.5'
 ```
 
 
-## Preview
+## [预览](http://127.0.0.1:8000)
 
 ![image](https://user-images.githubusercontent.com/8289395/58154303-e4b39a80-7ca3-11e9-80ca-b8e0af1b0ec8.png)

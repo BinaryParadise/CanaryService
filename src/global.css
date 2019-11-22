@@ -58,7 +58,7 @@ body {
 }
 
 .ansi .yellow {
-    color: #C77A4B
+    color: #d076ff
 }
 
 .ansi .yellow.bold {
@@ -89,7 +89,7 @@ body {
 }
 
 .ansi .white {
-    color: #EEE
+    color: #FFF
 }
 
 .ansi .white.bold {
@@ -97,11 +97,11 @@ body {
     font-weight: bold;
 }
 
-.ansi .grey {
+.ansi .verbose {
     color: #969696
 }
 
-.ansi .grey.bold {
+.ansi .verbose.bold {
   color: #af8d8d;
   font-weight: bold;
 }
@@ -114,7 +114,8 @@ body {
 }
 
 .log-body .fold.open {
-    height: auto
+    height: auto;
+    background: (assets/log.fold.open.svg);
 }
 
 .log-body .fold .log-line:first-of-type {

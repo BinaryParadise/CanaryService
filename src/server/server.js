@@ -15,7 +15,7 @@ wss.broadcast=function broadcast(message) {
 }
 
 wss.on('connection', function (ws, request) {
-    console.log(`[SERVER] connection(`+request.url+`)`);
+    console.log(`[SERVER] (`+request.url+`) connected`);
     ws.isWeb = request.url.indexOf('/device/') == -1
     if (!ws.isWeb) {
       ws.on('message', function (message) {
@@ -23,6 +23,10 @@ wss.on('connection', function (ws, request) {
           wss.broadcast(message)
       })
     }
+});
+
+wss.on('close', function (ws, request) {
+  console.log(`[SERVER] (`+request.url+`) disconnected`);
 });
 
 console.log('ws server started at port '+wss.options.port+'...');

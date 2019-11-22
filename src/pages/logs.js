@@ -25,7 +25,7 @@ export default class LogMonitor extends React.Component {
 
   logClass = obj => {
     switch (obj.type) {
-      case 0: return 'grey bold';
+      case 0: return 'verbose';
       case 1: return 'green';
       case 2: return 'white';
       case 3: return 'yellow';

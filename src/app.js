@@ -11,6 +11,7 @@ export const dva = {
   },
 };
 
+/*
 var serverPort = 8082;
 
 // 实例化:
@@ -42,6 +43,7 @@ wss.on('close', function (ws, request) {
 });
 
 console.log('ws server started at port ' + serverPort + '...');
+*/
 
 //打开数据库，如果没有会自动创建
 // var database;

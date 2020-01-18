@@ -1,8 +1,6 @@
 // ref: https://umijs.org/config/
-import aliyunTheme from '@ant-design/aliyun-theme';
 
 export default {
-  "theme": aliyunTheme,
   treeShaking: true,
   routes: [
     {
@@ -11,7 +9,7 @@ export default {
       routes: [
         {
           path: '/logger',
-          component: './logger',
+          component: '../pages/logger',
         },
         {
           path: '/',

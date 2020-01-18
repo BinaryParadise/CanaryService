@@ -1,0 +1,36 @@
+
+.normal {
+  font-family: Georgia, sans-serif;
+  text-align: left;
+}
+
+
+.logo {
+  float: left;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 16px;
+  background-color: rgb(255, 106, 0);
+  color: #fff;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: normal;
+  letter-spacing: -1px;
+  color: rgb(255, 106, 0);
+  padding-left: 8px;
+}
+
+.header {
+  height: 50px;
+  padding: 0px;
+  line-height: 50px;
+  background: #001529;
+}
+
+.shadow {
+  padding: 16px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
+  background: #fff;
+}

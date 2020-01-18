@@ -1,3 +1,6 @@
+// 导入WebSocket模块:
+const { WebSocket } = require('ws');
+// const sqlite3 = require('sqlite3')
 
 export const dva = {
   config: {
@@ -8,23 +11,40 @@ export const dva = {
   },
 };
 
-Date.prototype.Format = function (fmt) {
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "H+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)){
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+var serverPort = 8082;
+
+// 实例化:
+const wss = new WebSocket.Server({ port: serverPort });
+
+//服务端广播消息
+wss.broadcast = function broadcast(message) {
+  wss.clients.forEach(function each(client) {
+    if (client.isWeb && client.readyState == WebSocket.OPEN) {
+      client.send(message);
     }
-    for (var k in o){
-         if (new RegExp("(" + k + ")").test(fmt)){
-             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? ("000"+o[k]).substr(("" + o[k]).length) : (("00" + o[k]).substr(("" + o[k]).length)));
-         }
-    }
-    return fmt;
+  })
 }
+
+wss.on('connection', function (ws, request) {
+  console.log(`[SERVER] (` + request.url + `) connected`);
+  ws.send(`connected`);
+  ws.isWeb = request.url.indexOf('/device/') == -1
+  if (!ws.isWeb) {
+    ws.on('message', function (message) {
+      // console.log(`[SERVER] Received: ${message}`);
+      wss.broadcast(message)
+    })
+  }
+});
+
+wss.on('close', function (ws, request) {
+  console.log(`[SERVER] (` + request.url + `) disconnected`);
+});
+
+console.log('ws server started at port ' + serverPort + '...');
+
+//打开数据库，如果没有会自动创建
+// var database;
+// database = new sqlite3.Database("frontend.db", function(e){
+//  if (e) throw e;
+// });

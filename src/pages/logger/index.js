@@ -1,15 +1,15 @@
 import React from 'react'
-import { styles } from './logger.css';
+import styles from './logger.css';
 import PropTypes from 'prop-types'
 import { Popover, Affix, Icon, Breadcrumb } from 'antd'
 import WebSocket from '../../component/websocket'
 import imgURL from '../../assets/yay.jpg'
 import router from 'umi/router';
 
-export default class LogMonitor extends React.Component {
+export default class LoggerMonitor extends React.Component {
     state = {
         data: this.props.location.state,
-        logs: [],
+        logs: [{ "key": 1, "fileName": "MCViewController", "appVersion": "1.0.0", "flag": 8, "level": 31, "line": 69, "message": "T2 200", "type": 1, "deviceId": "17D71FCA-B22A-457B-B5D7-60E4509F77B6", "threadName": "", "threadID": "236217", "file": "/Users/bonana/Github/MCFrontendKit/Example/MCLogger/MCViewController.m", "queueLabel": "com.apple.root.default-qos", "function": "-[MCViewController callLogger:]_block_invoke", "options": 0, "context": 0, "timestamp": 1579443186774 }],
         autoscroll: true
     }
 
@@ -31,13 +31,13 @@ export default class LogMonitor extends React.Component {
 
     logClass = obj => {
         switch (obj.type) {
-            case 0: return 'verbose';
-            case 1: return 'green';
-            case 2: return 'white';
-            case 3: return 'yellow';
-            case 4: return 'red';
-            case 5: return 'magenta bold';
-            default: return 'white';
+            case 0: return styles.verbose;
+            case 1: return styles.green;
+            case 2: return styles.white;
+            case 3: return styles.yellow;
+            case 4: return styles.red;
+            case 5: return styles.magenta;
+            default: return styles.white;
         }
     }
 
@@ -77,22 +77,17 @@ export default class LogMonitor extends React.Component {
         const { autoscroll, logs, data } = this.state
         return (
             <div>
-                <Breadcrumb>
-                    <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                    <Breadcrumb.Item><a href="/device">设备列表</a></Breadcrumb.Item>
-                    <Breadcrumb.Item>日志监控（{data.name}）</Breadcrumb.Item>
-                </Breadcrumb>
-                <div className="log-body" style={{ minHeight: 618 }}>
-                    <pre className="ansi" ref={(el) => { this.messagesEnd = el }}>
+                <div className={styles.logbody}>
+                    <pre className={styles.ansi} ref={(el) => { this.messagesEnd = el }}>
                         {
-                            logs.map((record) => <div className="log-line" key={record.key}><a href='#'></a>
+                            logs.map((record) => <div className={styles.log_line} key={record.key}><a href='#'></a>
                                 <span id={record.key} className={this.logClass(record)}>{this.formatDate(record) + ' '}{this.formatFunc(record)}{this.formatMessage(record)}</span>
                             </div>)
                         }
                     </pre>
                 </div>
 
-                <Affix style={{ width: '50px', position: 'absolute', left: 10, bottom: 15 }}>
+                <Affix style={{ position: 'absolute', height: 40, width: '100vw', paddingLeft: 20, left: 0, bottom: 0, background: '#222' }}>
                     <Icon type="delete" style={iconStyle.clear} onClick={() => {
                         this.setState({ logs: [] })
                     }} />

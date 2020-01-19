@@ -1,8 +1,6 @@
 .normal {
   font-family: Georgia, sans-serif;
   text-align: left;
-  margin-top: -50px;
-  padding-top: 50px;
   height: 100vh;
 }
 
@@ -27,7 +25,7 @@
   height: 50px;
   padding: 0px;
   line-height: 50px;
-  background: #001529;
+  background: #fff;
   z-index: 1;
   position: fixed;
   width: 100%;

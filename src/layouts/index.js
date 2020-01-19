@@ -72,10 +72,9 @@ class BasicLayout extends React.Component {
           <span className={styles.title}>水月洞天</span>
           <Avatar style={{ float: "right", marginRight: 16, marginTop: 9 }} src="https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg"></Avatar>
         </Header>
-        <Content ref={this.saveContainer} style={{ padding: '12px 24px' }}>
+        <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
           {this.props.children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2020 Created by Ant UED</Footer>
       </Layout>
     );
   }

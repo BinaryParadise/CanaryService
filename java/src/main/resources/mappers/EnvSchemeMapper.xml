@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.frontend.mappers.EnvSchemeMapper">
+    <resultMap id="group" type="com.frontend.domain.MCSchemeGroup">
+
+    </resultMap>
+
+    <resultMap id="item" type="com.frontend.domain.MCSchemeItem">
+
+    </resultMap>
+
+    <insert id="insert" parameterType="com.frontend.domain.MCSchemeItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO envschemegroup(name, comment, appId, author) VALUES(#{name}, #{comment}, #{appId},#{author})
+    </insert>
+    <insert id="insertItem" parameterType="com.frontend.domain.MCSchemeItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO envschemeitem(value, pid, comment, author, type) VALUES(#{value}, #{pid}, #{comment}, #{author}, 1)
+    </insert>
+    <update id="update" parameterType="com.frontend.domain.MCSchemeItem">
+        UPDATE envschemegroup SET `name`=#{name},`value`=#{value},`comment`=#{comment},author=#{author} WHERE id=#{id}
+    </update>
+
+    <select id="findByAppId" resultMap="group">
+        SELECT a.* FROM envschemegroup a WHERE a.appId=#{appId} ORDER BY a.updateTime DESC
+    </select>
+
+    <select id="findByAppKey" resultMap="group">
+        SELECT a.* FROM envschemegroup a LEFT JOIN Project b on a.appid = b.id WHERE b.idetify = #{appkey} ORDER BY a.updateTime
+    </select>
+
+    <select id="findByGroupId" resultMap="item">
+      SELECT a.* FROM envschemeitem a WHERE a.pid=#{groupid} ORDER BY a.updateTime DESC
+    </select>
+
+    <update id="delete">
+        DELETE a.*,b.* FROM envschemegroup a LEFT JOIN envschemeitem b on a.id = b.pid WHERE a.id = #{0}
+    </update>
+    <delete id="deleteItem">
+        DELETE FROM envschemeitem where id = #{0}
+    </delete>
+</mapper>

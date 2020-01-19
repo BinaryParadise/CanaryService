@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.frontend.mappers.EnvConfigItemMapper">
+
+    <resultMap id="list" type="com.frontend.domain.MCEnvConfigItem">
+    </resultMap>
+
+    <select id="findAllById" resultMap="list">
+      SELECT a.* FROM envconfigitem where a.envid=${envid} order by b.updateTime desc
+    </select>
+
+    <select id="findByEnvId" resultMap="list">
+        select * from envconfigitem where envid=#{envid} order by updateTime desc
+    </select>
+
+    <insert id="insertNew" parameterType="com.frontend.domain.MCEnvConfigItem">
+        INSERT INTO envconfigitem(`name`, `value`, envid, `comment`, author,`type`,`platform`) VALUES(#{name},#{value},#{envid},#{comment},#{author},#{type},#{platform})
+    </insert>
+    <insert id="copyFromEnvId">
+        INSERT INTO envconfigitem(`name`,`value`,envid,`comment`,`author`, `type`,`platform`)
+        SELECT `name`,`value`,#{0},`comment`,#{1},`type`,`platform` FROM envconfigitem a WHERE a.envid = #{2};
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM envconfigitem WHERE id = #{0}
+    </delete>
+
+    <update id="update" parameterType="com.frontend.domain.MCEnvConfigItem">
+        UPDATE envconfigitem SET `name`=#{name},`value`=#{value},`comment`=#{comment},`author`=#{author},`platform`=#{platform} where id=#{id}
+    </update>
+</mapper>

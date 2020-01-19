@@ -1,9 +1,10 @@
-
 .normal {
   font-family: Georgia, sans-serif;
   text-align: left;
+  margin-top: -50px;
+  padding-top: 50px;
+  height: 100vh;
 }
-
 
 .logo {
   float: left;
@@ -27,6 +28,9 @@
   padding: 0px;
   line-height: 50px;
   background: #001529;
+  z-index: 1;
+  position: fixed;
+  width: 100%;
 }
 
 .shadow {

@@ -12,6 +12,10 @@ export default {
           component: '../pages/logger',
         },
         {
+          path: '/device',
+          component: '../pages/device'
+        },
+        {
           path: '/',
           component: '../pages/index',
         },
@@ -40,4 +44,7 @@ export default {
       },
     ],
   ],
+  // cssLoaderOptions: {
+  //   localIdentName: '[local]'
+  // }
 };

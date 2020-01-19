@@ -3,9 +3,10 @@ import React from 'react'
 import axios from '../../component/axios'
 import { routerURL } from '../../common/util'
 
-import { Table } from 'antd';
+import { Table, Button, Badge, Tag } from 'antd';
 import { Resizable } from 'react-resizable';
 import { Link } from 'react-router-dom'
+import ExtraPage from './component/extra'
 
 const ResizeableTitle = props => {
   const { onResize, width, ...restProps } = props;
@@ -29,16 +30,32 @@ const ResizeableTitle = props => {
 export default class IndexPage extends React.Component {
   state = {
     loading: false,
+    visible: false,
+    device: null,
     columns: [
       {
         title: '名称',
         dataIndex: 'name',
-        width: 200,
+        width: 280,
+        render: (text, record) => {
+          return <Badge status="processing" text={text}></Badge>
+        }
       },
       {
         title: '设备类型',
         dataIndex: 'modelName',
-        width: 100,
+        width: 180,
+        render: (text, record) => {
+          return <span><Tag color="#87d068">{text}</Tag> <Badge status={text ? 'warning' : 'success'} text={text ? '模拟器' : '真机'} /></span>
+        }
+      },
+      {
+        title: '唯一标识',
+        dataIndex: 'deviceId',
+        width: 380,
+        render: (text, record) => {
+          return <Tag color="purple">{record.deviceId}</Tag>
+        }
       },
       {
         title: '操作系统/版本',
@@ -55,18 +72,33 @@ export default class IndexPage extends React.Component {
       },
       {
         title: 'IP地址',
-        key: 'ipAddr'
+        dataIndex: 'ipAddr',
+        width: 130
       },
       {
-        title: '自定义',
+        title: '扩展信息',
+        dataIndex: 'profile',
+        render: (text, record) => {
+          return <Button onClick={() => this.showDrawer(record)}>查看</Button>;
+        }
+      },
+      {
+        title: '操作',
         key: 'action',
         render: (text, record) => {
-          return (<Link to={routerURL('logger', record)}>查看</Link>);
+          return (<Link to={routerURL('logger', record)}>日志监控</Link>);
         }
       }
     ],
     devices: []
   }
+
+  showDrawer = (device) => {
+    this.setState({
+      visible: true,
+      device
+    });
+  };
 
   components = {
     header: {
@@ -106,7 +138,7 @@ export default class IndexPage extends React.Component {
   };
 
   render() {
-    const { devices, loading, columns } = this.state;
+    const { devices, loading, columns, record } = this.state;
     columns.map((col, index) => ({
       ...col,
       onHeaderCell: column => ({
@@ -115,6 +147,19 @@ export default class IndexPage extends React.Component {
       }),
     }));
 
-    return <Table bordered loading={loading} size='small' className='custom-table' rowKey='deviceId' components={this.components} columns={columns} dataSource={devices} />;
+    return <div>
+      <Table
+        bordered
+        loading={loading}
+        size='small'
+        className='custom-table'
+        rowKey='deviceId'
+        components={this.components}
+        columns={columns} dataSource={devices} />
+      <ExtraPage
+        onClose={() => this.setState({ visible: false })}
+        visible={this.state.visible}
+        device={this.state.device}></ExtraPage>
+    </div >;
   }
 }

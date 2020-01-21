@@ -16,6 +16,10 @@ export default {
           component: '../pages/device'
         },
         {
+          path: '/env',
+          component: '../pages/env'
+        },
+        {
           path: '/',
           component: '../pages/index',
         },

@@ -85,18 +85,3 @@ instance.interceptors.response.use(
 )
 
 export default instance
-
-// NOTE: 默认使用 application/json 格式
-// 如果期望使用 form.js 格式
-// 1. 如果大多数场景为 form.js 格式
-// 请修改 axios.create 方法中的 'Content-Type': 'application/x-www-form.js-urlencoded'
-// 2. 手工调用 form.js 格式
-// axios.post(url, data, {
-//   headers: { 'Content-Type': 'application/x-www-form.js-urlencoded' }
-// })
-// 3. 封装 form.js 方法
-// instance.postForm = function(url, data, config = {}) {
-//   config.headers = config.headers || {}
-//   config.headers['Content-Type'] = 'application/x-www-form.js-urlencoded'
-//   return this.post(url, data, config)
-// }

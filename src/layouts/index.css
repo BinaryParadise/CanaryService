@@ -14,11 +14,23 @@
 }
 
 .title {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: normal;
   letter-spacing: -1px;
   color: rgb(255, 106, 0);
-  padding-left: 8px;
+  padding: 8px;
+  border-color: #fff;
+  margin-left: 8px;
+}
+
+.title:hover {
+  border-color: #fff;
+  color: rgb(255, 106, 0);
+}
+
+.title:active, .title:focus {
+  border-color: #fff;
+  color: rgb(255, 106, 0);
 }
 
 .header {

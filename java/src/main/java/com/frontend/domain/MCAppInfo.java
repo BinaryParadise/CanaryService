@@ -1,33 +1,33 @@
 package com.frontend.domain;
 
 public class MCAppInfo {
-    int id;
+  int id;
 
-    String appkey;
+  String identify;
 
-    String name;
+  String name;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getAppkey() {
-        return appkey;
-    }
+  public String getIdentify() {
+    return identify;
+  }
 
-    public void setAppkey(String appkey) {
-        this.appkey = appkey;
-    }
+  public void setIdentify(String identify) {
+    this.identify = identify;
+  }
 }

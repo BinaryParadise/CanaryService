@@ -7,19 +7,19 @@
     <resultMap id="list" type="com.frontend.domain.MCEnvConfigDetail"></resultMap>
 
     <insert id="insert" parameterType="com.frontend.domain.MCEnvConfig" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO envconfig(name, comment, type, appId, author, isDefault) VALUES(#{name}, #{comment}, #{type}, #{appId},
+        INSERT INTO RemoveConfig(name, comment, type, appId, author, isDefault) VALUES(#{name}, #{comment}, #{type}, #{appId},
         #{author}, #{isDefault})
     </insert>
     <update id="update" parameterType="com.frontend.domain.MCEnvConfig">
-        UPDATE envconfig SET `name`=#{name},type=#{type},`comment`=#{comment},author=#{author} WHERE id=#{id}
+        UPDATE RemoveConfig SET `name`=#{name},type=#{type},`comment`=#{comment},author=#{author} WHERE id=#{id}
     </update>
 
     <select id="findByName" parameterType="com.frontend.domain.MCEnvConfig" resultMap="onlyone">
-        SELECT * FROM envconfig WHERE appId=#{appId} AND `name`=#{name} LIMIT 0,1
+        SELECT * FROM RemoveConfig WHERE appId=#{appId} AND `name`=#{name} LIMIT 0,1
     </select>
 
     <select id="findById" parameterType="com.frontend.domain.MCEnvConfig" resultMap="onlyone">
-        SELECT * FROM envconfig WHERE id=#{1} LIMIT 0,1
+        SELECT * FROM RemoveConfig WHERE id=#{1} LIMIT 0,1
     </select>
 
     <select id="findByAppId" resultMap="list">
@@ -27,7 +27,7 @@
         SELECT
         a.*,
         b.`name` AS appname,
-        ( SELECT count( * ) FROM envconfigitem WHERE envid = a.id ) subItemsCount
+        ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) subItemsCount
         FROM
         envconfig a
         LEFT JOIN apps b ON a.appId = b.id
@@ -39,7 +39,7 @@
         SELECT
         a.*,
         b.`name` AS appname,
-        ( SELECT count( * ) FROM envconfigitem WHERE envid = a.id ) subItemsCount
+        ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) subItemsCount
         FROM
         envconfig a
         LEFT JOIN apps b ON a.appId = b.id
@@ -50,11 +50,11 @@
     </select>
 
     <select id="findByAppKey" resultMap="onlyone">
-        SELECT a.* FROM envconfig a LEFT JOIN apps b on a.appId = b.id WHERE b.appkey = #{0} ORDER BY a.updateTime DESC
+        SELECT a.* FROM RemoteConfig a LEFT JOIN apps b on a.appId = b.id WHERE b.appkey = #{0} ORDER BY a.updateTime DESC
 
     </select>
 
     <update id="deleteById">
-        DELETE a.*,b.* FROM envconfig a LEFT JOIN envconfigitem b on a.id = b.envid WHERE a.id = #{id}
+        DELETE a.*,b.* FROM RemoteConfig a LEFT JOIN envconfigitem b on a.id = b.envid WHERE a.id = #{id}
     </update>
 </mapper>

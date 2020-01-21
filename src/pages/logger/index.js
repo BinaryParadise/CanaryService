@@ -87,7 +87,7 @@ export default class LoggerMonitor extends React.Component {
                     </pre>
                 </div>
 
-                <Affix style={{ position: 'absolute', height: 40, width: '100vw', paddingLeft: 20, left: 0, bottom: 0, background: '#222' }}>
+                <Affix style={{ position: 'absolute', height: 40, width: '100vw', paddingLeft: 20, paddingTop: 12, left: 0, bottom: 0, background: '#222' }}>
                     <Icon type="delete" style={iconStyle.clear} onClick={() => {
                         this.setState({ logs: [] })
                     }} />

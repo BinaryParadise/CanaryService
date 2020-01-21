@@ -34,7 +34,7 @@ public class HomeController {
 
 	@RequestMapping(value = "japi/app/list", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public MCResult list () {
+	public MCResult projectList () {
 		MCResult result = MCResult.Success(appsMapper.findAllEnable());
 		return result;
 	}

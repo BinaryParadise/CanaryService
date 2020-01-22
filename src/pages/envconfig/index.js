@@ -1,10 +1,10 @@
 // 应用管理
 import React from 'react'
-import { message, Modal, Menu, Layout } from 'antd'
+import { message, Modal, Menu, Layout, Button } from 'antd'
 
 import axios from '../../component/axios'
 
-import { EnvEdit, AddConfigForm } from './components/envedit'
+import EnvEditForm from './components/envedit'
 import EnvList from './components/env-list'
 import { routerURL } from "../../common/util"
 import router from 'umi/router'
@@ -13,7 +13,7 @@ export default class EnvConfig extends React.Component {
   state = {
     listData: [],
     tableLoading: false,
-    modal: {
+    modalData: {
       visible: false,
       loading: false,
       appId: 0,
@@ -29,53 +29,7 @@ export default class EnvConfig extends React.Component {
     }
   }
 
-  componentDidMount() {
-    // this.query()
-  }
 
-  render() {
-    const { listData, tableLoading, modal, params } = this.state
-    const { envTypeList } = window.__config__
-    return (
-      <Layout>
-        <Menu mode="horizontal" selectedKeys={[params.type.toString()]} onClick={this.onTypeSelect}
-          style={{ marginBottom: '6px' }}>
-          {
-            envTypeList.map(record => <Menu.Item key={record.type}>{record.title}</Menu.Item>)
-          }
-        </Menu>
-
-        <EnvEdit
-          onModalShow={this.onAdd}
-          onSearch={this.query}
-          style={{ width: '100%' }} />
-
-        <div style={{ margin: '6px 0' }} />
-
-        <EnvList
-          onEdit={this.onRowEdit}
-          listData={listData}
-          loading={tableLoading}
-          onChange={this.query}
-          pageSize={params.pageSize}
-          onRowClick={this.onRowClick}
-        />
-
-        <Modal
-          title={modal.title}
-          visible={modal.visible}
-          confirmLoading={modal.loading}
-          onOk={this.onModalOk}
-          onCancel={this.onModalCancel}
-          key={modal.key}
-          maskClosable={false}
-        >
-
-          <AddConfigForm data={modal.data} />
-        </Modal>
-      </Layout>
-    )
-  }
 
   // 环境列表
   query = () => {
@@ -94,12 +48,12 @@ export default class EnvConfig extends React.Component {
   }
 
   onAdd = (record) => {
-    const { modal, params } = this.state
+    const { modalData, params } = this.state
     this.setState({
-      modal: {
-        ...modal,
+      modalData: {
+        ...modalData,
         visible: true,
-        key: modal.key + 1,
+        key: modalData.key + 1,
         title: '新增',
         data: { id: 0, appId: params.appId, name: '', type: 0, comment: '' }
       }
@@ -107,8 +61,8 @@ export default class EnvConfig extends React.Component {
   }
 
   onRowEdit = (record) => {
-    const { modal } = this.state
-    this.setState({ modal: { ...modal, visible: true, title: '编辑', data: record, key: modal.key + 1 } })
+    const { modalData } = this.state
+    this.setState({ modalData: { ...modalData, visible: true, title: '编辑', data: record, key: modalData.key + 1 } })
   }
 
   onTypeSelect = (item) => {
@@ -116,12 +70,59 @@ export default class EnvConfig extends React.Component {
     this.query()
   }
 
-  onModalOK = () => {
-
+  onModalOk = () => {
+    this.setState({ modalData: { ...this.state.modalData, visible: false } })
   }
 
   // 关闭弹窗
   onModalCancel = () => {
-    this.setState({ modal: { ...this.state.modal, visible: false } })
+    this.setState({ modalData: { ...this.state.modalData, visible: false } })
+  }
+
+  componentDidMount() {
+    // this.query()
+  }
+
+  render() {
+    const { listData, tableLoading, modalData, params } = this.state
+    const { envTypeList } = window.__config__
+    return (<Layout>
+      <Button
+        type="primary"
+        style={{ width: 150 }}
+        icon={'plus'}
+        onClick={this.onAdd}>
+        添加环境
+        </Button>
+
+      <div style={{ margin: '6px 0' }} />
+
+      <Menu mode="horizontal" selectedKeys={[params.type.toString()]} onClick={this.onTypeSelect}
+        style={{ marginBottom: '6px' }}>
+        {
+          envTypeList.map(record => <Menu.Item key={record.type}>{record.title}</Menu.Item>)
+        }
+      </Menu>
+
+      <EnvList
+        onEdit={this.onRowEdit}
+        listData={listData}
+        loading={tableLoading}
+        onChange={this.query}
+        pageSize={params.pageSize}
+        onRowClick={this.onRowClick} />
+
+      <Modal title={modalData.title}
+        visible={modalData.visible}
+        confirmLoading={modalData.loading}
+        onOk={this.onModalOk}
+        onCancel={this.onModalCancel}
+        maskClosable={false} >
+        <EnvEditForm data={modalData.data} >
+        </EnvEditForm>
+      </Modal>
+
+    </Layout>
+    )
   }
 }

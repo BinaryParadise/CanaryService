@@ -33,10 +33,10 @@ class EnvDetailForm extends React.Component {
         <Form.Item {...formItemLayout} label="类型">
           {getFieldDecorator('platform', {
             initialValue: 0,
-            rules: [{required: false}]
+            rules: [{ required: false }]
           })(<Radio.Group name='envtypes'>
             {platforms.map(record => <Radio.Button key={record.platform}
-                                                   value={record.platform}>{record.title}</Radio.Button>)}
+              value={record.platform}>{record.title}</Radio.Button>)}
           </Radio.Group>)}
         </Form.Item>
         <Form.Item {...formItemLayout} label="描述">

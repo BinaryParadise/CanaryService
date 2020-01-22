@@ -17,7 +17,11 @@ export default {
         },
         {
           path: '/env',
-          component: '../pages/env'
+          component: '../pages/envconfig'
+        },
+        {
+          path: '/envitem',
+          component: '../pages/envparam'
         },
         {
           path: '/',

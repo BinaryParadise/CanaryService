@@ -38,16 +38,9 @@ class BasicLayout extends React.Component {
 
 
   onMenuSelect = (item) => {
+    this.setState({ visible: false })
     router.push(this.state.menus[item.key]);
   }
-
-  switchMenu = () => {
-    return (<Menu onClick={this.onProjectChange}>
-      {
-        this.state.appData.map(item => <Menu.Item key={item.id}>{item.name}</Menu.Item>)
-      }
-    </Menu>)
-  };
 
   confirmSwitchProject = () => {
     if (this.state.selectedItem == null) {

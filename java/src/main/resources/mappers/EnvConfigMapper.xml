@@ -27,11 +27,11 @@
         SELECT
         a.*,
         b.`name` AS appname,
-        ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) subItemsCount
+        ( SELECT count( * ) FROM RemoteConfigParam WHERE configid = a.id ) subItemsCount
         FROM
-        envconfig a
-        LEFT JOIN apps b ON a.appId = b.id
-        WHERE a.type=#{type} or #{type} = -1) a where a.appid in (select id from apps where disable=0 and (appId=#{appId} or #{appId}=0))
+        RemoteConfig a
+        LEFT JOIN Project b ON a.appId = b.id
+        WHERE a.type=#{type} or #{type} = -1) a where a.appid in (select id from Project where enable=1 and (id=#{appId} or #{appId}=0))
         ORDER BY updateTime DESC
     </select>
 
@@ -41,8 +41,8 @@
         b.`name` AS appname,
         ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) subItemsCount
         FROM
-        envconfig a
-        LEFT JOIN apps b ON a.appId = b.id
+        RemoteConfig a
+        LEFT JOIN Project b ON a.appId = b.id
         WHERE
         a.appId=#{0} or #{0}=0
         ORDER BY

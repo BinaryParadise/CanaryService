@@ -7,6 +7,12 @@ public class MCAppInfo {
 
   String name;
 
+  Integer orderno;
+
+  public MCAppInfo() {
+    orderno = 1;
+  }
+
   public int getId() {
     return id;
   }
@@ -29,5 +35,13 @@ public class MCAppInfo {
 
   public void setIdentify(String identify) {
     this.identify = identify;
+  }
+
+  public Integer getOrderno() {
+    return orderno;
+  }
+
+  public void setOrderno(Integer orderno) {
+    this.orderno = orderno;
   }
 }

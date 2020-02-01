@@ -8,6 +8,10 @@ export default {
       component: '../layouts/index',
       routes: [
         {
+          path: '/project',
+          component: '../pages/project'
+        },
+        {
           path: '/logger',
           component: '../pages/logger',
         },
@@ -52,6 +56,13 @@ export default {
       },
     ],
   ],
+  proxy: {
+    '/api': {
+      target: 'http://127.0.0.1:8082/japi',
+      pathRewrite: { '^/api': '' },
+      changeOrigin: true
+    }
+  }
   // cssLoaderOptions: {
   //   localIdentName: '[local]'
   // }

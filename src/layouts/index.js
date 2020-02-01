@@ -72,6 +72,9 @@ class BasicLayout extends React.Component {
   }
 
   componentDidMount() {
+    if (window.__config__.projectInfo == undefined) {
+      router.push('/project')
+    }
   }
 
   render() {
@@ -86,7 +89,10 @@ class BasicLayout extends React.Component {
                 return <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>;
               })
             }
-          </Select>
+          </Select> <a onClick={() => {
+            this.setState({ project: false })
+            router.push('/project')
+          }}>管理</a>
         </Modal>
         <Drawer
           title="基础服务"
@@ -131,17 +137,7 @@ class BasicLayout extends React.Component {
           <Avatar style={{ float: "right", marginRight: 16, marginTop: 9 }} src="https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg"></Avatar>
         </Header>
         <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
-
-          {
-            projectInfo == undefined ? <Result
-              status="404"
-              title="404"
-              subTitle="无数据可以展示."
-              extra={<Button type="primary" onClick={this.switchProject}>立即选择</Button>}
-            /> :
-              this.props.children
-          }
-
+          {this.props.children}
         </Content>
       </Layout >
     );

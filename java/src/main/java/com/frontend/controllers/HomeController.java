@@ -1,9 +1,6 @@
 package com.frontend.controllers;
 
-import com.frontend.domain.MCLogCondition;
-import com.frontend.jsonutil.JSON;
-import com.frontend.mappers.AppsMapper;
-import com.frontend.models.LogMessage;
+import com.frontend.mappers.ProjectMapper;
 import com.frontend.models.MCResult;
 import com.frontend.websocket.WCWebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,7 @@ import java.util.HashMap;
 @Controller
 public class HomeController {
 	@Autowired
-	private AppsMapper appsMapper;
+	private ProjectMapper appsMapper;
 
 	/**
 	 * 首页
@@ -30,13 +27,6 @@ public class HomeController {
 	@RequestMapping(value = "scheme")
 	public String scheme() {
 		return "scheme";
-	}
-
-	@RequestMapping(value = "japi/app/list", produces = "application/json; charset=utf-8")
-	@ResponseBody
-	public MCResult projectList () {
-		MCResult result = MCResult.Success(appsMapper.findAllEnable());
-		return result;
 	}
 
 	@RequestMapping(value = "japi/device/list", produces = "application/json; charset=utf-8")

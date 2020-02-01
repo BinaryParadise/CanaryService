@@ -61,11 +61,7 @@ instance.interceptors.response.use(
       throwHttpError('返回数据格式异常！')
     }
 
-    if (result.code !== 0) {
-      throwHttpError(result.error || '请求异常！', result.code)
-    }
-
-    return result.data
+    return result
   },
   function(error) {
     if (error.response) {

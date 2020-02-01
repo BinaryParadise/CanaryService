@@ -1,4 +1,4 @@
-const baseURI = "http://127.0.0.1:8082/japi"
+const baseURI = "/api"
 const nickname = "Rake Yang"
 export {
   // 基础 URI

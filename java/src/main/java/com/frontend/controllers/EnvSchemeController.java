@@ -28,8 +28,7 @@ public class EnvSchemeController {
 
     @RequestMapping(value = "japi/scheme/update/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public MCResult update(@PathVariable int id, @RequestBody MCSchemeItem item, @RequestHeader(name = "X-Login-User") String author) {
-        item.setAuthor(author);
+    public MCResult update(@PathVariable int id, @RequestBody MCSchemeItem item) {
         boolean ret;
         if (id == 0) {
             ret = schemeMapper.insert(item);
@@ -41,8 +40,7 @@ public class EnvSchemeController {
 
     @RequestMapping(value = "japi/scheme/addItem", method = RequestMethod.POST)
     @ResponseBody
-    public MCResult addItem(@RequestBody MCSchemeItem item, @RequestHeader(name = "X-Login-User") String author) {
-        item.setAuthor(author);
+    public MCResult addItem(@RequestBody MCSchemeItem item) {
         return schemeMapper.insertItem(item) ? MCResult.Success() : MCResult.Failed(MybatisError.InsertFaield);
     }
 

@@ -14,7 +14,7 @@ public interface EnvConfigItemMapper {
     boolean copyFromEnvId(int envid,String author,int copyid);
     boolean update(MCEnvConfigItem item);
     boolean delete(int id);
-    List<MCEnvConfigItem> findByEnvId(@Param("envid") int envid);
+    List<MCEnvConfigItem> findByEnvId(int envid);
     @Select("select * from envconfigitem where envid=#{envid} and platform in(0,1) order by updateTime desc")
     List<MCEnvConfigItem> findByEnvIdiOS(@Param("envid") int envid);
     @Select("select * from envconfigitem where envid=#{envid} and platform in(0,2) order by updateTime desc")

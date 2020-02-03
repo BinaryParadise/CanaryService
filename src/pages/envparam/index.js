@@ -6,29 +6,28 @@ import axios from '../../component/axios'
 import { Link } from 'react-router-dom'
 
 import EnvList from './env-list'
-import EnvDetail from './env-add'
+import EnvItemAdd from './modify'
 
 export default class RemoteConfigPage extends React.Component {
   state = {
     listData: [],
-    title: '配置详情',
     tableLoading: false,
     modal: {
       visible: false,
       loading: false,
-      envid: this.props.match.params.envid >> 0,
-      key: 0
+      key: 0,
+      envid: this.props.location.state.id
     },
     record: {},
     params: {
       pageIndex: 1,
       pageSize: 20,
+      envid: this.props.location.state.id
     }
   }
 
   componentDidMount() {
-    const params = this.props.match.params
-    //this.query(params.envid)
+    this.query()
   }
 
   onMessage = obj => {
@@ -40,14 +39,16 @@ export default class RemoteConfigPage extends React.Component {
   }
 
   render() {
-    const { listData, tableLoading, modal, params, title } = this.state
+    const { listData, tableLoading, modal, params } = this.state
+    const { name } = this.props.location.state
     return (
       <div>
         <Breadcrumb style={{ marginBottom: 12 }}>
           <Breadcrumb.Item>
             <a href="/">首页</a>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>环境配置</Breadcrumb.Item>
+          <Breadcrumb.Item><a href="/env">环境配置</a></Breadcrumb.Item>
+          <Breadcrumb.Item>{name}</Breadcrumb.Item>
         </Breadcrumb>
 
         <div className="m-content">
@@ -62,19 +63,19 @@ export default class RemoteConfigPage extends React.Component {
             config={this.props.location.state}
           />
 
-          <EnvDetail modal={modal} onChange={this.onChange} onCancel={this.onModalCancel} />
+          <EnvItemAdd modal={modal} data={this.state.record} onChange={this.onChange} onCancel={this.onModalCancel} />
         </div>
       </div>
     )
   }
 
   // 环境列表
-  query = (envid) => {
+  query = () => {
     this.setState({ tableLoading: true })
-    const newParams = Object.assign(this.state.params, { envid })
+    const newParams = Object.assign(this.state.params)
     return axios
       .get(`/envitem/list`, { params: newParams })
-      .then(result => this.setState({ listData: result, tableLoading: false }))
+      .then(result => this.setState({ listData: result.data, tableLoading: false }))
       .finally(() => this.setState({ tableLoading: false, params: newParams }))
   }
 
@@ -83,11 +84,8 @@ export default class RemoteConfigPage extends React.Component {
     this.refs.detail.validateFields((errors, data) => {
       if (!errors) {
         this.setState({ modal: { ...this.state.modal, loading: true } })
-        data.id = this.state.record.id || ''
-        const url = data.id ? '/app/update' : '/app/add'
-
         return axios
-          .post(url, data)
+          .post('/app/update/' + data.id, data)
           .then(() => {
             message.success('保存成功')
             this.query()

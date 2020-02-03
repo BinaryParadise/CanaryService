@@ -22,14 +22,6 @@ export class EnvList extends React.Component {
     super(props)
 
     this.columns = [
-      {
-        dataIndex: 'id', title: '编号', width: 60,
-        render: (text, record) => {
-          return (
-            <Link to={routerURL('/env/configs/' + record.id, record)}>{record.id}</Link>
-          )
-        }
-      },
       { dataIndex: 'appName', title: '项目', width: 168 },
       {
         dataIndex: 'name', title: '环境名称',
@@ -110,8 +102,8 @@ export class EnvList extends React.Component {
 
     return (
       <span className="m-action-group">
-        <Link to={routerURL('/env/configs/' + record.id, record)}>查看</Link>
-        <a onClick={() => this.props.onEdit(record)}>编辑</a>
+        <Link to={routerURL('/envitem', record)}>查看</Link>
+        <a style={{ margin: "0px 5px" }} onClick={() => this.props.onEdit(record)}>编辑</a>
         <Popconfirm placement="topRight"
           title="确定要删除该项？" onConfirm={() => this.delete(record.id)}
         >{(record.isDefault ? false : true) && <a>删除</a>}

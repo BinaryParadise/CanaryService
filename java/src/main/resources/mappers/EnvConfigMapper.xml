@@ -7,19 +7,15 @@
     <resultMap id="list" type="com.frontend.domain.MCEnvConfigDetail"></resultMap>
 
     <insert id="insert" parameterType="com.frontend.domain.MCEnvConfig" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO RemoveConfig(name, comment, type, appId, author, isDefault) VALUES(#{name}, #{comment}, #{type}, #{appId},
-        #{author}, #{isDefault})
+        INSERT INTO RemoteConfig(name, comment, type, appId, author, defaulted, updateTime) VALUES(#{name}, #{comment}, #{type}, #{appId},
+        #{author}, #{defaulted},STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
     </insert>
     <update id="update" parameterType="com.frontend.domain.MCEnvConfig">
-        UPDATE RemoveConfig SET `name`=#{name},type=#{type},`comment`=#{comment},author=#{author} WHERE id=#{id}
+        UPDATE RemoteConfig SET `name`=#{name},type=#{type},`comment`=#{comment},author=#{author}, updateTime=STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4) WHERE id=#{id}
     </update>
 
-    <select id="findByName" parameterType="com.frontend.domain.MCEnvConfig" resultMap="onlyone">
-        SELECT * FROM RemoveConfig WHERE appId=#{appId} AND `name`=#{name} LIMIT 0,1
-    </select>
-
     <select id="findById" parameterType="com.frontend.domain.MCEnvConfig" resultMap="onlyone">
-        SELECT * FROM RemoveConfig WHERE id=#{1} LIMIT 0,1
+        SELECT * FROM RemoteConfig WHERE id=#{1} LIMIT 0,1
     </select>
 
     <select id="findByAppId" resultMap="list">
@@ -27,7 +23,7 @@
         SELECT
         a.*,
         b.`name` AS appname,
-        ( SELECT count( * ) FROM RemoteConfigParam WHERE configid = a.id ) subItemsCount
+        ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) subItemsCount
         FROM
         RemoteConfig a
         LEFT JOIN Project b ON a.appId = b.id
@@ -55,6 +51,6 @@
     </select>
 
     <update id="deleteById">
-        DELETE a.*,b.* FROM RemoteConfig a LEFT JOIN envconfigitem b on a.id = b.envid WHERE a.id = #{id}
+        DELETE a.*,b.* FROM RemoteConfig a LEFT JOIN RemoteConfigParam b on a.id = b.envid WHERE a.id = #{id}
     </update>
 </mapper>

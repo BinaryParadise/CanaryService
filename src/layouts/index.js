@@ -12,9 +12,9 @@ class BasicLayout extends React.Component {
     project: false,
     selectedItem: null,
     menus: {
-      "1": "/device",
-      "2": "/env",
-      "3": "source",
+      "1": "/env",
+      "2": "/device",
+      "3": "/source",
       "4": "/package"
     },
     appData: []
@@ -53,7 +53,7 @@ class BasicLayout extends React.Component {
     window.__config__.projectInfo = projectInfo
     this.setState({ project: false })
     message.success("项目切换成功!")
-    this.forceUpdate()
+    router.push("/")
   }
 
   onChange = (value) => {
@@ -63,7 +63,7 @@ class BasicLayout extends React.Component {
   // 获取项目列表
   getAppList = () => {
     return axios.get('/app/list', {}).then(result => {
-      this.setState({ appData: result, project: true })
+      this.setState({ appData: result.data, project: true })
     })
   }
 
@@ -112,18 +112,18 @@ class BasicLayout extends React.Component {
             onSelect={this.onMenuSelect}
           >
             <Menu.Item key="1">
-              <Icon type="hdd" />
-              <span>设备列表</span>
-            </Menu.Item>
-            <Menu.Item key="2">
               <Icon type="setting" />
               <span>环境切换</span>
             </Menu.Item>
-            <Menu.Item key="3">
+            <Menu.Item key="2">
+              <Icon type="hdd" />
+              <span>设备列表</span>
+            </Menu.Item>
+            <Menu.Item key="3" disabled={true}>
               <Icon type="link" />
               <span>路由配置</span>
             </Menu.Item>
-            <Menu.Item key="4">
+            <Menu.Item key="4" disabled={true}>
               <Icon type="appstore" />
               <span>测试包管理</span>
             </Menu.Item>

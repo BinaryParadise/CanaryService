@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Button, Input, Popconfirm, Table, Popover, Tag } from 'antd'
 import moment from 'moment'
 import { nickname } from '../../common/config'
-import { EnvItemDetail } from './env-add'
 import { message } from 'antd/lib'
 import axios from '../../component/axios'
 
@@ -79,14 +78,14 @@ export default class EnvList extends React.Component {
             <div className="editable-row-operations" style={{ padding: '0 0 0 8px' }}>
               {editable ? (
                 <span className="m-action-group">
-                  <a onClick={() => this.cancel(record.id)}>取消</a>
+                  <a onClick={() => this.cancel(record.id)} style={{ marginRight: 5 }}>取消</a>
                   <a onClick={() => this.onSubmit(record.id)}>
                     保存
                   </a>
                 </span>
               ) : (
                   <span className="m-action-group">
-                    <a onClick={() => this.edit(record.id)}>
+                    <a onClick={() => this.edit(record.id)} style={{ marginRight: 5 }}>
                       编辑
                   </a>
                     <Popconfirm title="确认删除?" onConfirm={() => this.props.onRemove(record.id)}>
@@ -102,10 +101,6 @@ export default class EnvList extends React.Component {
 
     this.state = { data: [], listData: this.props.listData, modal: { visible: false } }
     this.cacheData = this.props.listData.map(item => ({ ...item }))
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState(nextProps)
   }
 
   edit(key) {
@@ -146,8 +141,7 @@ export default class EnvList extends React.Component {
     const newData = [...this.props.listData]
     const target = newData.filter(item => key === item.id)[0]
     if (target) {
-      axios
-        .post('/envitem/update/' + target.id, Object.assign(target))
+      axios.post('/envitem/update/' + target.id, Object.assign(target))
         .then(() => {
           this.onFinished(true, target)
         })
@@ -202,7 +196,7 @@ export default class EnvList extends React.Component {
 
   render() {
     const { onShowModal, loading, pageSize, pageIndex, onRemove } = this.props
-    const { listData, modal } = this.state
+    const { listData } = this.props
     return (
       <div>
         <Button onClick={onShowModal} type="primary">
@@ -236,6 +230,5 @@ EnvList.propTypes = {
   onShowModal: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  config: PropTypes.object.isRequired
+  onRemove: PropTypes.func.isRequired
 }

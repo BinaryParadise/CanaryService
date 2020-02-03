@@ -13,6 +13,10 @@ public class MCSchemeItem {
     int type;
     int appId;
 
+    public MCSchemeItem() {
+      author = "admin";
+    }
+
     public int getId() {
         return id;
     }

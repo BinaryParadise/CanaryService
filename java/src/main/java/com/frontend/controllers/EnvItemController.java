@@ -25,8 +25,8 @@ public class EnvItemController {
 
     @RequestMapping(value = "japi/envitem/update/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public MCResult update(@PathVariable int id, @RequestBody MCEnvConfigItem item, @RequestHeader(name = "X-Login-User") String author) {
-        item.setAuthor(author);
+    public MCResult update(@PathVariable int id, @RequestBody MCEnvConfigItem item) {
+        item.setAuthor("admin");
         if (id > 0) {
             return envItemMapper.update(item) ? MCResult.Success() : MCResult.Failed(MybatisError.UpdateFaield);
         } else {

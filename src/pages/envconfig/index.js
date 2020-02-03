@@ -16,7 +16,7 @@ export default class EnvConfig extends React.Component {
     modalData: {
       visible: false,
       loading: false,
-      appId: 0,
+      appId: window.__config__.projectInfo.id,
       key: 0,
       title: "新增",
       data: null
@@ -33,13 +33,13 @@ export default class EnvConfig extends React.Component {
 
   // 环境列表
   query = () => {
-    this.setState({ tableLoading: true })
+    this.setState({ tableLoading: true, modalData: { ...this.state.modalData, visible: false } })
     const newParams = Object.assign(this.state.params)
 
     return axios
       .get('/list', { params: newParams })
       .then(result => {
-        this.setState({ listData: result })
+        this.setState({ listData: result.data })
       }).finally(() => this.setState({ tableLoading: false, params: newParams }))
   }
 
@@ -71,6 +71,17 @@ export default class EnvConfig extends React.Component {
   }
 
   onModalOk = () => {
+    const { form } = this.formRef.props;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+
+      this.submit(values, () => {
+        form.resetFields()
+        this.query()
+      });
+    });
     this.setState({ modalData: { ...this.state.modalData, visible: false } })
   }
 
@@ -79,8 +90,19 @@ export default class EnvConfig extends React.Component {
     this.setState({ modalData: { ...this.state.modalData, visible: false } })
   }
 
+  submit = (values, callback) => {
+    return axios.post(`/env/update/${values.id}`, values).then(result => {
+      if (result.code == 0) {
+        message.success("保存成功")
+        callback()
+      } else {
+        message.error(result.error)
+      }
+    });
+  }
+
   componentDidMount() {
-    // this.query()
+    this.query()
   }
 
   render() {
@@ -118,7 +140,7 @@ export default class EnvConfig extends React.Component {
         onOk={this.onModalOk}
         onCancel={this.onModalCancel}
         maskClosable={false} >
-        <EnvEditForm data={modalData.data} >
+        <EnvEditForm wrappedComponentRef={(ref) => this.formRef = ref} data={modalData.data} >
         </EnvEditForm>
       </Modal>
 

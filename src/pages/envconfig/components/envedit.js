@@ -37,21 +37,30 @@ class EnvEditForm extends React.Component {
 
     return (
       <Form {...formItemLayout}>
-        {
-          <Form.Item {...formItemLayout} hasFeedback label="模板">
-            {getFieldDecorator('copyid', {
-              rules: [{ required: false }]
-            })(
-              <Select placeholder="选择模板" onChange={this.handleAppChange} allowClear>
-                {
-                  listData.map(g => <Select.OptGroup key={g.type} label={g.title}>{g.items.map(d => <Option
-                    key={d.id}>{d.name}</Option>)}</Select.OptGroup>)
-                }
+        <Form.Item style={{ display: 'none' }}>
+          {getFieldDecorator('appId', {
+            initialValue: data.appId
+          })(<Input type="hidden" />)}
+        </Form.Item>
+        <Form.Item style={{ display: 'none' }}>
+          {getFieldDecorator('id', {
+            initialValue: data.id
+          })(<Input type="hidden" />)}
+        </Form.Item>
 
-              </Select>
-            )}
-          </Form.Item>
-        }
+        <Form.Item {...formItemLayout} hasFeedback label="模板">
+          {getFieldDecorator('copyid', {
+            rules: [{ required: false }]
+          })(
+            <Select placeholder="选择模板" onChange={this.handleAppChange} allowClear>
+              {
+                listData.map(g => <Select.OptGroup key={g.type} label={g.title}>{g.items.map(d => <Option
+                  key={d.id}>{d.name}</Option>)}</Select.OptGroup>)
+              }
+
+            </Select>
+          )}
+        </Form.Item>
 
         <Form.Item {...formItemLayout} hasFeedback label="环境名称">
           {getFieldDecorator('name', {

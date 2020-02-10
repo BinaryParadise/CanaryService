@@ -3,7 +3,6 @@ import styles from './logger.css';
 import PropTypes from 'prop-types'
 import { Popover, Affix, Icon, Breadcrumb } from 'antd'
 import WebSocket from '../../component/websocket'
-import imgURL from '../../assets/yay.jpg'
 import router from 'umi/router';
 
 export default class LoggerMonitor extends React.Component {
@@ -56,8 +55,7 @@ export default class LoggerMonitor extends React.Component {
     formatMessage = obj => {
         if (obj.type === undefined) {
             if (obj.mimeType.indexOf('image/') === 0) {
-                return (<span>{'🌐' + obj.statusCode + ' '}<Popover placement='topLeft' style={{ backgroundColor: 'transparent' }} content={<img src={'data:' + obj.mimeType + ';base64,' + obj.responseBody} alt='' />}>
-                    <img src={imgURL} style={{ width: '20px', height: '14px', marginRight: '3px' }} alt='' />
+                return (<span>{'🌐' + obj.statusCode + ' '}<Popover placement='topLeft' style={{ backgroundColor: 'transparent' }} content={<img src={'data:' + obj.mimeType + ';base64,' + obj.responseBody} alt='' />}>                    
                     {obj.url}
                 </Popover></span>
                 )

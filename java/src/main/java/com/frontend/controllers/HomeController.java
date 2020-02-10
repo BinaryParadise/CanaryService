@@ -29,7 +29,7 @@ public class HomeController {
 		return "scheme";
 	}
 
-	@RequestMapping(value = "japi/device/list", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "device/list", produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public MCResult deviceList(String appkey) {
 		HashMap data = new HashMap();

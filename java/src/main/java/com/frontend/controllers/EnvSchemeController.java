@@ -16,7 +16,7 @@ public class EnvSchemeController {
     @Autowired
     EnvSchemeMapper schemeMapper;
 
-    @RequestMapping(value = "japi/scheme/list", method = RequestMethod.GET)
+    @RequestMapping(value = "scheme/list", method = RequestMethod.GET)
     @ResponseBody
     public MCResult list(Integer appId) {
         List<MCSchemeGroup> result = schemeMapper.findByAppId(appId);
@@ -26,7 +26,7 @@ public class EnvSchemeController {
         return MCResult.Success(result);
     }
 
-    @RequestMapping(value = "japi/scheme/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "scheme/update/{id}", method = RequestMethod.POST)
     @ResponseBody
     public MCResult update(@PathVariable int id, @RequestBody MCSchemeItem item) {
         boolean ret;
@@ -38,19 +38,19 @@ public class EnvSchemeController {
         return ret ? MCResult.Success() : MCResult.Failed(MybatisError.InsertFaield);
     }
 
-    @RequestMapping(value = "japi/scheme/addItem", method = RequestMethod.POST)
+    @RequestMapping(value = "scheme/addItem", method = RequestMethod.POST)
     @ResponseBody
     public MCResult addItem(@RequestBody MCSchemeItem item) {
         return schemeMapper.insertItem(item) ? MCResult.Success() : MCResult.Failed(MybatisError.InsertFaield);
     }
 
-    @RequestMapping(value = "japi/scheme/delete/{id}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "scheme/delete/{id}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public MCResult delete(@PathVariable(value = "id") int itemid) {
         return schemeMapper.delete(itemid) ? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);
     }
 
-    @RequestMapping(value = "japi/scheme/deleteItem/{id}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "scheme/deleteItem/{id}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public MCResult deleteItem(@PathVariable(value = "id") int itemid) {
         return schemeMapper.deleteItem(itemid) ? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);

@@ -66,7 +66,7 @@ export class EnvList extends React.Component {
     const newData = [...this.props.listData]
     const target = newData.filter(item => key === item.id)[0]
     if (target) {
-      axios.post(`/delete/${key}`, target).then(result => {
+      axios.post(`/conf/delete/${key}`, target).then(result => {
         message.success('删除成功！')
         this.props.onChange()
       })

@@ -2,6 +2,9 @@
 
 export default {
   treeShaking: true,
+  exportStatic: {
+    hashHistory: true
+  },
   routes: [
     {
       path: '/',
@@ -58,7 +61,7 @@ export default {
   ],
   proxy: {
     '/api': {
-      target: 'http://127.0.0.1:8082/japi',
+      target: 'http://127.0.0.1:8082',
       pathRewrite: { '^/api': '' },
       changeOrigin: true
     }

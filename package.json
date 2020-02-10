@@ -1,6 +1,5 @@
 {
   "private": true,
-  "proxy": "http://127.0.0.1:8082",
   "scripts": {
     "start": "umi dev",
     "build": "umi build",

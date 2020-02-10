@@ -17,13 +17,13 @@ public class EnvItemController {
     @Autowired
     private EnvConfigItemMapper envItemMapper;
 
-    @RequestMapping(value = "japi/envitem/list", method = RequestMethod.GET)
+    @RequestMapping(value = "envitem/list", method = RequestMethod.GET)
     @ResponseBody
     public MCResult list(int envid) {
         return MCResult.Success(envItemMapper.findByEnvId(envid));
     }
 
-    @RequestMapping(value = "japi/envitem/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "envitem/update/{id}", method = RequestMethod.POST)
     @ResponseBody
     public MCResult update(@PathVariable int id, @RequestBody MCEnvConfigItem item) {
         item.setAuthor("admin");
@@ -34,7 +34,7 @@ public class EnvItemController {
         }
     }
 
-    @RequestMapping(value = "japi/envitem/delete/{id}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "envitem/delete/{id}", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public MCResult delete(@PathVariable(value = "id") int itemid) {
         return envItemMapper.delete(itemid) ? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);

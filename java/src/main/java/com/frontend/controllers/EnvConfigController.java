@@ -35,14 +35,14 @@ public class EnvConfigController {
    * @param id
    * @return
    */
-  @RequestMapping(value = "japi/list", method = RequestMethod.GET)
+  @RequestMapping(value = "conf/list", method = RequestMethod.GET)
   @ResponseBody
   public MCResult list(Integer appId, Integer type) {
     Object data = envMapper.findByAppId(appId == null ? 0 : appId, type == null ? -1 : type);
     return MCResult.Success(data);
   }
 
-  @RequestMapping(value = "japi/detail/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "conf/detail/{id}", method = RequestMethod.GET)
   @ResponseBody
   public MCResult detail(@PathVariable(value = "id") int envid) {
     return MCResult.Success(envMapper.findById(envid));
@@ -56,7 +56,7 @@ public class EnvConfigController {
    * @param author
    * @return
    */
-  @RequestMapping(value = "japi/env/update/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "conf/update/{id}", method = RequestMethod.POST)
   @ResponseBody
   @Transactional
   public MCResult update(@PathVariable(value = "id") int envid, @RequestBody MCEnvConfig config) {
@@ -83,29 +83,13 @@ public class EnvConfigController {
     }
   }
 
-  @RequestMapping(value = "japi/delete/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "conf/delete/{id}", method = RequestMethod.POST)
   @ResponseBody
   public MCResult delete(@PathVariable int id) {
     if (id > 0) {
       return envMapper.deleteById(id) ? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);
     }
     return MCResult.Failed(1001, "参数错误");
-  }
-
-  /**
-   * @param bundleId
-   * @param platform
-   * @param response
-   * @return
-   */
-  @RequestMapping(value = "conf/env/config", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-  @ResponseBody
-  @JSON(type = MCEnvConfig.class, include = "name,type,comment,default,subItems")
-  @JSON(type = MCEnvConfigItem.class, include = "name,value,comment")
-  @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
-  @JSON(type = MCSchemeItem.class, include = "value,comment")
-  public MCResult configs(String bundleId, String platform) {
-    return this.configsV2(bundleId, platform, null, null);
   }
 
   /**
@@ -117,13 +101,13 @@ public class EnvConfigController {
    * @param platform 兼容旧版
    * @return
    */
-  @RequestMapping(value = "japi/env/config", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+  @RequestMapping(value = "conf/config", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
   @ResponseBody
   @JSON(type = MCEnvConfig.class, include = "name,type,comment,default,subItems")
   @JSON(type = MCEnvConfigItem.class, include = "name,value,comment")
   @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
   @JSON(type = MCSchemeItem.class, include = "value,comment")
-  public MCResult configsV2(String appkey, String os, String bundleId, String platform) {
+  public MCResult configs(String appkey, String os, String bundleId, String platform) {
     appkey = appkey == null ? bundleId : appkey;
     os = os == null ? platform : os;
     if (appkey != null && appkey.length() > 0) {
@@ -171,7 +155,7 @@ public class EnvConfigController {
    * @param appKey
    * @return
    */
-  @RequestMapping(value = "japi/env/schemelist", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+  @RequestMapping(value = "conf/schemelist", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
   @ResponseBody
   @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
   @JSON(type = MCSchemeItem.class, include = "value,comment")

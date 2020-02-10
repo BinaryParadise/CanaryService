@@ -20,14 +20,14 @@ public class ProjectController {
   @Autowired
   private ProjectMapper appsMapper;
 
-  @RequestMapping(value = "japi/app/list", produces = "application/json; charset=utf-8")
+  @RequestMapping(value = "app/list", produces = "application/json; charset=utf-8")
   @ResponseBody
   public MCResult projectList() {
     MCResult result = MCResult.Success(appsMapper.findAllEnable());
     return result;
   }
 
-  @RequestMapping(value = "japi/app/modify", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
+  @RequestMapping(value = "app/modify", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
   @ResponseBody
   public MCResult modify(@RequestBody MCAppInfo project) {
     try {
@@ -46,7 +46,7 @@ public class ProjectController {
     }
   }
 
-  @RequestMapping(value = "japi/app/delete/{id}", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
+  @RequestMapping(value = "app/delete/{id}", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
   @ResponseBody
   public MCResult delete(@PathVariable("id") Integer pid) {
     return appsMapper.delete(pid) ? MCResult.Success() : MCResult.Failed(MybatisError.UpdateFaield);

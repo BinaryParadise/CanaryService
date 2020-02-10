@@ -19,7 +19,7 @@
 
 ### URL
 
-**{baseURL}/japi/env/config?appkey=[appkey]&os=[os]**
+**{baseURL}/conf/config?appkey=[appkey]&os=[os]**
 
 ### 请求类型
 
@@ -94,7 +94,7 @@
 
 ### 获取调试日志
 
-【POST】: **{baseURL}/japi/log/list**
+【POST】: **{baseURL}/log/list**
 
 ##### 参数列表
 
@@ -143,7 +143,7 @@
 
 ### 获取网络日志
 
-【POST】: **{baseURL}/japi/netlog/list**
+【POST】: **{baseURL}/netlog/list**
 
 | 参数       | 类型   | 说明          | 默认值 |
 | ---------- | ------ | ------------- | ------ |
@@ -292,7 +292,7 @@
         "uuid": "",//用户唯一标识，可为空
 		"method": "GET",
 		"statusCode": 404,
-		"url": "http:\/\/127.0.0.1:8081\/japi\/logs",
+		"url": "http:\/\/127.0.0.1:8081\/logs",
 		"mimeType", "image/png",
 		"requestHeader": "{\n  \"User-Agent\" : \"FoundationDemo\\\/1.0 (iPhone; iOS 12.1; Scale\\\/3.00)\",\n  \"Accept-Language\" : \"zh-Hans-US;q=1, en;q=0.9\"\n}",
 		"requestBody": null, //Base64

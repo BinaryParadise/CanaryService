@@ -4,6 +4,7 @@ import React from 'react'
 import { Layout, Drawer, Icon, Menu, Avatar, Result, Button, Modal, Select, message } from 'antd';
 import router from 'umi/router';
 import axios from '../component/axios'
+import default_handsome from '../assets/default_handsome.jpg'
 const { Header, Content, Footer } = Layout;
 
 class BasicLayout extends React.Component {
@@ -134,7 +135,7 @@ class BasicLayout extends React.Component {
           <Button className={styles.title} onClick={this.switchProject}>
             {projectInfo == undefined ? "未选择项目" : projectInfo.name}
           </Button>
-          <Avatar style={{ float: "right", marginRight: 16, marginTop: 9 }} src="https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg"></Avatar>
+          <Avatar style={{ float: "right", marginRight: 16, marginTop: 9 }} src={default_handsome}></Avatar>
         </Header>
         <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
           {this.props.children}

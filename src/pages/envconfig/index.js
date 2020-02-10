@@ -16,14 +16,14 @@ export default class EnvConfig extends React.Component {
     modalData: {
       visible: false,
       loading: false,
-      appId: window.__config__.projectInfo.id,
+      appId: (window.__config__.projectInfo || {}).id,
       key: 0,
       title: "新增",
       data: null
     },
     record: {},
     params: {
-      appId: window.__config__.projectInfo.id,
+      appId: (window.__config__.projectInfo || {}).id,
       type: 0,
       pageSize: 15
     }
@@ -37,7 +37,7 @@ export default class EnvConfig extends React.Component {
     const newParams = Object.assign(this.state.params)
 
     return axios
-      .get('/list', { params: newParams })
+      .get('/conf/list', { params: newParams })
       .then(result => {
         this.setState({ listData: result.data })
       }).finally(() => this.setState({ tableLoading: false, params: newParams }))
@@ -91,7 +91,7 @@ export default class EnvConfig extends React.Component {
   }
 
   submit = (values, callback) => {
-    return axios.post(`/env/update/${values.id}`, values).then(result => {
+    return axios.post(`/conf/update/${values.id}`, values).then(result => {
       if (result.code == 0) {
         message.success("保存成功")
         callback()

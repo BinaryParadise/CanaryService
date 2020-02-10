@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Component
 @ServletComponentScan
-@WebFilter(urlPatterns = "/japi/*", filterName = "ApiFilter")
+@WebFilter(urlPatterns = "/*", filterName = "ApiFilter")
 public class MCApiFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {

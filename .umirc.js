@@ -2,7 +2,6 @@
 
 export default {
   treeShaking: true,
-  history: 'hash',
   routes: [
     {
       path: '/',

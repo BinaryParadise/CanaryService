@@ -38,7 +38,10 @@ public class EnvConfigController {
   @RequestMapping(value = "conf/list", method = RequestMethod.GET)
   @ResponseBody
   public MCResult list(Integer appId, Integer type) {
-    Object data = envMapper.findByAppId(appId == null ? 0 : appId, type == null ? -1 : type);
+    if (appId == null) {
+      return MCResult.Failed(1, "缺少参数appId");
+    }
+    Object data = envMapper.findByAppId(appId, type == null ? 0 : type);
     return MCResult.Success(data);
   }
 

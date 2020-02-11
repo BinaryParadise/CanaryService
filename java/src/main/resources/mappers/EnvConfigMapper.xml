@@ -27,7 +27,7 @@
         FROM
         RemoteConfig a
         LEFT JOIN Project b ON a.appId = b.id
-        WHERE a.type=#{type} or #{type} = -1) a where a.appid in (select id from Project where enable=1 and (id=#{appId} or #{appId}=0))
+        WHERE a.type=#{type}) a where a.appid in (select id from Project where enable=1 and id=#{appId})
         ORDER BY updateTime DESC
     </select>
 

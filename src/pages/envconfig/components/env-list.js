@@ -22,7 +22,6 @@ export class EnvList extends React.Component {
     super(props)
 
     this.columns = [
-      { dataIndex: 'appName', title: '项目', width: 168 },
       {
         dataIndex: 'name', title: '环境名称',
         render: (text, record) => this.renderColumns(text, record, 'name')

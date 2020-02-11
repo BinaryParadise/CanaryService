@@ -19,16 +19,17 @@
     </select>
 
     <select id="findByAppId" resultMap="list">
-        SELECT * FROM (
         SELECT
         a.*,
-        b.`name` AS appname,
-        ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) subItemsCount
+        ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) AS subItemsCount
         FROM
         RemoteConfig a
-        LEFT JOIN Project b ON a.appId = b.id
-        WHERE a.type=#{type}) a where a.appid in (select id from Project where enable=1 and id=#{appId})
-        ORDER BY updateTime DESC
+        WHERE
+        a.appId = #{0}
+        AND
+        a.type = #{1}
+        ORDER BY
+        updateTime DESC
     </select>
 
     <select id="findByAppIdPage" resultMap="list">

@@ -17,7 +17,7 @@ public interface EnvConfigMapper {
     MCEnvConfig findByName(MCEnvConfig config);
 
     MCEnvConfig findById(int id);
-    List<MCEnvConfigDetail> findByAppId(@Param("appId") int appId, @Param("type") int type);
+    List<MCEnvConfigDetail> findByAppId(int appId, int type);
     List<MCEnvConfigDetail> findByAppIdPage(int appId,Integer pageIndex,Integer pageSize);
     List<MCEnvConfig> findByAppKey(String appkey);
 }

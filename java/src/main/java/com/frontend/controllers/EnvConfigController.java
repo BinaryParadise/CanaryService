@@ -104,7 +104,7 @@ public class EnvConfigController {
    * @param platform 兼容旧版
    * @return
    */
-  @RequestMapping(value = "conf/config", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+  @RequestMapping(value = "conf/full", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
   @ResponseBody
   @JSON(type = MCEnvConfig.class, include = "name,type,comment,default,subItems")
   @JSON(type = MCEnvConfigItem.class, include = "name,value,comment")

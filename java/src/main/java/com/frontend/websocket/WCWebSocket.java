@@ -167,12 +167,13 @@ public class WCWebSocket {
         if (info.getDeviceId() == null) {
             logger.error("注册设备必须包含deviceId");
         } else {
-            MCAppInfo appInfo = appsMapper.findByAppKey(info.getIdentify());
+            MCAppInfo appInfo = appsMapper.findByAppKey(info.getAppKey());
             if (appInfo!=null) {
                 info.setAppId(appInfo.getId());
             }
             session.getUserProperties().put("device", info);
             devices.put(info.getDeviceId(), info);
+            logger.info("设备注册成功: "+info.getDeviceId());
         }
     }
 
@@ -249,7 +250,7 @@ public class WCWebSocket {
     public static List<MCDeviceInfo> getDevices(String appKey) {
         List<MCDeviceInfo> list = new ArrayList<>();
         for(MCDeviceInfo device : devices.values()) {
-            if (device.getIdentify().compareTo(appKey) == 0) {
+            if (device.getAppKey().compareTo(appKey) == 0) {
                 list.add(device);
             }
         }

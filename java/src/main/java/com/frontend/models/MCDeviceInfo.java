@@ -9,7 +9,7 @@ public class MCDeviceInfo  {
 	String deviceId;
 	String ipAddr;
 	Integer appId;
-	String identify;
+	String appKey;
 	String appVersion;
 	String osName;
 	String osVersion;
@@ -48,14 +48,6 @@ public class MCDeviceInfo  {
 	public void setIpAddr(String ipAddr) {
 		this.ipAddr = ipAddr;
 	}
-
-  public String getIdentify() {
-    return identify;
-  }
-
-  public void setIdentify(String identify) {
-    this.identify = identify;
-  }
 
   public String getAppVersion() {
 		return appVersion;
@@ -111,5 +103,13 @@ public class MCDeviceInfo  {
 
   public void setSimulator(boolean simulator) {
     this.simulator = simulator;
+  }
+
+  public String getAppKey() {
+    return appKey;
+  }
+
+  public void setAppKey(String appKey) {
+    this.appKey = appKey;
   }
 }

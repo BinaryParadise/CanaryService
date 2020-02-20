@@ -26,7 +26,7 @@ const instance = axios.create({
     return qs.stringify(params, {
       skipNulls: true,
       arrayFormat: 'repeat',
-      encoder: function(str) {
+      encoder: function (str) {
         return encodeURIComponent(str)
       }
     })
@@ -38,7 +38,7 @@ const instance = axios.create({
       return data
     }
 
-    data = paramsUtil.parseParams(data, { skipEmpty: true})
+    data = paramsUtil.parseParams(data, { skipEmpty: true })
     if (data == null || typeof data === 'string') {
       return data
     }
@@ -51,7 +51,7 @@ const instance = axios.create({
 })
 
 instance.interceptors.response.use(
-  function(response) {
+  function (response) {
     let result = response.data
     if (!result) {
       throwHttpError('请求异常！')
@@ -63,7 +63,7 @@ instance.interceptors.response.use(
 
     return result
   },
-  function(error) {
+  function (error) {
     if (error.response) {
       const data = error.response.data
       if (data && data.error) {

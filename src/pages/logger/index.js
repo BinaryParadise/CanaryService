@@ -8,7 +8,7 @@ import router from 'umi/router';
 export default class LoggerMonitor extends React.Component {
     state = {
         data: this.props.location.state,
-        logs: [{ "key": 1, "fileName": "MCViewController", "appVersion": "1.0.0", "flag": 8, "level": 31, "line": 69, "message": "T2 200", "type": 1, "deviceId": "17D71FCA-B22A-457B-B5D7-60E4509F77B6", "threadName": "", "threadID": "236217", "file": "/Users/bonana/Github/MCFrontendKit/Example/MCLogger/MCViewController.m", "queueLabel": "com.apple.root.default-qos", "function": "-[MCViewController callLogger:]_block_invoke", "options": 0, "context": 0, "timestamp": 1579443186774 }],
+        logs: [],
         autoscroll: true
     }
 

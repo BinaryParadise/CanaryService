@@ -1,5 +1,3 @@
-import {baseURI} from './config'
-
 Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份

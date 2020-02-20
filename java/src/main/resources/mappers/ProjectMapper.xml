@@ -9,7 +9,7 @@
   <update id="update" parameterType="com.frontend.domain.MCAppInfo">
     UPDATE Project set name=#{name},identify=#{identify} where id=#{id}
   </update>
-  <select id="findById" resultType="com.frontend.domain.MCAppInfo">
+  <select id="findByAppKey" resultType="com.frontend.domain.MCAppInfo">
     select * from Project where identify=#{appKey}
   </select>
 

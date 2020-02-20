@@ -1,14 +1,16 @@
+import { wsPath } from '../common/config'
+
 export default {
   messagers: [],
-  create: function(deviceid) {
+  create: function (deviceid) {
     if (this.sock !== undefined) {
       return this;
     }
-    this.url = 'ws://'+window.location.hostname + ':8082/fk/web/'+deviceid
+    this.url = (window.location.protocol == "http:" ? 'ws://' : 'wss://') + window.location.hostname + wsPath + '/web/' + deviceid
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)
-      context.onMessage({code:0, type: 1, msg: '连接成功!'})
+      context.onMessage({ code: 0, type: 1, msg: '连接成功!' })
     }
 
     this.sendMessage = obj => {
@@ -21,13 +23,13 @@ export default {
 
     return this
   },
-  addReceiver: function(onMessage) {
+  addReceiver: function (onMessage) {
     if (onMessage !== undefined && this.messagers.indexOf(onMessage) < 0) {
       this.messagers.push(onMessage)
     }
     return this;
   },
-  connect: function(onMessage) {
+  connect: function (onMessage) {
     this.addReceiver(onMessage)
     var context = this
     if (this.sock === undefined || this.sock.readyState === 3) {
@@ -47,7 +49,7 @@ export default {
       sock.onerror = e => {
         console.error(e);
         if (sock.readyState === 3) {
-          setTimeout(function() {
+          setTimeout(function () {
             context.connect.apply(context)
           }, 10000)
         }
@@ -60,7 +62,7 @@ export default {
       this.sock = sock
     }
   },
-  onMessage: function(obj) {
+  onMessage: function (obj) {
     for (let messager of this.messagers) {
       if (messager(obj)) {
         break

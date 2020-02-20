@@ -12,12 +12,6 @@ class BasicLayout extends React.Component {
     visible: false,
     project: false,
     selectedItem: null,
-    menus: {
-      "1": "/env",
-      "2": "/device",
-      "3": "/source",
-      "4": "/package"
-    },
     appData: []
   };
 
@@ -40,7 +34,7 @@ class BasicLayout extends React.Component {
 
   onMenuSelect = (item) => {
     this.setState({ visible: false })
-    router.push(this.state.menus[item.key]);
+    router.push(item.key);
   }
 
   confirmSwitchProject = () => {
@@ -81,6 +75,7 @@ class BasicLayout extends React.Component {
   render() {
     const { projectInfo } = window.__config__
     const { appData } = this.state
+    const { pathname } = this.props.location
     return (
       <Layout className={styles.normal}>
         <Modal visible={this.state.project} title="请选择项目" onOk={this.confirmSwitchProject} onCancel={() => this.setState({ project: false })}>
@@ -105,28 +100,32 @@ class BasicLayout extends React.Component {
           style={{ position: 'absolute' }}
         >
           <Menu
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={pathname == "/" ? "/env" : pathname}
             style={{ width: 256, margin: -24 }}
             mode="inline"
             theme="light"
             inlineCollapsed={this.state.collapsed}
             onSelect={this.onMenuSelect}
           >
-            <Menu.Item key="1">
+            <Menu.Item key="/env">
               <Icon type="setting" />
               <span>环境切换</span>
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="/device">
               <Icon type="hdd" />
               <span>设备列表</span>
             </Menu.Item>
-            <Menu.Item key="3" disabled={true}>
+            <Menu.Item key="/source" disabled={true}>
               <Icon type="link" />
               <span>路由配置</span>
             </Menu.Item>
-            <Menu.Item key="4" disabled={true}>
+            <Menu.Item key="/package" disabled={true}>
               <Icon type="appstore" />
               <span>测试包管理</span>
+            </Menu.Item>
+            <Menu.Item key="/project">
+              <Icon type="project" />
+              <span>项目管理</span>
             </Menu.Item>
           </Menu>
         </Drawer>

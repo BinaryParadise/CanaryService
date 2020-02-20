@@ -42,7 +42,7 @@ export default {
         antd: true,
         dva: true,
         dynamicImport: false,
-        title: '水月洞天',
+        title: '奶味蓝的乐园',
         dll: false,
         routes: {
           exclude: [

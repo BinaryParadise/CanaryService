@@ -86,7 +86,7 @@ export default class IndexPage extends React.Component {
         title: '操作',
         key: 'action',
         render: (text, record) => {
-          return (<Link to={routerURL('logger', record)}>日志监控</Link>);
+          return (<Link to={routerURL('/logger', record)}>日志监控</Link>);
         }
       }
     ],
@@ -107,7 +107,6 @@ export default class IndexPage extends React.Component {
   };
 
   componentDidMount() {
-    // WebSocket.create('E7003F069F0BB9C8BC6262709758610A').connect(this.onMessage)
     this.getDeviceList();
   }
 
@@ -117,9 +116,9 @@ export default class IndexPage extends React.Component {
       return
     }
     this.setState({ loading: true });
-    axios.get('/device/list?appkey=' + 'com.binaryparadise.MCFrontendKit')
+    axios.get('/device/list?appkey=' + window.__config__.projectInfo.identify)
       .then((result) => {
-        this.setState({ devices: result.devices })
+        this.setState({ devices: result.data.devices })
       })
       .finally(() => {
         this.setState({ loading: false })

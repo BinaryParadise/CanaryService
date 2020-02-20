@@ -1,16 +1,24 @@
-const baseURI = "/api"
-const nickname = "Rake Yang"
-export {
-  // 基础 URI
-  baseURI,
-  nickname
+const DefaultConfig = {
+  development: {
+    baseURI: "/api",
+    wsPath: ":8082/v2/fk"
+  },
+  production: {
+    baseURI: "/api",
+    wsPath: "/channel"
+  }
 }
 
-const prj = localStorage.getItem('projectInfo')
-window.__config__ = {
-  envTypeList: [{ 'type': 0, 'title': '测试', 'key': '0' }, { 'type': 1, 'title': '开发', 'key': '1' }, { 'type': 2, 'title': '生产', 'key': '2' }],
-  platforms: [{ 'platform': 0, 'title': '全部' }, { 'platform': 1, 'title': 'iOS' }, { 'platform': 2, 'title': 'Android' }]
+let config = DefaultConfig.development
+if (process.env.NODE_ENV === "production") {
+  config = DefaultConfig.production
 }
-if (prj != undefined) {
-  window.__config__.projectInfo = JSON.parse(prj)
+
+const nickname = "Rake Yang"
+const baseURI = config.baseURI
+const wsPath = config.wsPath
+export {
+  baseURI,
+  wsPath,
+  nickname
 }

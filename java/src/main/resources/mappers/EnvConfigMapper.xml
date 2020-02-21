@@ -7,11 +7,11 @@
     <resultMap id="list" type="com.frontend.domain.MCEnvConfigDetail"></resultMap>
 
     <insert id="insert" parameterType="com.frontend.domain.MCEnvConfig" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO RemoteConfig(name, comment, type, appId, author, defaulted, updateTime) VALUES(#{name}, #{comment}, #{type}, #{appId},
-        #{author}, #{defaulted},STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
+        INSERT INTO RemoteConfig(name, comment, type, appId, uid, defaulted, updateTime) VALUES(#{name}, #{comment}, #{type}, #{appId},
+        #{uid}, #{defaulted},STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
     </insert>
     <update id="update" parameterType="com.frontend.domain.MCEnvConfig">
-        UPDATE RemoteConfig SET `name`=#{name},type=#{type},`comment`=#{comment},author=#{author}, updateTime=STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4) WHERE id=#{id}
+        UPDATE RemoteConfig SET `name`=#{name},type=#{type},`comment`=#{comment},uid=#{uid}, updateTime=STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4) WHERE id=#{id}
     </update>
 
     <select id="findById" parameterType="com.frontend.domain.MCEnvConfig" resultMap="onlyone">
@@ -20,10 +20,10 @@
 
     <select id="findByAppId" resultMap="list">
         SELECT
-        a.*,
+        a.*, b.name as author,
         ( SELECT count( * ) FROM RemoteConfigParam WHERE envid = a.id ) AS subItemsCount
         FROM
-        RemoteConfig a
+        RemoteConfig a LEFT JOIN User b on a.uid = b.id
         WHERE
         a.appId = #{0}
         AND
@@ -41,9 +41,9 @@
         RemoteConfig a
         LEFT JOIN Project b ON a.appId = b.id
         WHERE
-        a.appId=#{0} or #{0}=0
+        a.appId=#{0} and a.type = #{1}
         ORDER BY
-        a.id DESC limit #{1},#{2}
+        a.id DESC limit #{2.begin},#{2.end}
     </select>
 
     <select id="findByAppKey" resultMap="onlyone">

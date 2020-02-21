@@ -11,6 +11,16 @@ public class MCEnvConfig {
   Date updateTime;
   int appId;
   String author;
+  int uid;
+
+  public int getUid() {
+    return uid;
+  }
+
+  public void setUid(int uid) {
+    this.uid = uid;
+  }
+
   String comment;
   List<MCEnvConfigItem> subItems;
   int subItemsCount;

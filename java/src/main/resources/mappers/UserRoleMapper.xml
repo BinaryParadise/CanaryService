@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.frontend.mappers.UserRoleMapper">
+  <insert id="inserUser">
+    INSERT INTO User (username,password,name,roleid) VALUES(#{username},#{password},#{name},#{roleid});
+  </insert>
+
+  <update id="updateUser">
+    UPDATE User
+    <set>
+      <if test="password != null">
+        password = #{password},
+      </if>
+      <if test="username != null">
+        username = #{username},
+      </if>
+      <if test="name != null">
+        name = #{name},
+      </if>
+      <if test="roleid != null">
+        roleid = #{roleid},
+      </if>
+    </set>
+
+    where id = #{id}
+  </update>
+
+  <select id="findUserList" resultType="com.frontend.domain.MCUserInfo">
+    SELECT
+    a.*,
+    b.name AS rolename,
+    b.level as rolelevel
+    FROM
+    User a
+    LEFT JOIN UserRole b ON a.roleid = b.id
+  </select>
+
+  <select id="isLogin" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM User a WHERE a.token=#{0} AND a.expire&gt;#{1}
+  </select>
+
+  <update id="login" parameterType="java.util.Map">
+    UPDATE User
+    <set>
+      <if test="token != null">
+        token = #{token},
+      </if>
+      <if test="stamp != null">
+        expire = #{stamp}+86400*7000,
+      </if>
+    </set>
+    WHERE
+    username = #{username}
+    AND password = #{password};
+  </update>
+
+  <select id="findByLogin" resultType="com.frontend.domain.MCUserInfo">
+    SELECT
+    a.*,
+    b.name AS rolename
+    FROM
+    User a
+    LEFT JOIN UserRole b ON a.roleid = b.id
+    WHERE
+    a.username = #{username}
+    AND a.password = #{password} AND a.token is not NULL AND expire&gt;#{stamp};
+  </select>
+
+  <select id="findByToken" resultType="com.frontend.domain.MCUserInfo">
+    SELECT
+    a.*,
+    b.name AS rolename
+    FROM
+    User a
+    LEFT JOIN UserRole b ON a.roleid = b.id
+    WHERE a.token=#{0} AND expire&gt;#{1};
+  </select>
+
+  <select id="findRoleList" resultType="com.frontend.domain.MCUserRole">
+    SELECT * FROM UserRole
+  </select>
+
+</mapper>

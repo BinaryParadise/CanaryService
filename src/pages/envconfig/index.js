@@ -25,7 +25,8 @@ export default class EnvConfig extends React.Component {
     params: {
       appId: (window.__config__.projectInfo || {}).id,
       type: 0,
-      pageSize: 15
+      pageSize: 5,
+      pageIndex: 1
     }
   }
 
@@ -39,6 +40,10 @@ export default class EnvConfig extends React.Component {
     return axios
       .get('/conf/list', { params: newParams })
       .then(result => {
+        if (result.code != 0) {
+          message.error(result.error)
+          return
+        }
         this.setState({ listData: result.data })
       }).finally(() => this.setState({ tableLoading: false, params: newParams }))
   }

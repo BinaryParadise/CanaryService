@@ -2,6 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import paramsUtil from './params'
 import { baseURI } from '../../common/config'
+import router from 'umi/router'
 
 function throwHttpError(message, code) {
   const error = new Error(message)
@@ -32,6 +33,11 @@ const instance = axios.create({
     })
   },
   transformRequest(data, header) {
+    let user = JSON.parse(localStorage.getItem("user"))
+    let token = (user || {}).token
+    if (token != undefined) {
+      header["Access-Token"] = token
+    }
     // 文件上传
     const isMultiPart = header['Content-Type'] === 'multipart/form.js-data'
     if (isMultiPart) {
@@ -59,6 +65,12 @@ instance.interceptors.response.use(
 
     if (typeof result !== 'object') {
       throwHttpError('返回数据格式异常！')
+    }
+
+    if (result.code == 401) {
+      localStorage.removeItem("user")
+      router.push('/login')
+      return;
     }
 
     return result

@@ -1,10 +1,12 @@
 import styles from './index.css';
 import React from 'react'
 
-import { Layout, Drawer, Icon, Menu, Avatar, Result, Button, Modal, Select, message } from 'antd';
+import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown } from 'antd';
 import router from 'umi/router';
 import axios from '../component/axios'
+import { MD5 } from '../common/util'
 import default_handsome from '../assets/default_handsome.jpg'
+
 const { Header, Content, Footer } = Layout;
 
 class BasicLayout extends React.Component {
@@ -66,7 +68,13 @@ class BasicLayout extends React.Component {
     this.getAppList()
   }
 
+  logout = () => {
+    localStorage.removeItem("user")
+    router.push('/login')
+  }
+
   componentDidMount() {
+    console.log(MD5('neverland'))
     if (window.__config__.projectInfo == undefined) {
       router.push('/project')
     }
@@ -76,6 +84,20 @@ class BasicLayout extends React.Component {
     const { projectInfo } = window.__config__
     const { appData } = this.state
     const { pathname } = this.props.location
+    const user = JSON.parse(localStorage.getItem("user"))
+    if (pathname === "/login" && localStorage.getItem("user") == null) {
+      return (
+        <Layout style={{ padding: "180px", height: '100vh' }}>
+          <Row>
+            <Col span={9} />
+            <Col span={6} >
+              {this.props.children}
+            </Col>
+            <Col span={9} />
+          </Row>
+        </Layout>
+      )
+    }
     return (
       <Layout className={styles.normal}>
         <Modal visible={this.state.project} title="请选择项目" onOk={this.confirmSwitchProject} onCancel={() => this.setState({ project: false })}>
@@ -115,17 +137,21 @@ class BasicLayout extends React.Component {
               <Icon type="hdd" />
               <span>设备列表</span>
             </Menu.Item>
-            <Menu.Item key="/source" disabled={true}>
+            <Menu.Item key="/source" hidden={true}>
               <Icon type="link" />
               <span>路由配置</span>
             </Menu.Item>
-            <Menu.Item key="/package" disabled={true}>
+            <Menu.Item key="/package" hidden={true}>
               <Icon type="appstore" />
               <span>测试包管理</span>
             </Menu.Item>
             <Menu.Item key="/project">
               <Icon type="project" />
               <span>项目管理</span>
+            </Menu.Item>
+            <Menu.Item key="/user">
+              <Icon type="user" />
+              <span>用户管理</span>
             </Menu.Item>
           </Menu>
         </Drawer>
@@ -134,7 +160,20 @@ class BasicLayout extends React.Component {
           <Button className={styles.title} onClick={this.switchProject}>
             {projectInfo == undefined ? "未选择项目" : projectInfo.name}
           </Button>
-          <Avatar style={{ float: "right", marginRight: 16, marginTop: 9 }} src={default_handsome}></Avatar>
+          <span style={{ float: "right" }}>
+            <Dropdown overlay={(
+              <Menu onClick={this.logout}>
+                <Menu.Item key="1">
+                  退出
+              </Menu.Item>
+              </Menu>
+            )}>
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                {user.name}
+                <Avatar style={{ marginRight: 16, marginLeft: 8 }} src={default_handsome}></Avatar>
+              </a>
+            </Dropdown>
+          </span>
         </Header>
         <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
           {this.props.children}

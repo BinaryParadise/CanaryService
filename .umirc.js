@@ -8,6 +8,14 @@ export default {
       component: '../layouts/index',
       routes: [
         {
+          path: '/login',
+          component: '../pages/login'
+        },
+        {
+          path: '/user',
+          component: '../pages/user'
+        },
+        {
           path: '/project',
           component: '../pages/project'
         },

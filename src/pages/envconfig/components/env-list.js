@@ -145,8 +145,9 @@ export class EnvList extends React.Component {
         // }}
         pagination={{
           total: total,
+          pageSize,
           showSizeChanger: total > pageSize,
-          pageSizeOptions: ['15', '30', '50'],
+          pageSizeOptions: ['20', '30', '50'],
           size: 'midlle',
           showQuickJumper: true,
           showTotal: total => `共 ${total} 条`

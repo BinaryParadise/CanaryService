@@ -3,6 +3,7 @@ package com.frontend.controllers;
 import com.frontend.domain.*;
 import com.frontend.jsonutil.JSON;
 import com.frontend.mappers.*;
+import com.frontend.models.MCPagination;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 环境配置控制器
@@ -37,11 +39,12 @@ public class EnvConfigController {
    */
   @RequestMapping(value = "conf/list", method = RequestMethod.GET)
   @ResponseBody
-  public MCResult list(Integer appId, Integer type) {
+  public MCResult list(Integer appId, Integer type, Integer pageSize, Integer pageIndex) {
     if (appId == null) {
       return MCResult.Failed(1, "缺少参数appId");
     }
     Object data = envMapper.findByAppId(appId, type == null ? 0 : type);
+//    Object data = envMapper.findByAppIdPage(appId, type == null ? 0 : type, new MCPagination(pageIndex, pageSize));
     return MCResult.Success(data);
   }
 
@@ -56,14 +59,13 @@ public class EnvConfigController {
    *
    * @param envid
    * @param config
-   * @param author
    * @return
    */
   @RequestMapping(value = "conf/update/{id}", method = RequestMethod.POST)
   @ResponseBody
   @Transactional
-  public MCResult update(@PathVariable(value = "id") int envid, @RequestBody MCEnvConfig config) {
-    config.setAuthor("admin");
+  public MCResult update(@PathVariable(value = "id") int envid, @RequestBody MCEnvConfig config, @RequestAttribute(name = "uid") int uid) {
+    config.setUid(uid);
     if (envid > 0) {
       //更新环境配置
       return envMapper.update(config) ? MCResult.Success(null) : MCResult.Failed(MybatisError.UpdateFaield);

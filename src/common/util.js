@@ -1,3 +1,5 @@
+import crypto from 'crypto'
+
 Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -25,3 +27,8 @@ export function routerURL(url,record) {
       state: record
     }
   }
+
+export function MD5(str) {
+    const hash = crypto.createHash('md5');
+    return hash.update(str).digest('hex');
+}

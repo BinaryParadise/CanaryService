@@ -11,29 +11,27 @@ import java.util.HashMap;
 
 @Controller
 public class HomeController {
-	@Autowired
-	private ProjectMapper appsMapper;
+  @Autowired
+  private ProjectMapper appsMapper;
 
-	/**
-	 * 首页
-	 *
-	 * @return
-	 */
-	@RequestMapping(value = "/")
-	public String index() {
-		return "index";
-	}
+  /**
+   * 首页
+   *
+   * @return
+   */
+  @RequestMapping(value = "/", produces = "application/json; charset=utf-8")
+  @ResponseBody
+  public MCResult index() {
+    HashMap data = new HashMap();
+    data.put("status", "All systems are operational");
+    return MCResult.Success(data);
+  }
 
-	@RequestMapping(value = "scheme")
-	public String scheme() {
-		return "scheme";
-	}
-
-	@RequestMapping(value = "device/list", produces = "application/json; charset=utf-8")
-	@ResponseBody
-	public MCResult deviceList(String appkey) {
-		HashMap data = new HashMap();
-		data.put("devices", WCWebSocket.getDevices(appkey));
-		return MCResult.Success(data);
-	}
+  @RequestMapping(value = "device/list", produces = "application/json; charset=utf-8")
+  @ResponseBody
+  public MCResult deviceList(String appkey) {
+    HashMap data = new HashMap();
+    data.put("devices", WCWebSocket.getDevices(appkey));
+    return MCResult.Success(data);
+  }
 }

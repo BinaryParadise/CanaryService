@@ -26,7 +26,15 @@ class EnvEditForm extends React.Component {
   }
 
   componentDidMount() {
+    this.getEnvTemplate()
+  }
 
+  getEnvTemplate = () => {
+    axios.get("/conf/full", {
+      params: {
+        appkey: (window.__config__.projectInfo || {}).identify
+      }
+    }).then(result => this.setState({ listData: result.data }))
   }
 
   render() {
@@ -52,10 +60,10 @@ class EnvEditForm extends React.Component {
           {getFieldDecorator('copyid', {
             rules: [{ required: false }]
           })(
-            <Select placeholder="选择模板" onChange={this.handleAppChange} allowClear>
+            <Select placeholder="选择模板" allowClear>
               {
-                listData.map(g => <Select.OptGroup key={g.type} label={g.title}>{g.items.map(d => <Option
-                  key={d.id}>{d.name}</Option>)}</Select.OptGroup>)
+                listData.map(g => <Select.OptGroup key={g.type} label={g.name}>{g.items.map(d => <Option
+                  key={d.id} value={d.id}>{d.name}</Option>)}</Select.OptGroup>)
               }
 
             </Select>

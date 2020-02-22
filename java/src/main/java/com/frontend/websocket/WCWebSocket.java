@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/fk/{source}/{deviceid}")
+@ServerEndpoint(value = "/channel/{source}/{deviceid}")
 @Component
 public class WCWebSocket {
     Logger logger = LoggerFactory.getLogger(WCWebSocket.class);

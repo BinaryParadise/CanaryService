@@ -58,7 +58,8 @@
   <select id="findByLogin" resultType="com.frontend.domain.MCUserInfo">
     SELECT
     a.*,
-    b.name AS rolename
+    b.name AS rolename,
+    b.level AS rolelevel
     FROM
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id
@@ -70,7 +71,8 @@
   <select id="findByToken" resultType="com.frontend.domain.MCUserInfo">
     SELECT
     a.*,
-    b.name AS rolename
+    b.name AS rolename,
+    b.level AS rolelevel
     FROM
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id

@@ -31,6 +31,7 @@ class NormalLoginForm extends React.Component {
                     .then(() => router.push('/'))
             } else {
                 message.error(result.error);
+                this.setState({ loading: false })
             }
         })
     }

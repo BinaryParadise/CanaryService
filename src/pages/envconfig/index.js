@@ -37,8 +37,7 @@ export default class EnvConfig extends React.Component {
     this.setState({ tableLoading: true, modalData: { ...this.state.modalData, visible: false } })
     const newParams = Object.assign(this.state.params)
 
-    return axios
-      .get('/conf/list', { params: newParams })
+    return axios.get('/conf/list', { params: newParams })
       .then(result => {
         if (result.code != 0) {
           message.error(result.error)

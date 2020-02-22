@@ -20,7 +20,7 @@ export default {
           component: '../pages/project'
         },
         {
-          path: '/logger',
+          path: '/device/log',
           component: '../pages/logger',
         },
         {

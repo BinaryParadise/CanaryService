@@ -2,12 +2,12 @@ package com.frontend.domain;
 
 public class MCAppInfo {
   int id;
-
   String identify;
-
   String name;
-
   Integer orderno;
+  Integer uid;
+  String author;
+  Boolean shared;
 
   public MCAppInfo() {
     orderno = 1;
@@ -43,5 +43,29 @@ public class MCAppInfo {
 
   public void setOrderno(Integer orderno) {
     this.orderno = orderno;
+  }
+
+  public Integer getUid() {
+    return uid;
+  }
+
+  public void setUid(Integer uid) {
+    this.uid = uid;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
+  public Boolean getShared() {
+    return shared;
+  }
+
+  public void setShared(Boolean shared) {
+    this.shared = shared;
   }
 }

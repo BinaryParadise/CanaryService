@@ -47,11 +47,12 @@
     </select>
 
     <select id="findByAppKey" resultMap="onlyone">
-        SELECT a.* FROM RemoteConfig a LEFT JOIN apps b on a.appId = b.id WHERE b.appkey = #{0} ORDER BY a.updateTime DESC
+        SELECT a.* FROM RemoteConfig a LEFT JOIN Project b on a.appId = b.id WHERE b.identify = #{0} ORDER BY a.updateTime DESC
 
     </select>
 
     <update id="deleteById">
-        DELETE a.*,b.* FROM RemoteConfig a LEFT JOIN RemoteConfigParam b on a.id = b.envid WHERE a.id = #{id}
+      DELETE FROM RemoteConfig WHERE id=#{id};
+      DELETE FROM	RemoteConfigParam WHERE envid = #{id};
     </update>
 </mapper>

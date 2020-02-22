@@ -85,7 +85,7 @@ export default class RemoteConfigPage extends React.Component {
       if (!errors) {
         this.setState({ modal: { ...this.state.modal, loading: true } })
         return axios
-          .post('/app/update/' + data.id, data)
+          .post('/project/update/' + data.id, data)
           .then(() => {
             message.success('保存成功')
             this.query()

@@ -3,6 +3,7 @@ package com.frontend.domain;
 public class MCUserInfo {
   Integer id;
   String username;
+  String password;
   String name;
   String token;
   int roleid;
@@ -76,5 +77,13 @@ public class MCUserInfo {
 
   public void setRoleid(int roleid) {
     this.roleid = roleid;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }

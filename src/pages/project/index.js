@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Popconfirm, Layout, Button, message, Modal } from "antd";
+import { Table, Popconfirm, Layout, Button, message, Modal, Badge } from "antd";
 import axios from '../../component/axios'
 import ProjectEditForm from './edit'
 
@@ -14,6 +14,13 @@ export default class ProjectPage extends React.Component {
         {
             title: '唯一标识',
             dataIndex: 'identify',
+        },
+        {
+            title: '共享',
+            dataIndex: 'shared',
+            render: (text) => {
+                return <Badge status={text ? 'success' : 'default'} text={text ? '共享' : '私有'} />;
+            }
         },
         {
             title: '操作',
@@ -49,13 +56,13 @@ export default class ProjectPage extends React.Component {
 
     // 获取项目列表
     getAppList = () => {
-        return axios.get('/app/list', {}).then(result => {
+        return axios.get('/project/list', {}).then(result => {
             this.setState({ listData: result.data, loading: false, editItem: { visible: false, data: {} } })
         })
     }
 
     handleDelete = (record) => {
-        return axios.post("/app/delete/" + record.id).then(result => {
+        return axios.post("/project/delete/" + record.id).then(result => {
             if (result.code == 0) {
                 const dataSource = [...this.state.listData];
                 this.setState({ listData: dataSource.filter(item => item.id !== record.id) });
@@ -90,7 +97,7 @@ export default class ProjectPage extends React.Component {
     }
 
     submit = (values, callback) => {
-        return axios.post('/app/modify', values).then(result => {
+        return axios.post('/project/update', values).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")
                 callback()
@@ -113,7 +120,7 @@ export default class ProjectPage extends React.Component {
                     onCancel={this.onCancel}
                     onOk={this.onSave}
                 >
-                    <ProjectEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data}></ProjectEditForm>
+                    <ProjectEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data || {}}></ProjectEditForm>
                 </Modal>
                 <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns}></Table>
             </Layout>

@@ -23,6 +23,14 @@ export class EnvList extends React.Component {
 
     this.columns = [
       {
+        dataIndex: 'subItemsCount',
+        title: "已配置",
+        width: 88,
+        render: (text) => {
+          return <b style={{ paddingLeft: 6, color: '#dc8413', fontSize: 16 }}>{text}</b>
+        }
+      },
+      {
         dataIndex: 'name', title: '环境名称',
         render: (text, record) => this.renderColumns(text, record, 'name')
       },
@@ -86,8 +94,9 @@ export class EnvList extends React.Component {
     switch (name) {
       case 'name':
         return (
-          <span><Tooltip placement='topLeft' title={'已配置 ' + record.subItemsCount + ' 个参数'}>{value}</Tooltip> {record.default &&
-            <Tag color='purple' style={{ margin: '0 5px', minWidth: '27' }}>默认</Tag>}</span>
+          <span>
+            <Tooltip placement='topLeft' title={'已配置 ' + record.subItemsCount + ' 个参数'}>{value}</Tooltip> {record.defaulted &&
+              <Tag color='purple' style={{ margin: '0 5px', minWidth: '27' }}>默认</Tag>}</span>
         )
       case 'type':
         return this.renderType(record)

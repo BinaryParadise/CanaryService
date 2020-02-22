@@ -5,24 +5,28 @@ import com.frontend.mappers.UserRoleMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
 import com.frontend.utils.TokenProccessor;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-@Controller
+@RestController
+@RequestMapping("/user")
+@EnableSwagger2
+@Api(tags = "用户中心")
 public class UserRoleController {
   @Autowired
   UserRoleMapper userMapper;
 
-  @RequestMapping(value = "/user/list")
-  @ResponseBody
-  MCResult list() {
+  @GetMapping("/list")
+  public MCResult list() {
     try {
       Object data = userMapper.findUserList();
       return MCResult.Success(data);
@@ -32,8 +36,7 @@ public class UserRoleController {
     }
   }
 
-  @RequestMapping(value = "/user/login", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
-  @ResponseBody
+  @PostMapping("/login")
   MCResult login(@RequestBody Map<String, Object> data, HttpServletResponse response) {
     try {
       data.put("token", TokenProccessor.getInstance().makeToken());
@@ -52,21 +55,18 @@ public class UserRoleController {
       return MCResult.Failed(MybatisError.NotFoundEntry);
     }
   }
-
-  @RequestMapping(value = "/user/insert", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
-  @ResponseBody
+  @PostMapping(value = "/add")
   MCResult addUser(@RequestBody MCUserInfo data, HttpServletRequest request) {
     try {
-      Integer ret = userMapper.insert(data);
-      return ret > 0 ? MCResult.Success(data) : MCResult.Failed(MybatisError.DuplicateEntry);
+      Integer ret = userMapper.inserUser(data);
+      return ret > 0 ? MCResult.Success(data) : MCResult.Failed(MybatisError.InsertFaield);
     } catch (Throwable e) {
       e.printStackTrace();
-      return MCResult.Failed(MybatisError.NotFoundEntry);
+      return MCResult.Failed(MybatisError.DuplicateEntry);
     }
   }
 
-  @RequestMapping(value = "/user/update", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
-  @ResponseBody
+  @PostMapping(value = "/update")
   MCResult updateUser(@RequestBody MCUserInfo data, HttpServletResponse response) {
     try {
       Integer ret = userMapper.updateUser(data);
@@ -77,8 +77,7 @@ public class UserRoleController {
     }
   }
 
-  @RequestMapping(value = "/user/role/list")
-  @ResponseBody
+  @GetMapping(value = "/role/list")
   MCResult roleList() {
     try {
       Object data = userMapper.findRoleList();

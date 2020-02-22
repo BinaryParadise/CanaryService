@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.frontend.domain.MCUserInfo;
 import com.frontend.mappers.UserRoleMapper;
 import com.frontend.models.MCResult;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Component;
@@ -25,17 +27,29 @@ public class MCApiFilter extends OncePerRequestFilter {
   @Autowired
   UserRoleMapper userMapper;
 
+  private List<String> publicUrls;
   /*需要管理员权限页面*/
-  final List<String> adminUrls = Arrays.asList("/v2/user/insert", "/v2/user/update");
+  private List<String> adminUrls;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-    response.setContentType("application/json; charset=utf-8");
-    String path = getServletContext().getContextPath();
-    if (request.getRequestURI().equals(path + "/")
-      || request.getRequestURI().startsWith(path + "/user/login")) {
+  protected void initFilterBean() throws ServletException {
+    super.initFilterBean();
+    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/v2/swagger-ui.html", "/error");
+    publicUrls.replaceAll(item -> getServletContext().getContextPath() + item);
 
+    adminUrls = Arrays.asList("/user/add", "/user/update", "/user/role/list");
+    adminUrls.replaceAll(item -> getServletContext().getContextPath() + item);
+  }
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws
+    IOException, ServletException {
+    logger.info(request.getRequestURI());
+    if (publicUrls.contains(request.getRequestURI()) || request.getRequestURI().startsWith(getServletContext().getContextPath() + "/channel")) {
+      response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+      response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
     } else {
+      response.setContentType("application/json; charset=utf-8");
       String token = request.getHeader("Access-Token");
       MCUserInfo user = userMapper.findByToken(token, System.currentTimeMillis());
       if (token == null || token.length() == 0 || user == null) {

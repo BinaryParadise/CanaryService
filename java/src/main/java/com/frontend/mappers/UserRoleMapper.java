@@ -11,7 +11,7 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface UserRoleMapper {
-  Integer insert(MCUserInfo user);
+  Integer inserUser(MCUserInfo user);
 
   Integer updateUser(MCUserInfo user);
 

@@ -6,11 +6,13 @@ import com.frontend.mappers.*;
 import com.frontend.models.MCPagination;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -20,8 +22,11 @@ import java.util.Map;
 /**
  * 环境配置控制器
  */
-@Controller
-public class EnvConfigController {
+@RestController
+@EnableSwagger2
+@Api(tags = "远程配置")
+@RequestMapping(value = "/conf")
+public class RemoteConfigController {
   @Autowired
   EnvConfigMapper envMapper;
 
@@ -37,8 +42,7 @@ public class EnvConfigController {
    * @param id
    * @return
    */
-  @RequestMapping(value = "conf/list", method = RequestMethod.GET)
-  @ResponseBody
+  @GetMapping(value = "/list")
   public MCResult list(Integer appId, Integer type, Integer pageSize, Integer pageIndex) {
     if (appId == null) {
       return MCResult.Failed(1, "缺少参数appId");
@@ -48,8 +52,7 @@ public class EnvConfigController {
     return MCResult.Success(data);
   }
 
-  @RequestMapping(value = "conf/detail/{id}", method = RequestMethod.GET)
-  @ResponseBody
+  @GetMapping(value = "/detail/{id}")
   public MCResult detail(@PathVariable(value = "id") int envid) {
     return MCResult.Success(envMapper.findById(envid));
   }
@@ -61,8 +64,7 @@ public class EnvConfigController {
    * @param config
    * @return
    */
-  @RequestMapping(value = "conf/update/{id}", method = RequestMethod.POST)
-  @ResponseBody
+  @PostMapping(value = "/update/{id}")
   @Transactional
   public MCResult update(@PathVariable(value = "id") int envid, @RequestBody MCEnvConfig config, @RequestAttribute(name = "uid") int uid) {
     config.setUid(uid);
@@ -78,7 +80,7 @@ public class EnvConfigController {
         boolean ret = envMapper.insert(config);
         if (ret && config.getCopyid() > 0) {
           //从其它环境复制
-          envItemMapper.copyFromEnvId(config.getId(), "admin", config.getCopyid());
+          envItemMapper.copyFromEnvId(config.getId(), uid, config.getCopyid());
         }
         return ret ? MCResult.Success(null) : MCResult.Failed(MybatisError.InsertFaield);
       } catch (UncategorizedSQLException e) {
@@ -88,7 +90,7 @@ public class EnvConfigController {
     }
   }
 
-  @RequestMapping(value = "conf/delete/{id}", method = RequestMethod.POST)
+  @PostMapping(value = "/delete/{id}")
   @ResponseBody
   public MCResult delete(@PathVariable int id) {
     if (id > 0) {
@@ -106,23 +108,21 @@ public class EnvConfigController {
    * @param platform 兼容旧版
    * @return
    */
-  @RequestMapping(value = "conf/full", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+  @GetMapping(value = "/full")
   @ResponseBody
-  @JSON(type = MCEnvConfig.class, include = "name,type,comment,default,subItems")
+  @JSON(type = MCEnvConfig.class, include = "id,name,type,comment,default,subItems")
   @JSON(type = MCEnvConfigItem.class, include = "name,value,comment")
   @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
   @JSON(type = MCSchemeItem.class, include = "value,comment")
-  public MCResult configs(String appkey, String os, String bundleId, String platform) {
-    appkey = appkey == null ? bundleId : appkey;
-    os = os == null ? platform : os;
+  public MCResult full(String appkey, String platform) {
     if (appkey != null && appkey.length() > 0) {
       List<MCEnvConfigGroup> groups = new ArrayList<>();
       //环境列表
       List<MCEnvConfig> list = envMapper.findByAppKey(appkey);
       //参数列表
       int t;
-      if (os != null) {
-        t = os.equals("iOS") ? 1 : 2;
+      if (platform != null) {
+        t = platform.equals("iOS") ? 1 : 2;
       } else {
         t = 0;
       }
@@ -142,12 +142,12 @@ public class EnvConfigController {
         groups.add(group);
       }
 
-      List<MCSchemeGroup> schemes = schemeMapper.findByAppKey(appkey);
-      for (MCSchemeGroup item : schemes) {
-        item.setSubItems(schemeMapper.findByGroupId(item.getId()));
-      }
+//      List<MCSchemeGroup> schemes = schemeMapper.findByAppKey(appkey);
+//      for (MCSchemeGroup item : schemes) {
+//        item.setSubItems(schemeMapper.findByGroupId(item.getId()));
+//      }
       MCResult result = MCResult.Success(groups);
-      result.setExt(schemes);
+//      result.setExt(schemes);
       return result;
     } else {
       return MCResult.Failed(1001, "啊咧，你的参数貌似不对?");
@@ -160,7 +160,7 @@ public class EnvConfigController {
    * @param appKey
    * @return
    */
-  @RequestMapping(value = "conf/schemelist", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+  @GetMapping(value = "/schemelist")
   @ResponseBody
   @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
   @JSON(type = MCSchemeItem.class, include = "value,comment")

@@ -5,31 +5,35 @@ import com.frontend.mappers.ProjectMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
 import com.frontend.websocket.WCWebSocket;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-@Controller
+@RestController
+@EnableSwagger2
+@Api(tags = "项目管理")
+@RequestMapping("/project")
 public class ProjectController {
   @Autowired
   private ProjectMapper appsMapper;
 
-  @RequestMapping(value = "app/list", produces = "application/json; charset=utf-8")
-  @ResponseBody
-  public MCResult projectList() {
-    MCResult result = MCResult.Success(appsMapper.findAllEnable());
+  @GetMapping("/list")
+  public MCResult projectList(HttpServletRequest request) {
+    MCResult result = MCResult.Success(appsMapper.findAll((Integer) request.getAttribute("uid")));
     return result;
   }
 
-  @RequestMapping(value = "app/modify", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
-  @ResponseBody
-  public MCResult modify(@RequestBody MCAppInfo project) {
+  @PostMapping("/update")
+  public MCResult update(@RequestBody MCAppInfo project) {
     try {
       if (project.getId() > 0) {
         appsMapper.update(project);
@@ -46,8 +50,7 @@ public class ProjectController {
     }
   }
 
-  @RequestMapping(value = "app/delete/{id}", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
-  @ResponseBody
+  @PostMapping("/delete/{id}")
   public MCResult delete(@PathVariable("id") Integer pid) {
     return appsMapper.delete(pid) ? MCResult.Success() : MCResult.Failed(MybatisError.UpdateFaield);
   }

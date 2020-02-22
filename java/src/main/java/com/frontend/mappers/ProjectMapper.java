@@ -24,6 +24,5 @@ public interface ProjectMapper {
 
     MCAppInfo findByAppKey(@Param("appKey") String appKey);
 
-    @Select("SELECT * FROM Project where enable=1 order by orderno asc")
-    List<MCAppInfo> findAllEnable();
+    List<MCAppInfo> findAll(Integer uid);
 }

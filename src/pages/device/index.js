@@ -3,7 +3,7 @@ import React from 'react'
 import axios from '../../component/axios'
 import { routerURL } from '../../common/util'
 
-import { Table, Button, Badge, Tag } from 'antd';
+import { Table, Button, Badge, Tag, Breadcrumb } from 'antd';
 import { Resizable } from 'react-resizable';
 import { Link } from 'react-router-dom'
 import ExtraPage from './component/extra'
@@ -147,6 +147,12 @@ export default class IndexPage extends React.Component {
     }));
 
     return <div>
+      <Breadcrumb style={{ marginBottom: 12 }}>
+        <Breadcrumb.Item>
+          <a href="/">首页</a>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>设备列表</Breadcrumb.Item>
+      </Breadcrumb>
       <Table
         bordered
         loading={loading}

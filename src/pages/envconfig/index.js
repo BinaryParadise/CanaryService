@@ -1,6 +1,6 @@
 // 应用管理
 import React from 'react'
-import { message, Modal, Menu, Layout, Button } from 'antd'
+import { message, Modal, Menu, Layout, Button, Breadcrumb } from 'antd'
 
 import axios from '../../component/axios'
 
@@ -113,6 +113,12 @@ export default class EnvConfig extends React.Component {
     const { listData, tableLoading, modalData, params } = this.state
     const { envTypeList } = window.__config__
     return (<Layout>
+      <Breadcrumb style={{ marginBottom: 12 }}>
+        <Breadcrumb.Item>
+          <a href="/">首页</a>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>环境列表</Breadcrumb.Item>
+      </Breadcrumb>
       <Button
         type="primary"
         style={{ width: 150 }}

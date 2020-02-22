@@ -1,7 +1,5 @@
 package com.frontend.utils;
 
-import sun.misc.BASE64Encoder;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;

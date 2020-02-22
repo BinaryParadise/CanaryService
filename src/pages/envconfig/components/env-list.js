@@ -44,7 +44,7 @@ export class EnvList extends React.Component {
       },
       { dataIndex: 'author', title: '操作人', width: 100 },
       {
-        dataIndex: 'updateTime', title: '操作时间', width: 150, key: 'updateTime',
+        dataIndex: 'updateTime', title: '操作时间', width: 155, key: 'updateTime',
         sortOrder: true,
         render: date => moment(date).format('YYYY-MM-DD HH:mm:ss')
       },
@@ -95,7 +95,8 @@ export class EnvList extends React.Component {
       case 'name':
         return (
           <span>
-            <Tooltip placement='topLeft' title={'已配置 ' + record.subItemsCount + ' 个参数'}>{value}</Tooltip> {record.defaulted &&
+            <Link to={routerURL('/envitem', record)}><Tooltip placement='topLeft' title={'已配置 ' + record.subItemsCount + ' 个参数'}>{value}</Tooltip></Link>
+            {record.defaulted &&
               <Tag color='purple' style={{ margin: '0 5px', minWidth: '27' }}>默认</Tag>}</span>
         )
       case 'type':

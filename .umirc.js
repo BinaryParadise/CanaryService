@@ -21,7 +21,7 @@ export default {
         },
         {
           path: '/device/log',
-          component: '../pages/logger',
+          component: '../pages/device/logger',
         },
         {
           path: '/device',

@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './logger.css';
 import PropTypes from 'prop-types'
 import { Popover, Affix, Icon, Breadcrumb } from 'antd'
-import WebSocket from '../../component/websocket'
+import WebSocket from '../../../component/websocket'
 import router from 'umi/router';
 
 export default class LoggerMonitor extends React.Component {
@@ -55,7 +55,7 @@ export default class LoggerMonitor extends React.Component {
     formatMessage = obj => {
         if (obj.type === undefined) {
             if (obj.mimeType.indexOf('image/') === 0) {
-                return (<span>{'🌐' + obj.statusCode + ' '}<Popover placement='topLeft' style={{ backgroundColor: 'transparent' }} content={<img src={'data:' + obj.mimeType + ';base64,' + obj.responseBody} alt='' />}>                    
+                return (<span>{'🌐' + obj.statusCode + ' '}<Popover placement='topLeft' style={{ backgroundColor: 'transparent' }} content={<img src={'data:' + obj.mimeType + ';base64,' + obj.responseBody} alt='' />}>
                     {obj.url}
                 </Popover></span>
                 )
@@ -75,6 +75,17 @@ export default class LoggerMonitor extends React.Component {
         const { autoscroll, logs, data } = this.state
         return (
             <div>
+                <Breadcrumb style={{ marginBottom: 12 }}>
+                    <Breadcrumb.Item>
+                        <a href="/">首页</a>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        <a href="/device">设备列表</a>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        {data.name}（{data.ipAddr}）
+                    </Breadcrumb.Item>
+                </Breadcrumb>
                 <div className={styles.logbody}>
                     <pre className={styles.ansi} ref={(el) => { this.messagesEnd = el }}>
                         {

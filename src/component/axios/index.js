@@ -3,6 +3,7 @@ import qs from 'qs'
 import paramsUtil from './params'
 import { baseURI } from '../../common/config'
 import router from 'umi/router'
+import { notification } from 'antd'
 
 function throwHttpError(message, code) {
   const error = new Error(message)
@@ -53,19 +54,19 @@ const instance = axios.create({
     const isForm = header['Content-Type'] === 'application/x-www-form.js-urlencoded'
 
     return isForm ? qs.stringify(data) : JSON.stringify(data)
+  },
+  transformResponse(data, header) {
+    const result = JSON.parse(data)
+    if (result) {
+      return result
+    }
+    return JSON.stringify({ code: 500, error: data })
   }
 })
 
 instance.interceptors.response.use(
   function (response) {
     let result = response.data
-    if (!result) {
-      throwHttpError('请求异常！')
-    }
-
-    if (typeof result !== 'object') {
-      throwHttpError('返回数据格式异常！')
-    }
 
     if (result.code == 401) {
       localStorage.removeItem("user")
@@ -77,11 +78,13 @@ instance.interceptors.response.use(
   },
   function (error) {
     if (error.response) {
-      const data = error.response.data
-      if (data && data.error) {
-        throwHttpError(data.error)
-      }
-      throwHttpError('请求异常：' + error.response.statusText)
+      notification.error({
+        message: '请求失败',
+        description:
+          error.response.statusText,
+      })
+      return
+      // throwHttpError('请求异常：' + error.response.statusText)
     }
 
     if (error.request) {

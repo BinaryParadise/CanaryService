@@ -60,7 +60,7 @@ export default class EnvList extends React.Component {
       {
         dataIndex: 'updateTime',
         title: '操作时间',
-        width: 150,
+        width: 155,
         render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
       },
       {

@@ -96,7 +96,7 @@ export class EnvList extends React.Component {
         return (
           <span>
             <Link to={routerURL('/envitem', record)}><Tooltip placement='topLeft' title={'已配置 ' + record.subItemsCount + ' 个参数'}>{value}</Tooltip></Link>
-            {record.defaulted &&
+            {record.defaultTag &&
               <Tag color='purple' style={{ margin: '0 5px', minWidth: '27' }}>默认</Tag>}</span>
         )
       case 'type':

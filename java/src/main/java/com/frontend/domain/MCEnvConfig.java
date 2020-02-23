@@ -5,13 +5,18 @@ import java.util.Date;
 import java.util.List;
 
 public class MCEnvConfig {
-  int id;
-  String name;
-  int type;
-  Date updateTime;
-  int appId;
-  String author;
-  int uid;
+  private int id;
+  private String name;
+  private int type;
+  private Date updateTime;
+  private int appId;
+  private String author;
+  private int uid;
+  private String comment;
+  private List<MCEnvConfigItem> subItems;
+  private int subItemsCount;
+  private boolean defaultTag;
+  private int copyid;
 
   public int getUid() {
     return uid;
@@ -20,13 +25,6 @@ public class MCEnvConfig {
   public void setUid(int uid) {
     this.uid = uid;
   }
-
-  String comment;
-  List<MCEnvConfigItem> subItems;
-  int subItemsCount;
-  boolean defaulted;
-  int copyid;
-
   public int getId() {
     return id;
   }
@@ -99,19 +97,19 @@ public class MCEnvConfig {
     this.copyid = copyid;
   }
 
-  public boolean isDefaulted() {
-    return defaulted;
-  }
-
-  public void setDefaulted(boolean defaulted) {
-    this.defaulted = defaulted;
-  }
-
   public int getSubItemsCount() {
     return subItemsCount;
   }
 
   public void setSubItemsCount(int subItemsCount) {
     this.subItemsCount = subItemsCount;
+  }
+
+  public boolean isDefaultTag() {
+    return defaultTag;
+  }
+
+  public void setDefaultTag(boolean defaultTag) {
+    this.defaultTag = defaultTag;
   }
 }

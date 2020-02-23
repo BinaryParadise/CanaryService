@@ -74,7 +74,7 @@ public class RemoteConfigController {
     } else {
       List allConfig = envMapper.findByAppId(config.getAppId(), 0);
       if (allConfig == null || allConfig.size() == 0) {
-        config.setDefaulted(true);
+        config.setDefaultTag(true);
       }
       try {
         boolean ret = envMapper.insert(config);
@@ -110,7 +110,7 @@ public class RemoteConfigController {
    */
   @GetMapping(value = "/full")
   @ResponseBody
-  @JSON(type = MCEnvConfig.class, include = "id,name,type,comment,default,subItems")
+  @JSON(type = MCEnvConfig.class, include = "id,name,type,comment,defaultTag,subItems")
   @JSON(type = MCEnvConfigItem.class, include = "name,value,comment")
   @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
   @JSON(type = MCSchemeItem.class, include = "value,comment")

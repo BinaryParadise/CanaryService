@@ -12,7 +12,7 @@ else
 end
 
 target 'MCFrontendKit_Example' do
-  pod 'MCFrontendKit', :path => '../'
+  pod 'MCFrontendKit', :path => '../../'
 
   target 'MCFrontendKit_Tests' do
     inherit! :search_paths

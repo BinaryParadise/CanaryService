@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MCFrontendKit'
-  s.version          = '0.2.4'
+  s.version          = '0.2.5'
   s.summary          = 'A short description of MCFrontendService.'
 
 # This description is used to generate tags and improve search results.
@@ -31,6 +31,7 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '9.0'
 
   s.source_files = 'iOS/MCFrontendKit/Classes/**/*'
+  s.private_header_files = 'MCLogger/Classes/Internal/**/*.h'
   
   # s.resource_bundles = {
   #   'MCFrontendService' => ['MCFrontendService/Assets/*.png']
@@ -39,5 +40,9 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'MCUIKit', '~> 0.3'
-   
+  s.dependency 'MJExtension'
+  s.dependency 'CocoaLumberjack', '~> 3.6'
+  s.dependency 'SAMKeychain', '~> 1.5'
+  s.dependency 'SocketRocket', '~> 0.5'
+
 end

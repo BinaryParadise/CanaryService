@@ -8,6 +8,8 @@
 
 #import "MCFrontendKit.h"
 #import "MCFrontendKitViewController.h"
+#import "MCLoggerUtils.h"
+#import "MCLogger.h"
 
 #define kMCSuiteName @"com.binaryparadise.frontendkit"
 #define kMCRemoteConfig @"remoteConfig"
@@ -28,6 +30,8 @@
 {
     self = [super init];
     if (self) {
+        self.appKey = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleIdentifier"];
+        self.deviceId = [MCLoggerUtils identifier];
         self.frontendDefaults = [[NSUserDefaults alloc] initWithSuiteName:kMCSuiteName];
         self.remoteConfig = [self.frontendDefaults objectForKey:kMCRemoteConfig];
         _currentName = [self.frontendDefaults objectForKey:kMCCurrentName];
@@ -70,7 +74,8 @@
 }
 
 - (void)fetchRemoteConfig:(void (^)(void))completion {
-    NSURLSessionDataTask *task = [NSURLSession.sharedSession dataTaskWithURL:self.baseURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSString *confURL = [NSString stringWithFormat:@"%@?appkey=%@", self.baseURL.absoluteURL, self.appKey];
+    NSURLSessionDataTask *task = [NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:confURL] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (!error) {
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
             [self processRemoteConfig:dict];
@@ -119,6 +124,13 @@
     NSDictionary *dict = [subItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name=%@", key]].firstObject;
     NSString *value = dict[@"value"];
     return value?:def;
+}
+
+#pragma mark - 日志监控
+
+- (void)startLogMonitor:(NSDictionary<NSString *,NSString *> *(^)(void))customProfileBlock {
+    MCLogger.sharedInstance.customProfileBlock = customProfileBlock;
+    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@/channel", self.baseURL.host]]];
 }
 
 @end

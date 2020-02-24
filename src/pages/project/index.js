@@ -57,6 +57,9 @@ export default class ProjectPage extends React.Component {
     // 获取项目列表
     getAppList = () => {
         return axios.get('/project/list', {}).then(result => {
+            if (result.code != 0) {
+                return
+            }
             this.setState({ listData: result.data, loading: false, editItem: { visible: false, data: {} } })
         })
     }

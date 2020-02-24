@@ -38,6 +38,12 @@
     [self.view addSubview:self.tableView];
     
     [self.tableView registerClass:MCRemoteConfigViewCell.class forCellReuseIdentifier:@"ConfigCell"];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStyleDone target:self action:@selector(closeView:)];
+}
+
+- (IBAction)closeView:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDataSource
@@ -75,7 +81,8 @@
     NSDictionary *item = group[@"items"][indexPath.row];
     UIViewController *vc = [[MCRemoveConfigItemViewController alloc] initWithConfigItem:item];
     vc.title = item[@"name"];
-    vc.navigationItem.backBarButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.backBarButtonItem.title = @"";
     [self.navigationController pushViewController:vc animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }

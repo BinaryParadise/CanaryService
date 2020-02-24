@@ -12,8 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MCRemoteConfigViewCell : UITableViewCell
 
+@property (nonatomic, strong) UILabel *extraLabel;
+
 @property (nonatomic, assign) BOOL checked;
 
++ (CGFloat)heightForObject:(id)obj;
 
 @end
 

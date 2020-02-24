@@ -14,7 +14,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"http://127.0.0.1:8082/v2/conf/full?appkey=com.binaryparadise.neverland"];
+    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"http://127.0.0.1:9001/v2/conf/full?appkey=com.binaryparadise.neverland"];
     MCFrontendKit.manager.currentName = @"奶味蓝";
     return YES;
 }

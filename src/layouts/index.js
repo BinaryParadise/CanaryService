@@ -75,7 +75,7 @@ class BasicLayout extends React.Component {
   }
 
   componentDidMount() {
-    if (window.__config__.projectInfo == undefined) {
+    if (AuthUser().id && window.__config__.projectInfo == undefined) {
       router.push('/project')
     }
   }

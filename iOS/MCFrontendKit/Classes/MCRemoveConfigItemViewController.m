@@ -57,7 +57,7 @@
     [self.applyButton addTarget:self action:@selector(applyConfig:) forControlEvents:UIControlEventTouchUpInside];
     
     self.tipLabel = [UILabel new];
-    self.tipLabel.text = @"应用后重启App生效";
+    self.tipLabel.text = @"应用后建议重启App";
     self.tipLabel.textColor = [UIColor grayColor];
     self.tipLabel.font = [UIFont systemFontOfSize:12];
     [self.view addSubview:self.tipLabel];
@@ -71,7 +71,7 @@
     if (@available(iOS 11.0, *)) {
         safeBottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    self.tableView.mcHeight -= (110+safeBottomInset);
+    self.tableView.mcHeight = self.view.mcHeight - (80+safeBottomInset);
     
     self.applyButton.frame = CGRectMake((self.tableView.mcWidth-180)/2, self.tableView.mcBottom+5, 180, 40);
     
@@ -95,7 +95,13 @@
     NSDictionary *item = self.items[indexPath.row];
     cell.textLabel.text = item[@"name"];
     cell.detailTextLabel.text = item[@"value"];
+    cell.extraLabel.text = item[@"comment"];
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *item = self.items[indexPath.row];
+    return [MCRemoteConfigViewCell heightForObject:item[@"comment"]];
 }
 
 #pragma mark - UITableViewDelegate

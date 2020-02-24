@@ -22,7 +22,7 @@ import java.util.List;
 
 @Component
 @ServletComponentScan
-@WebFilter(urlPatterns = "*", filterName = "ApiFilter")
+@WebFilter(urlPatterns = "/v2/*", filterName = "ApiFilter")
 public class MCApiFilter extends OncePerRequestFilter {
   @Autowired
   UserRoleMapper userMapper;
@@ -34,7 +34,7 @@ public class MCApiFilter extends OncePerRequestFilter {
   @Override
   protected void initFilterBean() throws ServletException {
     super.initFilterBean();
-    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/v2/swagger-ui.html", "/error");
+    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error");
     publicUrls.replaceAll(item -> getServletContext().getContextPath() + item);
 
     adminUrls = Arrays.asList("/user/add", "/user/update", "/user/role/list");
@@ -45,9 +45,10 @@ public class MCApiFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws
     IOException, ServletException {
     logger.info(request.getRequestURI());
+    response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,x-requested-with");
     if (publicUrls.contains(request.getRequestURI()) || request.getRequestURI().startsWith(getServletContext().getContextPath() + "/channel")) {
-      response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-      response.setHeader("Access-Control-Allow-Headers", "x-requested-with");
+
     } else {
       response.setContentType("application/json; charset=utf-8");
       String token = request.getHeader("Access-Token");

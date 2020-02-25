@@ -47,8 +47,8 @@
 
 #pragma mark - MCMessageProtocol
 
-- (void)webSocketDidOpen:(MCWebSocket *)webSocket {
-    MCWebSocketMessage *msg = [MCWebSocketMessage messageWithType:MCMessageTypeDeviceInfo];
+- (void)registerDevice:(MCWebSocket *)webSocket {
+    MCWebSocketMessage *msg = [MCWebSocketMessage messageWithType:MCMessageTypeRegisterDevice];
     msg.appKey = self.appKey;
     MCDevice *device = MCDevice.new;
     device.deviceId = [self identifier];
@@ -60,8 +60,16 @@
     [webSocket sendMessage:msg];
 }
 
+- (void)webSocketDidOpen:(MCWebSocket *)webSocket {
+    [self registerDevice:webSocket];
+}
+
 - (void)webSocket:(MCWebSocket *)webSocket didReceiveMessage:(MCWebSocketMessage *)message {
     
+}
+
+- (void)webSocket:(MCWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
+    [self registerDevice:webSocket];
 }
 
 @end

@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './logger.css';
 import PropTypes from 'prop-types'
-import { Popover, Affix, Icon, Breadcrumb } from 'antd'
+import { Popover, Affix, Icon, Breadcrumb, message, Badge, notification } from 'antd'
 import WebSocket from '../../../component/websocket'
 import router from 'umi/router';
 
@@ -9,7 +9,8 @@ export default class LoggerMonitor extends React.Component {
     state = {
         data: this.props.location.state,
         logs: [],
-        autoscroll: true
+        autoscroll: true,
+        avaiable: false
     }
 
     componentWillMount() {
@@ -72,7 +73,7 @@ export default class LoggerMonitor extends React.Component {
     }
 
     render() {
-        const { autoscroll, logs, data } = this.state
+        const { autoscroll, logs, data, avaiable } = this.state
         return (
             <div>
                 <Breadcrumb style={{ marginBottom: 12 }}>
@@ -83,7 +84,7 @@ export default class LoggerMonitor extends React.Component {
                         <a href="/device">设备列表</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        {data.name}（{data.ipAddr}）
+                        <Badge status={avaiable ? 'success' : 'default'}></Badge> {data.name}（{(data.ipAddrs || {}).ipv4.en0}）
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={styles.logbody}>
@@ -111,10 +112,16 @@ export default class LoggerMonitor extends React.Component {
     }
 
     onMessage = (obj) => {
+        this.setState({ avaiable: obj.code == 0 })
+        if (obj.code != 0) {
+            notification['error']({
+                message: '错误',
+                description:
+                    obj.msg,
+            });
+            return
+        }
         switch (obj.type) {
-            case 1: //开启监听
-                WebSocket.sendMessage({ type: 1, data: { logger: true } })
-                return false;
             case 30://本地日志
             case 31://网络日志
                 const { logs } = this.state

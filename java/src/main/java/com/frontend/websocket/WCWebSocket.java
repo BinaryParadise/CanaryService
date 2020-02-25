@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/channel/{source}/{deviceid}")
-@Component
+//@ServerEndpoint(value = "/channel/{source}/{deviceid}")
+//@Component
 public class WCWebSocket {
     Logger logger = LoggerFactory.getLogger(WCWebSocket.class);
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
@@ -177,6 +177,28 @@ public class WCWebSocket {
         }
     }
 
+  /**
+   * 查询设备信息 - invoke
+   */
+  void transferMessage11(MCMessage msg, Session session) {
+    Session destSession = (Session) session.getUserProperties().get("bindSession");
+    if (destSession != null) {
+      destSession.getUserProperties().put("bindSession", session);
+    }
+    if (!sendMessage(JSON.toJSONString(msg), destSession)) {
+      msg.setCode(-1);
+      msg.setMsg("设备貌似离线了耶...");
+      sendMessage(JSON.toJSONString(msg), session);
+    }
+  }
+
+  /**
+   * 设备查询结果 - invoke
+   */
+  void transferMessage12(MCMessage msg, Session session) {
+    Session destSession = (Session) session.getUserProperties().get("bindSession");
+    sendMessage(JSON.toJSONString(msg), destSession);
+  }
 
     /**
      * 向设备发送数据库查询请求

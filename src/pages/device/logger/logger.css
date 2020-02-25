@@ -26,7 +26,7 @@
 }
 
 .ansi .green {
-    color: #0A0
+    color: #0F0
 }
 
 .ansi .green.bold {
@@ -135,12 +135,12 @@
     left: 0px;
     right: 0px;
     overflow: auto;
-    background-color: #222;
+    background-color: #002b36;
 }
 
 .logbody pre {
     clear: left;
-    color: #f1f1f1;
+    color: #9c9c9c;
     font-family: Cousine, monospace;
     font-size: 12px;
     line-height: 19px;

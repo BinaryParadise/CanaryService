@@ -31,6 +31,9 @@
 /// 当前配置名称，未设置默认时自动取默认环境
 @property (nonatomic, copy) NSString *currentName;
 
+/// 师傅启用调试模式，默认为NO
+@property (nonatomic, assign) BOOL enableDebug;
+
 - (void)show;
 
 /// 获取环境配置的参数值

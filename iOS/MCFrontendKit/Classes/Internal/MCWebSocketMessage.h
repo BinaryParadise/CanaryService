@@ -10,7 +10,7 @@
 #import <MJExtension/MJExtension.h>
 
 typedef NS_OPTIONS(NSUInteger, MCMessageType) {
-    MCMessageTypeDeviceInfo = 10,   //注册、查询设备信息
+    MCMessageTypeRegisterDevice = 10,   //注册设备信息
     MCMessageTypeDBQuery    = 20,   //数据库查询请求
     MCMessageTypeDBResult   = 21,   //数据库查询结果
     MCMessageTypeLogger     = 30,   //本地日志

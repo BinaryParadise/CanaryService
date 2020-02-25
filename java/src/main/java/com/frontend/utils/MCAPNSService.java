@@ -14,10 +14,10 @@ import java.util.Date;
 public class MCAPNSService {
 
     public static void appleAPNSV2(String token, boolean inhouse, boolean production) throws UnsupportedEncodingException {
-        String path = "src/main/resources/JiZhang" + (inhouse ? "Inhouse" : "") + "_" + (production ? "Production" : "Development") + "_aps.p12";
+        String path = "src/main/resources/Cert_" + (inhouse ? "Inhouse" : "") + "_" + (production ? "Production" : "Development") + "_aps.p12";
         System.out.println("证书：" + path);
         ApnsServiceBuilder serviceBuilder = APNS.newService();
-        serviceBuilder.withCert(path, "jizhang");
+        serviceBuilder.withCert(path, "111111");
         if (production) {
             serviceBuilder = serviceBuilder.withProductionDestination();
         } else {

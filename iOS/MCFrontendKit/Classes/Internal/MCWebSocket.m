@@ -10,6 +10,12 @@
 #import <SocketRocket/SRWebSocket.h>
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import "MCLoggerUtils.h"
+#import "MCFrontendKit.h"
+
+#define TRACE(fmt, ...) \
+if (MCFrontendKit.manager.enableDebug) {\
+    NSLog(@"[MFK] %s+%d " fmt, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__); \
+} \
 
 @interface MCWebSocket () <SRWebSocketDelegate>
 
@@ -59,11 +65,11 @@
     NSAssert(self.webSocketURL, @"请设置WebSocket服务地址");
     self.mySocket = nil;
     NSURL *fullURL = [NSURL URLWithString:[self.webSocketURL stringByAppendingFormat:@"/%@/%@", [MCLoggerUtils systemName], [MCLoggerUtils identifier]]];
-    self.mySocket = [[SRWebSocket alloc] initWithURL:fullURL];
+    self.mySocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:fullURL]];
     self.mySocket.delegate = self;
     
     if (!self.pingTimer) {
-        self.pingTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(_pingTimerAction:) userInfo:nil repeats:YES];
+        self.pingTimer = [NSTimer scheduledTimerWithTimeInterval:self.retryInterval target:self selector:@selector(_pingTimerAction:) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:self.pingTimer forMode:NSDefaultRunLoopMode];
     }
     [self.pingTimer fire];
@@ -91,22 +97,16 @@
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    self.retryInterval = 10;
-    //注册设备
-    MCWebSocketMessage *message = [MCWebSocketMessage messageWithType:MCMessageTypeDeviceInfo];
-    [self sendMessage:message];
-
     [self.recivers enumerateObjectsUsingBlock:^(id<MCMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj respondsToSelector:@selector(webSocketDidOpen:)]) {
             [obj webSocketDidOpen:self];
         }
     }];
-    NSLog(@"🍺WebSocket连接成功：%@", webSocket.url);
+    TRACE(@"🍺 WebSocket连接成功：%@", webSocket.url);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     MCWebSocketMessage *result = [MCWebSocketMessage mj_objectWithKeyValues:message];
-    NSLog(@"处理消息：%lu", result.type);
     if (result) {
         if (result.code == 0) {
             [self.recivers enumerateObjectsUsingBlock:^(id<MCMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -116,18 +116,25 @@
                 }
             }];
         } else {
-            NSLog(@"%@", result.msg);
+            TRACE(@"%@", result.msg);
         }
-        
     }
 }
 
+- (void)webSocket:(SRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
+    [self.recivers enumerateObjectsUsingBlock:^(id<MCMessageProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj respondsToSelector:@selector(webSocket:didReceivePong:)]) {
+            [obj webSocket:self didReceivePong:pongPayload];
+        }
+    }];
+}
+
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"%@", error);
+    TRACE(@"❌ %@", error);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"连接关闭：%zd-%@", code, reason);
+    TRACE(@"🍺 连接关闭：%zd-%@", code, reason);
     if (self.readyStateChanged) {
         self.readyStateChanged(NO);
     }
@@ -138,12 +145,12 @@
 - (void)_pingTimerAction:(id)sender {
     SRReadyState state = self.mySocket.readyState;
     if(state == SR_OPEN) {
-        NSString *pingData = @([NSDate date].timeIntervalSince1970).stringValue;
-        [self.mySocket sendPing:[pingData dataUsingEncoding:NSUTF8StringEncoding]];
+        NSData *data = [@(NSDate.date.timeIntervalSince1970).stringValue dataUsingEncoding:NSUTF8StringEncoding];
+        [self.mySocket sendPing:data];
     }else {
         static BOOL retry = YES;
         if (retry && (state == SR_CLOSED || state == SR_CLOSING)) {
-            NSLog(@"%.1f秒后重试连接", self.retryInterval);
+            TRACE(@"🍺 %.1f秒后重试连接", self.retryInterval);
             retry = NO;
             __weak typeof(self) self_weak = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.retryInterval * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

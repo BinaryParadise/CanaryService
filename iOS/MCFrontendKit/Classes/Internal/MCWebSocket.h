@@ -18,11 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @protocol MCMessageProtocol <NSObject>
 
+@optional
 - (void)webSocket:(MCWebSocket *)webSocket didReceiveMessage:(MCWebSocketMessage *)message;
 
-@optional
-
 - (void)webSocketDidOpen:(MCWebSocket *)webSocket;
+
+- (void)webSocket:(MCWebSocket *)webSocket didReceivePong:(NSData *)pongPayload;
 
 @end
 

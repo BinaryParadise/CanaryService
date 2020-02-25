@@ -248,6 +248,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = BinaryParadise;
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = 9V4T4T8D8H;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -537,6 +540,7 @@
 			baseConfigurationReference = 3048B26DFBCF1A434CD9A995 /* Pods-MCFrontendKit_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9V4T4T8D8H;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MCFrontendKit/MCFrontendService-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/MCFrontendKit/MCFrontendService-Info.plist";
@@ -553,6 +557,7 @@
 			baseConfigurationReference = 528928B1BB819CCADD774857 /* Pods-MCFrontendKit_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9V4T4T8D8H;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MCFrontendKit/MCFrontendService-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/MCFrontendKit/MCFrontendService-Info.plist";

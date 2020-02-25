@@ -44,11 +44,14 @@ public class MCApiFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws
     IOException, ServletException {
-    logger.info(request.getRequestURI());
+    if ("websocket".equalsIgnoreCase(request.getHeader("upgrade"))) {
+      filterChain.doFilter(request, response);
+      return;
+    }
     response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,x-requested-with");
-    if (publicUrls.contains(request.getRequestURI()) || request.getRequestURI().startsWith(getServletContext().getContextPath() + "/channel")) {
-
+    if (publicUrls.contains(request.getRequestURI())) {
+      logger.info("pass filter: " + request.getRequestURI());
     } else {
       response.setContentType("application/json; charset=utf-8");
       String token = request.getHeader("Access-Token");

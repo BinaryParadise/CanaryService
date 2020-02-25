@@ -3,9 +3,6 @@ import { wsPath } from '../common/config'
 export default {
   messagers: [],
   create: function (deviceid) {
-    if (this.sock !== undefined) {
-      return this;
-    }
     this.url = (window.location.protocol == "http:" ? 'ws://' : 'wss://') + window.location.hostname + wsPath + '/web/' + deviceid
     var context = this
     this.onOpen = () => {
@@ -56,7 +53,10 @@ export default {
       }
       sock.onclose = e => {
         if (e.type === 'error' || e.type === 'close') {
-          context.connect()
+          context.onMessage({ code: 1, type: 0, msg: "连接已断开，10秒稍后自动重连" })
+          setTimeout(function () {
+            context.connect.apply(context)
+          }, 10000)
         }
       }
       this.sock = sock

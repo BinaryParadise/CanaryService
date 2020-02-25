@@ -4,98 +4,98 @@ import java.util.List;
 import java.util.Map;
 
 public class MCDeviceInfo  {
-	String name;
-	List<String> databases;
-	String deviceId;
-	String ipAddr;
-	Integer appId;
-	String appKey;
-	String appVersion;
-	String osName;
-	String osVersion;
-	String modelName;
-	boolean simulator;
-	Map<String, String> profile;
+	private String name;
+	private List<String> databases;
+	private String deviceId;
+	private Object ipAddrs;
+	private Integer appId;
+	private String appKey;
+	private String appVersion;
+	private String osName;
+	private String osVersion;
+	private String modelName;
+	private boolean simulator;
+	private Object profile;
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public List<String> getDatabases() {
-		return databases;
-	}
+  public List<String> getDatabases() {
+    return databases;
+  }
 
-	public void setDatabases(List<String> databases) {
-		this.databases = databases;
-	}
+  public void setDatabases(List<String> databases) {
+    this.databases = databases;
+  }
 
-	public String getDeviceId() {
-		return deviceId;
-	}
+  public String getDeviceId() {
+    return deviceId;
+  }
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
+  public void setDeviceId(String deviceId) {
+    this.deviceId = deviceId;
+  }
 
-	public String getIpAddr() {
-		return ipAddr;
-	}
+  public Object getIpAddrs() {
+    return ipAddrs;
+  }
 
-	public void setIpAddr(String ipAddr) {
-		this.ipAddr = ipAddr;
-	}
+  public void setIpAddrs(Object ipAddrs) {
+    this.ipAddrs = ipAddrs;
+  }
+
+  public Integer getAppId() {
+    return appId;
+  }
+
+  public void setAppId(Integer appId) {
+    this.appId = appId;
+  }
+
+  public String getAppKey() {
+    return appKey;
+  }
+
+  public void setAppKey(String appKey) {
+    this.appKey = appKey;
+  }
 
   public String getAppVersion() {
-		return appVersion;
-	}
+    return appVersion;
+  }
 
-	public void setAppVersion(String appVersion) {
-		this.appVersion = appVersion;
-	}
+  public void setAppVersion(String appVersion) {
+    this.appVersion = appVersion;
+  }
 
-	public String getOsVersion() {
-		return osVersion;
-	}
+  public String getOsName() {
+    return osName;
+  }
 
-	public void setOsVersion(String osVersion) {
-		this.osVersion = osVersion;
-	}
+  public void setOsName(String osName) {
+    this.osName = osName;
+  }
 
-	public String getModelName() {
-		return modelName;
-	}
+  public String getOsVersion() {
+    return osVersion;
+  }
 
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
-	}
+  public void setOsVersion(String osVersion) {
+    this.osVersion = osVersion;
+  }
 
-	public Map<String, String> getProfile() {
-		return profile;
-	}
+  public String getModelName() {
+    return modelName;
+  }
 
-	public void setProfile(Map<String, String> profile) {
-		this.profile = profile;
-	}
-
-	public String getOsName() {
-		return osName;
-	}
-
-	public void setOsName(String osName) {
-		this.osName = osName;
-	}
-
-	public Integer getAppId() {
-		return appId;
-	}
-
-	public void setAppId(Integer appId) {
-		this.appId = appId;
-	}
+  public void setModelName(String modelName) {
+    this.modelName = modelName;
+  }
 
   public boolean isSimulator() {
     return simulator;
@@ -105,11 +105,11 @@ public class MCDeviceInfo  {
     this.simulator = simulator;
   }
 
-  public String getAppKey() {
-    return appKey;
+  public Object getProfile() {
+    return profile;
   }
 
-  public void setAppKey(String appKey) {
-    this.appKey = appKey;
+  public void setProfile(Object profile) {
+    this.profile = profile;
   }
 }

@@ -58,20 +58,9 @@ static MCTTYLogger *instance;
         mdict[@"appVersion"] = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
         mdict[@"timestamp"] = [NSNumber numberWithLongLong:logMessage.timestamp.timeIntervalSince1970*1000];
         mdict[@"deviceId"] = [MCLoggerUtils identifier];
-        mdict[@"type"] = @([self logTypeForFlag:logMessage.flag]);
+        mdict[@"type"] = @(1);
         mesage.data = mdict;
         [[MCWebSocket shared] sendMessage:mesage];
-    }
-}
-
-- (int)logTypeForFlag:(DDLogFlag)flag {
-    switch (flag) {
-        case DDLogFlagVerbose: return 0;
-        case DDLogFlagDebug: return 1;
-        case DDLogFlagInfo: return 2;
-        case DDLogFlagWarning: return 3;
-        case DDLogFlagError: return 4;
-        default: return 0;
     }
 }
 

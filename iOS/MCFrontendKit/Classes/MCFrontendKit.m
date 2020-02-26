@@ -10,6 +10,7 @@
 #import "MCFrontendKitViewController.h"
 #import "MCLoggerUtils.h"
 #import "MCLogger.h"
+#import "MCFrontendLogFormatter.h"
 
 #define kMCSuiteName @"com.binaryparadise.frontendkit"
 #define kMCRemoteConfig @"remoteConfig"
@@ -30,6 +31,11 @@
 {
     self = [super init];
     if (self) {
+        if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
+            DDOSLogger.sharedInstance.logFormatter = [MCFrontendLogFormatter new];
+        } else {
+            DDTTYLogger.sharedInstance.logFormatter = [MCFrontendLogFormatter new];
+        }
         self.appKey = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleIdentifier"];
         self.deviceId = [MCLoggerUtils identifier];
         self.frontendDefaults = [[NSUserDefaults alloc] initWithSuiteName:kMCSuiteName];
@@ -130,7 +136,7 @@
 
 - (void)startLogMonitor:(NSDictionary<NSString *,NSString *> *(^)(void))customProfileBlock {
     MCLogger.sharedInstance.customProfileBlock = customProfileBlock;
-    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@/channel", self.baseURL.host]]];
+    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@/channel", self.baseURL.host,self.baseURL.port]]];
 }
 
 @end

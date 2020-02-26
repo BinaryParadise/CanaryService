@@ -11,7 +11,7 @@ else
     return
 end
 
-target 'MCFrontendKit_Example' do
+target 'Example' do
   pod 'MCFrontendKit', :path => '../../'
 
   target 'MCFrontendKit_Tests' do

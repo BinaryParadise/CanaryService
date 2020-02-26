@@ -45,14 +45,23 @@ static DDLogLevel ddLogLevel = DDLogLevelVerbose;
     DDLogDebug(@"将要消失");
 }
 
-- (IBAction)showConfig:(id)sender {
+- (IBAction)showConfig:(id)sender {    
+    [MCFrontendKit.manager show];
+    [self showDemoLogs];
+}
+
+- (void)showDemoLogs {
     DDLogError(@"%@", @"error message.");
     DDLogWarn(@"%@", @"warning message.");
     DDLogInfo(@"%@", @"info message.");
     DDLogDebug(@"%@", @"debug message.");
     DDLogVerbose(@"%@", @"verbose message.");
-    
-    [MCFrontendKit.manager show];
+}
+
+- (IBAction)logLevelChanged:(UISegmentedControl *)segmented {
+    NSArray<NSNumber *> *levels = @[@(DDLogLevelVerbose), @(DDLogLevelDebug), @(DDLogLevelInfo), @(DDLogLevelWarning), @(DDLogLevelError)];
+    ddLogLevel = levels[segmented.selectedSegmentIndex].integerValue;
+    [self showDemoLogs];
 }
 
 @end

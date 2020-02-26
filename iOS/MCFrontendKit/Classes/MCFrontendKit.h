@@ -21,6 +21,8 @@
 /// 应用标识，默认为CFBundleIdentifier
 @property (nonatomic, copy) NSString *appKey;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 + (instancetype)manager;
 
 #pragma mark - 环境配置

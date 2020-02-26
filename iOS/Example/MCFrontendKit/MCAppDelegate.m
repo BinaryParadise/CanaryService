@@ -8,15 +8,21 @@
 
 #import "MCAppDelegate.h"
 #import <MCFrontendKit/MCFrontendKit.h>
+#import <CocoaLumberjack/CocoaLumberjack.h>
 
 @implementation MCAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
+        [DDLog addLogger:DDOSLogger.sharedInstance];
+    } else {
+        [DDLog addLogger:DDTTYLogger.sharedInstance];
+    }
     MCFrontendKit.manager.appKey = @"com.binaryparadise.neverland";
     MCFrontendKit.manager.enableDebug = YES;
-    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"http://127.0.0.1:9001/v2/conf/full"];
+    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"http://127.0.0.1:8081/v2/conf/full"];
     MCFrontendKit.manager.currentName = @"奶味蓝";
     [MCFrontendKit.manager startLogMonitor:^NSDictionary<NSString *,NSString *> *{
         return @{@"PushToken": @"fjejfliejglaje",

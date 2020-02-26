@@ -1,16 +1,40 @@
 import React from 'react'
 import styles from './logger.css';
 import PropTypes from 'prop-types'
-import { Popover, Affix, Icon, Breadcrumb, message, Badge, notification } from 'antd'
+import { Popover, Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
 import WebSocket from '../../../component/websocket'
 import router from 'umi/router';
+
+// 日志标记
+const Error = (1 << 0)
+const Warning = (1 << 1)
+const Info = (1 << 2)
+const Debug = (1 << 3)
+const Verbose = (1 << 4)
+
+// 日志等级
+const LevelError = 1;
+const LevelWarning = 3;
+const LevelInfo = 7;
+const LevelDebug = 15;
+const LevelVerbose = 31;
+
+
+const FlagInfo = {
+    1: { name: "错误", style: styles.red },
+    3: { name: "警告", style: styles.yellow },
+    7: { name: "信息", style: styles.white },
+    15: { name: "调试", style: styles.green },
+    31: { name: "全部", style: styles.white }
+}
 
 export default class LoggerMonitor extends React.Component {
     state = {
         data: this.props.location.state,
         logs: [],
         autoscroll: true,
-        avaiable: false
+        avaiable: false,
+        logLevel: LevelVerbose
     }
 
     componentWillMount() {
@@ -29,18 +53,6 @@ export default class LoggerMonitor extends React.Component {
         this.scrollToBottom()
     }
 
-    logClass = obj => {
-        switch (obj.type) {
-            case 0: return styles.verbose;
-            case 1: return styles.green;
-            case 2: return styles.white;
-            case 3: return styles.yellow;
-            case 4: return styles.red;
-            case 5: return styles.magenta;
-            default: return styles.white;
-        }
-    }
-
     formatDate = obj => {
         return new Date(obj.timestamp).Format('HH:mm:ss.S')
     }
@@ -54,7 +66,7 @@ export default class LoggerMonitor extends React.Component {
     }
 
     formatMessage = obj => {
-        if (obj.type === undefined) {
+        if (obj.type !== 1) {
             if (obj.mimeType.indexOf('image/') === 0) {
                 return (<span>{'🌐' + obj.statusCode + ' '}<Popover placement='topLeft' style={{ backgroundColor: 'transparent' }} content={<img src={'data:' + obj.mimeType + ';base64,' + obj.responseBody} alt='' />}>
                     {obj.url}
@@ -72,8 +84,43 @@ export default class LoggerMonitor extends React.Component {
         }
     }
 
+    onMenuClick = (item) => {
+        this.setState({ logLevel: parseInt(item.key) })
+    }
+
+    logMenu = () => {
+        const selectedKeys = []
+        Object.keys(FlagInfo).map((key) => {
+            if (key | this.state.logLevel) {
+                selectedKeys.push(key)
+            }
+        })
+        return (
+            < Menu selectedKeys={selectedKeys} multiple={true} onClick={this.onMenuClick} > {
+                Object.keys(FlagInfo).map((skey) => {
+                    return (<Menu.Item key={skey}>
+                        <a className={FlagInfo[skey].style}>{FlagInfo[skey].name}</a>
+                    </Menu.Item>)
+                })}
+            </Menu >
+        )
+    }
+
+    logClass = obj => {
+        switch (obj.flag) {
+            case Verbose: return styles.verbose;
+            case Debug: return styles.green;
+            case Info: return styles.white;
+            case Warning: return styles.yellow;
+            case Error: return styles.red;
+            default: return styles.white;
+        }
+    }
+
     render() {
-        const { autoscroll, logs, data, avaiable } = this.state
+        const { autoscroll, data, avaiable, logLevel } = this.state
+        const filterLogs = this.state.logs.filter(item => item.flag & logLevel)
+        const levelInfo = FlagInfo[logLevel]
         return (
             <div>
                 <Breadcrumb style={{ marginBottom: 12 }}>
@@ -90,7 +137,7 @@ export default class LoggerMonitor extends React.Component {
                 <div className={styles.logbody}>
                     <pre className={styles.ansi} ref={(el) => { this.messagesEnd = el }}>
                         {
-                            logs.map((record) => <div className={styles.log_line} key={record.key}><a href='#'></a>
+                            filterLogs.map((record) => <div className={styles.log_line} key={record.key}><a href='#'></a>
                                 <span id={record.key} className={this.logClass(record) + " " + styles.bold}>{this.formatDate(record) + ' '}{this.formatFunc(record)}{this.formatMessage(record)}</span>
                             </div>)
                         }
@@ -106,6 +153,9 @@ export default class LoggerMonitor extends React.Component {
                             autoscroll: !this.state.autoscroll,
                         });
                     }} />
+                    <Dropdown overlay={this.logMenu()} placement="topRight">
+                        <a>{levelInfo.name}<Icon type="down"></Icon></a>
+                    </Dropdown>
                 </Affix>
             </div >
         )

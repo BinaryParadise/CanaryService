@@ -61,8 +61,8 @@
     color: #FF9CFE
 }
 
-.ansi .cyan {
-    color: #5FF
+.ansi .verbose {
+    color: #c2c2c2;
 }
 
 .ansi .white {

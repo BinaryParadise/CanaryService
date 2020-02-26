@@ -51,11 +51,11 @@ export class UserList extends React.Component {
         return (<div>
             <a style={{ margin: "0px 5px" }} onClick={() => this.setState({ editData: record, visible: true })}>编辑</a>
             <Popconfirm placement="topRight" hidden={auth.level == 0}
-                title="确定要删除该项？" onConfirm={() => this.delete(record.id)}
+                title="确定要删除该项？" onConfirm={() => this.deleteUser(record.id)}
             >{(record.isDefault ? false : true) && <a>删除</a>}
             </Popconfirm>
             <Divider type="vertical" />
-            <a style={{ margin: "0px 5px", color: "#e02a31" }} onClick={() => this.setState({ visible: true, resetPwd: true })}>重置密码</a>
+            <a style={{ margin: "0px 5px", color: "#e02a31" }} onClick={() => this.setState({ visible: true, editData: record, resetPwd: true })}>重置密码</a>
         </div>)
     }
 
@@ -84,7 +84,8 @@ export class UserList extends React.Component {
     submit = (values, callback) => {
         let newValues = { ...values }
         if (newValues.password) {
-            newValues.password = MD5(newValues.password)   
+            newValues.password = MD5(newValues.password)
+            newValues.confirm = newValues.password
         }
         return axios.post(newValues.id ? '/user/update' : '/user/add', newValues).then(result => {
             if (result.code == 0) {
@@ -104,14 +105,24 @@ export class UserList extends React.Component {
         this.query()
     }
 
+    deleteUser = (id) => {
+        return axios.post("/user/delete/" + id).then(result => {
+            if (result.code != 0) {
+                message.error(result.error)
+            } else {
+                message.success("删除成功").then(this.query)
+            }
+        });
+    }
+
     render() {
-        const { loading, data, pageSize, editData, confirmLoading } = this.state
+        const { loading, data, pageSize, editData, resetPwd, confirmLoading } = this.state
         var total = data.length
         return (
             <Layout>
                 <Button type="primary" style={{ width: 100, marginBottom: 12 }} onClick={() => this.setState({ visible: true })}>添加用户</Button>
                 <Modal
-                    title={(editData || {}).id ? '编辑用户' : '添加用户'}
+                    title={resetPwd ? "重置密码" : ((editData || {}).id ? '编辑用户' : '添加用户')}
                     visible={this.state.visible}
                     onOk={this.onSave}
                     closable={!confirmLoading}

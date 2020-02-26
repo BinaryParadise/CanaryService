@@ -91,7 +91,7 @@ export default class LoggerMonitor extends React.Component {
                     <pre className={styles.ansi} ref={(el) => { this.messagesEnd = el }}>
                         {
                             logs.map((record) => <div className={styles.log_line} key={record.key}><a href='#'></a>
-                                <span id={record.key} className={this.logClass(record)}>{this.formatDate(record) + ' '}{this.formatFunc(record)}{this.formatMessage(record)}</span>
+                                <span id={record.key} className={this.logClass(record) + " " + styles.bold}>{this.formatDate(record) + ' '}{this.formatFunc(record)}{this.formatMessage(record)}</span>
                             </div>)
                         }
                     </pre>

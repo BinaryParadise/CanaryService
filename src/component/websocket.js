@@ -53,7 +53,8 @@ export default {
       }
       sock.onclose = e => {
         if (e.type === 'error' || e.type === 'close') {
-          context.onMessage({ code: 1, type: 0, msg: "连接已断开，10秒稍后自动重连" })
+          console.error("[WS]连接已断开，10秒稍后自动重连")
+          // context.onMessage({ code: 1, type: 0, msg: "连接已断开，10秒稍后自动重连" })
           setTimeout(function () {
             context.connect.apply(context)
           }, 10000)

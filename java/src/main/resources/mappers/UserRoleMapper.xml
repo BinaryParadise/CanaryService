@@ -25,6 +25,9 @@
 
     where id = #{id}
   </update>
+  <delete id="deleteUser">
+    UPDATE User set deleteTag=1 where id = #{0}
+  </delete>
 
   <select id="findUserList" resultType="com.frontend.domain.MCUserInfo">
     SELECT
@@ -33,7 +36,7 @@
     b.level as rolelevel
     FROM
     User a
-    LEFT JOIN UserRole b ON a.roleid = b.id
+    LEFT JOIN UserRole b ON a.roleid = b.id where a.deleteTag=0
   </select>
 
   <select id="isLogin" resultType="java.lang.Integer">
@@ -52,7 +55,7 @@
     </set>
     WHERE
     username = #{username}
-    AND password = #{password};
+    AND password = #{password} and deleteTag=0;
   </update>
 
   <select id="findByLogin" resultType="com.frontend.domain.MCUserInfo">
@@ -76,7 +79,7 @@
     FROM
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id
-    WHERE a.token=#{0} AND expire&gt;#{1};
+    WHERE a.token=#{0} AND expire&gt;#{1} and a.deleteTag=0;
   </select>
 
   <select id="findRoleList" resultType="com.frontend.domain.MCUserRole">

@@ -55,6 +55,7 @@ public class UserRoleController {
       return MCResult.Failed(MybatisError.NotFoundEntry);
     }
   }
+
   @PostMapping(value = "/add")
   MCResult addUser(@RequestBody MCUserInfo data, HttpServletRequest request) {
     try {
@@ -74,6 +75,16 @@ public class UserRoleController {
     } catch (Throwable e) {
       e.printStackTrace();
       return MCResult.Failed(MybatisError.NotFoundEntry);
+    }
+  }
+
+  @PostMapping(value = "/delete/{uid}")
+  MCResult deleteUser(@PathVariable("uid") Integer uid) {
+    try {
+      return userMapper.deleteUser(uid) > 0 ? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);
+    } catch (Throwable e) {
+      e.printStackTrace();
+      return MCResult.Failed(MybatisError.InsertFaield);
     }
   }
 

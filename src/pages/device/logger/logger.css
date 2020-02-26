@@ -9,6 +9,10 @@
     background: #f7f7f7;
 }
 
+.ansi .bold {
+    font-weight: 700
+}
+
 .ansi .black {
     color: #4E4E4E
 }
@@ -26,7 +30,7 @@
 }
 
 .ansi .green {
-    color: #0F0
+    color: #B1FD79
 }
 
 .ansi .green.bold {

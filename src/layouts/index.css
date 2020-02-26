@@ -1,0 +1,50 @@
+.normal {
+  font-family: Georgia, sans-serif;
+  text-align: left;
+  height: 100vh;
+}
+
+.logo {
+  float: left;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 16px;
+  background-color: rgb(255, 106, 0);
+  color: #fff;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: normal;
+  letter-spacing: -1px;
+  color: rgb(255, 106, 0);
+  padding: 8px;
+  border-color: #fff;
+  margin-left: 8px;
+}
+
+.title:hover {
+  border-color: #fff;
+  color: rgb(255, 106, 0);
+}
+
+.title:active, .title:focus {
+  border-color: #fff;
+  color: rgb(255, 106, 0);
+}
+
+.header {
+  height: 50px;
+  padding: 0px;
+  line-height: 50px;
+  background: #fff;
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+}
+
+.shadow {
+  padding: 16px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
+  background: #fff;
+}

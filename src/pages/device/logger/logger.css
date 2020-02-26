@@ -1,0 +1,209 @@
+.list {
+    font-size: 1.2em;
+    margin-top: 1.8em;
+    list-style: none;
+    line-height: 1.5em;
+}
+
+.list code {
+    background: #f7f7f7;
+}
+
+.ansi .bold {
+    font-weight: 700
+}
+
+.ansi .black {
+    color: #4E4E4E
+}
+
+.ansi .black.bold {
+    color: #7C7C7C
+}
+
+.ansi .red {
+    color: #FF6C60
+}
+
+.ansi .red.bold {
+    color: #FF9B93
+}
+
+.ansi .green {
+    color: #B1FD79
+}
+
+.ansi .green.bold {
+    color: #B1FD79
+}
+
+.ansi .yellow {
+    color: #FFFFB6
+}
+
+.ansi .yellow.bold {
+    color: #FFFF91
+}
+
+.ansi .blue {
+    color: #96CBFE
+}
+
+.ansi .blue.bold {
+    color: #B5DCFE
+}
+
+.ansi .magenta {
+    color: #FF73FD
+}
+
+.ansi .magenta.bold {
+    color: #FF9CFE
+}
+
+.ansi .cyan {
+    color: #5FF
+}
+
+.ansi .white {
+    color: #EEE
+}
+
+.ansi .white.bold {
+    color: #FFF
+}
+
+.ansi .grey {
+    color: #969696
+}
+
+.logbody .fold {
+    position: relative;
+    height: 19px;
+    overflow: hidden;
+    cursor: pointer
+}
+
+.logbody .fold.open {
+    height: auto
+}
+
+.logbody .fold .log_line:first-of-type {
+    padding-right: 190px;
+    background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTAiIHdpZHRoPSIxMCIgdmlld0JveD0iMCAwIDEwIDEwIj4KPHBhdGggZD0ibTAuNSwxLjUsNC41LDcsNC41LTd6IiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMC41IiBmaWxsPSIjNjY2Ii8+Cjwvc3ZnPgo=) 8px 3px no-repeat #2b2b2b
+}
+
+.logbody .fold .log_line:first-of-type.highlight {
+    background-color: #777
+}
+
+.logbody .duration, .logbody .fold .fold-name {
+    position: absolute;
+    top: 1px;
+    padding: 4px 7px 2px;
+    line-height: 10px;
+    font-size: 10px;
+    background-color: #666;
+    border-radius: 6px;
+    color: #bbb
+}
+
+.logbody .fold:not(.open) .log_line:first-of-type {
+    visibility: visible;
+    height: auto;
+    min-height: 16px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMTAiIHdpZHRoPSIxMCIgdmlld0JveD0iMCAwIDEwIDEwIj4KPHBhdGggZD0iTTIsOSw5LDUsMiwxeiIgc3Ryb2tlPSIjNTU1IiBzdHJva2Utd2lkdGg9IjAuNSIgZmlsbD0iIzY2NiIvPgo8L3N2Zz4K)
+}
+
+.logbody .fold .fold-name {
+    z-index: 10;
+    display: block;
+    right: 85px
+}
+
+.logbody .fold-end, .logbody .fold-start:not(.fold) {
+    display: none
+}
+
+.logbody .duration {
+    display: block;
+    right: 12px
+}
+
+.logbody {
+    border: 1px solid #222;
+    border-radius: 2px;
+    position: absolute;
+    top: 95px;
+    bottom: 38px;
+    left: 0px;
+    right: 0px;
+    overflow: auto;
+    background-color: #002b36;
+}
+
+.logbody pre {
+    clear: left;
+    color: #9c9c9c;
+    font-family: Cousine, monospace;
+    font-size: 12px;
+    line-height: 19px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    counter-reset: line-numbering;
+    padding: 3px;
+    margin: 0px;
+}
+
+.logbody .cut {
+    padding: 20px 15px 0 55px
+}
+
+.logbody .log_line a::before {
+    content: counter(line-numbering);
+    counter-increment: line-numbering;
+    padding-right: 1em
+}
+
+.logbody .log_line {
+    position: relative;
+    padding: 0 15px 0 62px;
+    margin: 0;
+    min-height: 22px
+}
+
+.logbody .log_line:hover {
+    background-color: #444!important
+}
+
+.logbody .log_line.highlight {
+    background-color: #9d9d9d
+}
+
+.logbody .log_line.highlight a {
+    color: #fff
+}
+
+.logbody .log_line a {
+    display: inline-block;
+    text-align: right;
+    min-width: 40px;
+    margin-left: -40px;
+    cursor: pointer;
+    text-decoration: none;
+    position: absolute
+}
+
+.ant-layout-header {
+    height: 32px;
+}
+
+.ant-popover-inner {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.test {
+    background: #fff;
+    padding: 24;
+    min-height: 280;
+}

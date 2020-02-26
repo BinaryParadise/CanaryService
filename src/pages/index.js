@@ -1,11 +1,25 @@
 import React from 'react'
-import DeviceLog from './logs'
+import axios from '../component/axios'
+import DevicePage from './device'
+import { Breadcrumb, Layout } from 'antd'
 
 export default class IndexPage extends React.Component {
+
+  componentDidMount() {
+  }
+
   render() {
-    const data = {deviceId: "1B7F03BF-8C78-4229-AE8B-9432885AB11B"}
     return (
-        <DeviceLog data={data} />
-    )
+      <Layout>
+        <Breadcrumb style={{ marginBottom: 12 }}>
+          <Breadcrumb.Item>
+            <a href="">首页</a>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>概览</Breadcrumb.Item>
+        </Breadcrumb>
+
+        <DevicePage></DevicePage>
+      </Layout>
+    );
   }
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="whP-gf-Uak">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="wQg-tq-qST">
+            <objects>
+                <viewController id="whP-gf-Uak" customClass="MCViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uEw-UM-LJ8"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mvr-aV-6Um"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TpU-gO-2f1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V6F-jZ-O4o">
+                                <rect key="frame" x="142.5" y="314" width="90" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="远程配置"/>
+                                <connections>
+                                    <action selector="showConfig:" destination="whP-gf-Uak" eventType="touchUpInside" id="OCn-Mc-YfU"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I5S-eI-SDJ">
+                                <rect key="frame" x="173" y="88" width="29" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4mg-Jc-Rk4">
+                                <rect key="frame" x="173" y="16" width="29" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="unset" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aRN-eF-eqD">
+                                <rect key="frame" x="166" y="139" width="43" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="V6F-jZ-O4o" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="1NY-DR-EUk"/>
+                            <constraint firstItem="I5S-eI-SDJ" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="88" id="9xz-Or-goj"/>
+                            <constraint firstItem="aRN-eF-eqD" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="RkR-z3-sdc"/>
+                            <constraint firstItem="aRN-eF-eqD" firstAttribute="top" secondItem="I5S-eI-SDJ" secondAttribute="bottom" constant="30" id="d76-a4-Iak"/>
+                            <constraint firstItem="4mg-Jc-Rk4" firstAttribute="top" secondItem="uEw-UM-LJ8" secondAttribute="bottom" constant="16" id="gbd-NO-8f5"/>
+                            <constraint firstItem="4mg-Jc-Rk4" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="sXi-ds-e71"/>
+                            <constraint firstItem="I5S-eI-SDJ" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="whv-EN-4ya"/>
+                            <constraint firstItem="V6F-jZ-O4o" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="xs2-Q5-Dw0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="textLabel" destination="I5S-eI-SDJ" id="vXT-jC-4bD"/>
+                        <outlet property="titleLabel" destination="4mg-Jc-Rk4" id="J9J-BB-OQJ"/>
+                        <outlet property="unsetLabel" destination="aRN-eF-eqD" id="QNx-hG-3ab"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="304.80000000000001" y="432.23388305847078"/>
+        </scene>
+    </scenes>
+</document>

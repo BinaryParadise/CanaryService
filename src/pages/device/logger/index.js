@@ -21,11 +21,11 @@ const LevelVerbose = 31;
 
 
 const FlagInfo = {
-    1: { name: "错误", style: styles.red },
-    3: { name: "警告", style: styles.yellow },
-    7: { name: "信息", style: styles.white },
-    15: { name: "调试", style: styles.green },
-    31: { name: "全部", style: styles.white }
+    1: { flag: Error, name: "错误", style: styles.red },
+    3: { flag: Warning, name: "警告", style: styles.yellow },
+    7: { flag: Info, name: "信息", style: styles.white },
+    15: { flag: Debug, name: "调试", style: styles.green },
+    31: { flag: Verbose, name: "全部", style: styles.white }
 }
 
 export default class LoggerMonitor extends React.Component {
@@ -91,15 +91,15 @@ export default class LoggerMonitor extends React.Component {
     logMenu = () => {
         const selectedKeys = []
         Object.keys(FlagInfo).map((key) => {
-            if (key | this.state.logLevel) {
+            if (FlagInfo[parseInt(key)].flag & this.state.logLevel) {
                 selectedKeys.push(key)
             }
         })
         return (
-            < Menu selectedKeys={selectedKeys} multiple={true} onClick={this.onMenuClick} > {
+            < Menu style={{ width: 80 }} theme="dark" selectedKeys={selectedKeys} multiple={true} onClick={this.onMenuClick} > {
                 Object.keys(FlagInfo).map((skey) => {
                     return (<Menu.Item key={skey}>
-                        <a className={FlagInfo[skey].style}>{FlagInfo[skey].name}</a>
+                        <a className={FlagInfo[parseInt(skey)].style}>{FlagInfo[skey].name}</a>
                     </Menu.Item>)
                 })}
             </Menu >
@@ -192,11 +192,13 @@ const iconStyle = {
     sync: {
         color: '#B1FD79',
         width: '25px',
-        height: '25px'
+        height: '25px',
+        marginRight: '6px'
     },
     paus: {
         color: 'gray',
         width: '25px',
-        height: '25px'
+        height: '25px',
+        marginRight: '6px'
     }
 }

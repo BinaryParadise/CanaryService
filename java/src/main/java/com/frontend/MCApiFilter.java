@@ -48,22 +48,26 @@ public class MCApiFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
+
     response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,x-requested-with");
+
     if (publicUrls.contains(request.getRequestURI())) {
       logger.info("pass filter: " + request.getRequestURI());
     } else {
-      response.setContentType("application/json; charset=utf-8");
-      String token = request.getHeader("Access-Token");
-      MCUserInfo user = userMapper.findByToken(token, System.currentTimeMillis());
-      if (token == null || token.length() == 0 || user == null) {
-        response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "用户鉴权失败")));
-        return;
-      }
-      request.setAttribute("uid", user.getId());
-      if (adminUrls.contains(request.getRequestURI()) && user.getRolelevel() > 0) {
-        response.getWriter().write(JSON.toJSONString(MCResult.Failed(101, "您没有操作权限")));
-        return;
+      if (!request.getMethod().equalsIgnoreCase("OPTIONS")) {
+        response.setContentType("application/json; charset=utf-8");
+        String token = request.getHeader("Access-Token");
+        MCUserInfo user = userMapper.findByToken(token, System.currentTimeMillis());
+        if (token == null || token.length() == 0 || user == null) {
+          response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "用户鉴权失败")));
+          return;
+        }
+        request.setAttribute("uid", user.getId());
+        if (adminUrls.contains(request.getRequestURI()) && user.getRolelevel() > 0) {
+          response.getWriter().write(JSON.toJSONString(MCResult.Failed(101, "您没有操作权限")));
+          return;
+        }
       }
     }
     filterChain.doFilter(request, response);

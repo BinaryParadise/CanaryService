@@ -56,19 +56,21 @@ class EnvEditForm extends React.Component {
           })(<Input type="hidden" />)}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} hasFeedback label="模板">
-          {getFieldDecorator('copyid', {
-            rules: [{ required: false }]
-          })(
-            <Select placeholder="选择模板" allowClear>
-              {
-                listData.map(g => <Select.OptGroup key={g.type} label={g.name}>{g.items.map(d => <Option
-                  key={d.id} value={d.id}>{d.name}</Option>)}</Select.OptGroup>)
-              }
+        {data.id <= 0 &&
+          <Form.Item {...formItemLayout} hasFeedback label="模板">
+            {getFieldDecorator('copyid', {
+              rules: [{ required: false }]
+            })(
+              <Select placeholder="选择模板" allowClear>
+                {
+                  listData.map(g => <Select.OptGroup key={g.type} label={g.name}>{g.items.map(d => <Option
+                    key={d.id} value={d.id}>{d.name}</Option>)}</Select.OptGroup>)
+                }
 
-            </Select>
-          )}
-        </Form.Item>
+              </Select>
+            )}
+          </Form.Item>
+        }
 
         <Form.Item {...formItemLayout} hasFeedback label="环境名称">
           {getFieldDecorator('name', {

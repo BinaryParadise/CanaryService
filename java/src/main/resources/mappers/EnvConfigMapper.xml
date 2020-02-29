@@ -54,8 +54,10 @@
 
   </select>
 
-  <update id="deleteById">
-    DELETE FROM RemoteConfig WHERE id=#{id};
-    DELETE FROM RemoteConfigParam WHERE envid = #{id};
-  </update>
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    DELETE FROM RemoteConfig WHERE id=#{0};
+  </delete>
+  <delete id="deleteItemByConfigId">
+    DELETE FROM RemoteConfigParam WHERE envid=#{0};
+  </delete>
 </mapper>

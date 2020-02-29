@@ -70,14 +70,14 @@ public class RemoteConfigController {
     config.setUid(uid);
     if (envid > 0) {
       //更新环境配置
-      return envMapper.update(config) ? MCResult.Success(null) : MCResult.Failed(MybatisError.UpdateFaield);
+      return envMapper.update(config) > 0 ? MCResult.Success(null) : MCResult.Failed(MybatisError.UpdateFaield);
     } else {
       List allConfig = envMapper.findByAppId(config.getAppId(), 0);
       if (allConfig == null || allConfig.size() == 0) {
         config.setDefaultTag(true);
       }
       try {
-        boolean ret = envMapper.insert(config);
+        boolean ret = envMapper.insert(config) > 0;
         if (ret && config.getCopyid() > 0) {
           //从其它环境复制
           envItemMapper.copyFromEnvId(config.getId(), uid, config.getCopyid());
@@ -92,9 +92,14 @@ public class RemoteConfigController {
 
   @PostMapping(value = "/delete/{id}")
   @ResponseBody
-  public MCResult delete(@PathVariable int id) {
+  @Transactional
+  public MCResult delete(@PathVariable(value = "id") int id) {
     if (id > 0) {
-      return envMapper.deleteById(id) ? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);
+      Integer ret = envMapper.deleteById(id);
+      if (ret > 0) {
+        envMapper.deleteItemByConfigId(id);
+      }
+      return ret > 0? MCResult.Success() : MCResult.Failed(MybatisError.DeleteFailed);
     }
     return MCResult.Failed(1001, "参数错误");
   }

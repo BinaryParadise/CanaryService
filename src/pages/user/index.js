@@ -98,7 +98,7 @@ export class UserList extends React.Component {
     }
 
     onCancel = () => {
-        this.setState({ visible: false, resetPwd: false })
+        this.setState({ visible: false, resetPwd: false, editData: null })
     }
 
     componentDidMount() {

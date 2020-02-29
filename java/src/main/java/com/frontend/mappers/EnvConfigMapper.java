@@ -11,11 +11,12 @@ import java.util.List;
 @Mapper
 @Repository
 public interface EnvConfigMapper {
-  boolean insert(MCEnvConfig config);
+  Integer insert(MCEnvConfig config);
 
-  boolean deleteById(int id);
+  Integer deleteById(Integer id);
+  Integer deleteItemByConfigId(Integer id);
 
-  boolean update(MCEnvConfig config);
+  Integer update(MCEnvConfig config);
 
   MCEnvConfig findById(int id);
 

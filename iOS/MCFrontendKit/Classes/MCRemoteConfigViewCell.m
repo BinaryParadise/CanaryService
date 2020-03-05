@@ -17,7 +17,7 @@
     if (self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier]) {
         self.textLabel.font = [UIFont fontWithName:@"DINAlternate-Bold" size:18];
         self.detailTextLabel.font = [UIFont fontWithName:@"DINCondensed" size:16];
-        self.detailTextLabel.textColor = [UIColor systemOrangeColor];
+        self.detailTextLabel.textColor = [UIColor orangeColor];
         
         self.extraLabel = [UILabel new];
         self.extraLabel.lineBreakMode = NSLineBreakByCharWrapping;

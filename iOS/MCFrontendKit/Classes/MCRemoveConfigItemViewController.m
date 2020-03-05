@@ -51,7 +51,7 @@
     self.applyButton.layer.cornerRadius = 8;
     self.applyButton.layer.masksToBounds = YES;
     self.applyButton.backgroundColor = [UIColor cyanColor];
-    [self.applyButton setTitleColor:[UIColor systemPurpleColor] forState:UIControlStateNormal];
+    [self.applyButton setTitleColor:[UIColor purpleColor] forState:UIControlStateNormal];
     [self.applyButton setTitle:@"应用" forState:UIControlStateNormal];
     [self.view addSubview:self.applyButton];
     [self.applyButton addTarget:self action:@selector(applyConfig:) forControlEvents:UIControlEventTouchUpInside];

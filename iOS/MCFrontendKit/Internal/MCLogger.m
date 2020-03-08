@@ -7,10 +7,10 @@
 //
 
 #import "MCLogger.h"
-#import "Internal/MCLoggerUtils.h"
-#import "Internal/MCWebSocket.h"
-#import "Internal/MCTTYLogger.h"
-#import "Internal/MCDevice.h"
+#import "MCLoggerUtils.h"
+#import "MCWebSocket.h"
+#import "MCTTYLogger.h"
+#import "MCDevice.h"
 
 @interface MCLogger () <MCMessageProtocol>
 

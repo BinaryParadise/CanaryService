@@ -23,12 +23,14 @@
 {
     self = [super init];
     if (self) {
+#if TARGET_OS_IPHONE        
         self.name = UIDevice.currentDevice.name;
-        self.ipAddrs = [self getIPAddresses];
-        self.appVersion = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
         self.osName = UIDevice.currentDevice.systemName;
         self.osVersion = UIDevice.currentDevice.systemVersion;
         self.modelName = UIDevice.currentDevice.localizedModel;
+#endif
+        self.ipAddrs = [self getIPAddresses];
+        self.appVersion = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
         self.simulator = TARGET_OS_SIMULATOR;
         self.profile = @{};
     }

@@ -1,0 +1,37 @@
+PODS:
+  - CocoaLumberjack (3.6.1):
+    - CocoaLumberjack/Core (= 3.6.1)
+  - CocoaLumberjack/Core (3.6.1)
+  - MCFrontendKit (0.3.0):
+    - CocoaLumberjack (~> 3.6)
+    - MJExtension
+    - SAMKeychain (~> 1.5)
+    - SocketRocket (~> 0.5)
+  - MJExtension (3.2.1)
+  - SAMKeychain (1.5.3)
+  - SocketRocket (0.5.1)
+
+DEPENDENCIES:
+  - MCFrontendKit (from `../../..`)
+
+SPEC REPOS:
+  trunk:
+    - CocoaLumberjack
+    - MJExtension
+    - SAMKeychain
+    - SocketRocket
+
+EXTERNAL SOURCES:
+  MCFrontendKit:
+    :path: "../../.."
+
+SPEC CHECKSUMS:
+  CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
+  MCFrontendKit: 3d2dbec35900238232ab7a7787e2578efd2fe5cc
+  MJExtension: 635f2c663dcb1bf76fa4b715b2570a5710aec545
+  SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+
+PODFILE CHECKSUM: 8f6db19a6c9c74a214bed14a32a7365e0c1cf786
+
+COCOAPODS: 1.9.0

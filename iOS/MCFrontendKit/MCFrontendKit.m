@@ -19,7 +19,6 @@
 @interface MCFrontendKit ()
 
 @property (nonatomic, copy) NSArray *remoteConfig;
-@property (nonatomic, strong) UIWindow *currentWindow;
 @property (nonatomic, strong) NSUserDefaults *frontendDefaults;
 @property (nonatomic, copy) NSDictionary *selectedConfig;
 
@@ -71,8 +70,17 @@
 - (void)show {
     void(^showController)(void) = ^() {
         dispatch_async(dispatch_get_main_queue(), ^{
+#if TARGET_OS_IOS
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:MCFrontendKitViewController.new];
             [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
+#else
+            NSWindow *newWindow = [[NSWindow alloc] initWithContentRect:CGRectMake(0, 0, 300, 600) styleMask:NSWindowStyleMaskClosable|NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+            newWindow.contentViewController = [[MCFrontendKitViewController alloc] initWithNibName:nil bundle:[self resourceBundle]];
+            newWindow.title = @"环境配置";
+            newWindow.hasShadow = YES;
+            [newWindow center];
+            [newWindow orderFront:nil];
+#endif
         });
     };
     
@@ -137,6 +145,10 @@
 - (void)startLogMonitor:(NSDictionary<NSString *,NSString *> *(^)(void))customProfileBlock {
     MCLogger.sharedInstance.customProfileBlock = customProfileBlock;
     [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@/channel", self.baseURL.host,self.baseURL.port]]];
+}
+
+- (NSBundle *)resourceBundle {
+    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:self.class] pathForResource:@"MCFrontendKit.bundle" ofType:nil]];
 }
 
 @end

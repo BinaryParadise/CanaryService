@@ -12,13 +12,11 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - MCFrontendKit (0.2.7):
+  - MCFrontendKit (0.3.0):
     - CocoaLumberjack (~> 3.6)
-    - MCUIKit (~> 0.3)
     - MJExtension
     - SAMKeychain (~> 1.5)
     - SocketRocket (~> 0.5)
-  - MCUIKit (0.3.1)
   - MJExtension (3.2.1)
   - SAMKeychain (1.5.3)
   - SocketRocket (0.5.1)
@@ -28,7 +26,7 @@ DEPENDENCIES:
   - Expecta
   - "Expecta+Snapshots"
   - FBSnapshotTestCase
-  - MCFrontendKit (from `../../`)
+  - MCFrontendKit (from `../../..`)
   - Specta
 
 SPEC REPOS:
@@ -37,7 +35,6 @@ SPEC REPOS:
     - Expecta
     - "Expecta+Snapshots"
     - FBSnapshotTestCase
-    - MCUIKit
     - MJExtension
     - SAMKeychain
     - SocketRocket
@@ -45,20 +42,19 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   MCFrontendKit:
-    :path: "../../"
+    :path: "../../.."
 
 SPEC CHECKSUMS:
   CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
   Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
   "Expecta+Snapshots": dcff217eef506dabd6dfdc7864ea2da321fafbb8
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  MCFrontendKit: bb2499ad328cbf8eb27f5b069ef5847c2ff48278
-  MCUIKit: cdf31d6c54a0c3e8a371885a55212efff72b14fa
+  MCFrontendKit: 3d2dbec35900238232ab7a7787e2578efd2fe5cc
   MJExtension: 635f2c663dcb1bf76fa4b715b2570a5710aec545
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
   Specta: 3e1bd89c3517421982dc4d1c992503e48bd5fe66
 
-PODFILE CHECKSUM: 3d427c67f31bd213655b2382dd5ef6bdb031faab
+PODFILE CHECKSUM: 543a743fb977e440068997ca6be077d2d8d25414
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.0

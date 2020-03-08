@@ -2,17 +2,17 @@ use_frameworks!
 
 platform :ios, '9.0'
 
-if Gem::Version.new(`pod --version`) >= Gem::Version.new('1.7.5')
+if Gem::Version.new(`pod --version`) >= Gem::Version.new('1.9.0')
   install! 'cocoapods',
     :generate_multiple_pod_projects => true,
     :incremental_installation => true
 else
-    raise 'cocoapods 最低要求1.7.5'
+    raise 'cocoapods 最低要求1.9.0'
     return
 end
 
 target 'Example' do
-  pod 'MCFrontendKit', :path => '../../'
+  pod 'MCFrontendKit', :path => '../../..'
 
   target 'MCFrontendKit_Tests' do
     inherit! :search_paths

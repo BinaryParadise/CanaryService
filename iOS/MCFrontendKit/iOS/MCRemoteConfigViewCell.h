@@ -5,8 +5,10 @@
 //  Created by Rake Yang on 2020/2/23.
 //
 
+#if TARGET_OS_IPHONE
+
 #import <UIKit/UIKit.h>
-#import <MCUIKit/MCUIKit.h>
+#import "UIView+Geometry.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,3 +23,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

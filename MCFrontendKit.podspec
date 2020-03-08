@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MCFrontendKit'
-  s.version          = '0.2.7'
+  s.version          = '0.3.0'
   s.summary          = 'A short description of MCFrontendService.'
 
 # This description is used to generate tags and improve search results.
@@ -28,18 +28,23 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/BinaryParadise/MCFrontendService.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
+  s.osx.deployment_target = '10.10'
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'iOS/MCFrontendKit/Classes/**/*'
-  s.private_header_files = 'MCLogger/Classes/Internal/**/*.h'
+  s.ios.source_files = ['iOS/MCFrontendKit/*.{h,m}',
+                        'iOS/MCFrontendKit/Internal/**/*',
+                        'iOS/MCFrontendKit/iOS/*']
+  s.osx.source_files = ['iOS/MCFrontendKit/*.{h,m}',
+                        'iOS/MCFrontendKit/Internal/**/*',
+                        'iOS/MCFrontendKit/OSX/*']
+  s.private_header_files = 'iOS/MCFrontendKit/Internal/**/*.h'
   
-  # s.resource_bundles = {
-  #   'MCFrontendService' => ['MCFrontendService/Assets/*.png']
-  # }
+   s.osx.resource_bundles = {
+     'MCFrontendKit' => ['iOS/MCFrontendKit/OSX/Assets/*']
+   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'MCUIKit', '~> 0.3'
   s.dependency 'MJExtension'
   s.dependency 'CocoaLumberjack', '~> 3.6'
   s.dependency 'SAMKeychain', '~> 1.5'

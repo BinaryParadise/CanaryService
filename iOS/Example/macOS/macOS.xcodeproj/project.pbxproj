@@ -11,6 +11,7 @@
 		241B71682414E56700EC0E15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 241B71672414E56700EC0E15 /* Assets.xcassets */; };
 		241B716B2414E56700EC0E15 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 241B71692414E56700EC0E15 /* MainMenu.xib */; };
 		241B716E2414E56700EC0E15 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 241B716D2414E56700EC0E15 /* main.m */; };
+		241B729E2414FB7400EC0E15 /* MainWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 241B729D2414FB7400EC0E15 /* MainWindow.m */; };
 		45013307427BE58E39629175 /* Pods_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A96CD3841842B055F59FE5 /* Pods_macOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,8 @@
 		241B71732414E59000EC0E15 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		241B71752414E59900EC0E15 /* MCFrontendKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MCFrontendKit.podspec; path = ../../../MCFrontendKit.podspec; sourceTree = "<group>"; };
 		241B71A12414EDC100EC0E15 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		241B729C2414FB7400EC0E15 /* MainWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainWindow.h; sourceTree = "<group>"; };
+		241B729D2414FB7400EC0E15 /* MainWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainWindow.m; sourceTree = "<group>"; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -59,6 +62,8 @@
 				241B716C2414E56700EC0E15 /* Info.plist */,
 				241B716D2414E56700EC0E15 /* main.m */,
 				241B716F2414E56700EC0E15 /* Example.entitlements */,
+				241B729C2414FB7400EC0E15 /* MainWindow.h */,
+				241B729D2414FB7400EC0E15 /* MainWindow.m */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -149,8 +154,12 @@
 				TargetAttributes = {
 					241B71612414E56600EC0E15 = {
 						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = 9V4T4T8D8H;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
 							com.apple.Sandbox = {
 								enabled = 1;
 							};
@@ -247,6 +256,7 @@
 			files = (
 				241B716E2414E56700EC0E15 /* main.m in Sources */,
 				241B71662414E56600EC0E15 /* AppDelegate.m in Sources */,
+				241B729E2414FB7400EC0E15 /* MainWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +301,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9V4T4T8D8H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -333,6 +344,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9V4T4T8D8H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;

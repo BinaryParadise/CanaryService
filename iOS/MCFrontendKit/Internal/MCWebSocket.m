@@ -130,7 +130,7 @@ if (MCFrontendKit.manager.enableDebug) {\
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    TRACE(@"❌ %@", error);
+    TRACE(@"❌ %@ %@", webSocket.url, error);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {

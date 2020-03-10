@@ -46,7 +46,8 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'MJExtension'
-  s.dependency 'CocoaLumberjack', '~> 3.6'
+  s.ios.dependency 'CocoaLumberjack', '3.5.2'
+  s.osx.dependency 'CocoaLumberjack/Swift', '3.5.2'
   s.dependency 'SAMKeychain', '~> 1.5'
   s.dependency 'SocketRocket', '~> 0.5'
 

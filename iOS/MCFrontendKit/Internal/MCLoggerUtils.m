@@ -19,17 +19,20 @@
 
 + (NSString *)identifier {
     static dispatch_once_t onceToken;
+    static NSString *identifierString;
     dispatch_once(&onceToken, ^{
-        NSString *identifierString = [SAMKeychain passwordForService:kBundleIdentifier account:kLoggerServiceName];
+        identifierString = [SAMKeychain passwordForService:kBundleIdentifier account:kLoggerServiceName];
         if (identifierString.length == 0) {
 #if TARGET_OS_OSX
-            [SAMKeychain setPassword:[NSUUID UUID].UUIDString forService:kBundleIdentifier account:kLoggerServiceName];
+            identifierString = [NSUUID UUID].UUIDString;
+            [SAMKeychain setPassword:identifierString forService:kBundleIdentifier account:kLoggerServiceName];
 #else
-            [SAMKeychain setPassword:[UIDevice currentDevice].identifierForVendor.UUIDString forService:kBundleIdentifier account:kLoggerServiceName];
+            identifierString = [UIDevice currentDevice].identifierForVendor.UUIDString;
+            [SAMKeychain setPassword:identifierString forService:kBundleIdentifier account:kLoggerServiceName];
 #endif
         }
     });
-    return [SAMKeychain passwordForService:kBundleIdentifier account:kLoggerServiceName];
+    return identifierString;
 }
 
 + (void)setIdentifier:(NSString *)identifier {
@@ -38,7 +41,7 @@
 
 + (NSString *)systemName {
 #if TARGET_OS_OSX
-    return [NSHost currentHost].name;
+    return @"macOS";
 #else
     return [UIDevice currentDevice].systemName;
 #endif

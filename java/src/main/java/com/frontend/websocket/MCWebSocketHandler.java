@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MCWebSocketHandler extends BinaryWebSocketHandler {
-  Logger logger = LoggerFactory.getLogger(WCWebSocket.class);
+  Logger logger = LoggerFactory.getLogger(MCWebSocketHandler.class);
 
   /**
    * Web端会话合集

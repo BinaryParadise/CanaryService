@@ -37,6 +37,10 @@
 @property (nonatomic, assign) BOOL enableDebug;
 
 - (void)show;
+- (void)show:(UIWindowLevel)level;
+- (void)hide;
+
+- (void)fetchRemoteConfig:(void (^)(void))completion;
 
 /// 获取环境配置的参数值
 /// @param key 参数键

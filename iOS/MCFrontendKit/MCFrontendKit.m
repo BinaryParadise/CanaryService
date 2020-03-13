@@ -21,6 +21,7 @@
 @property (nonatomic, copy) NSArray *remoteConfig;
 @property (nonatomic, strong) NSUserDefaults *frontendDefaults;
 @property (nonatomic, copy) NSDictionary *selectedConfig;
+@property (nonatomic, strong) UIWindow *coverWindow;
 
 @end
 
@@ -68,23 +69,37 @@
 }
 
 - (void)show {
-    void(^showController)(void) = ^() {
-        dispatch_async(dispatch_get_main_queue(), ^{
+    [self show:UIWindowLevelStatusBar+9];
+}
+
+- (void)show:(UIWindowLevel)level {
 #if TARGET_OS_IOS
-            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:MCFrontendKitViewController.new];
-            [UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:nav animated:YES completion:nil];
+    UIWindow *window = [UIWindow.alloc initWithFrame:UIScreen.mainScreen.bounds];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:MCFrontendKitViewController.new];
+    window.rootViewController = nav;
+    window.windowLevel = level;
+    [window makeKeyAndVisible];
+    self.coverWindow = window;
+//    nav.modalPresentationStyle = UIModalPresentationPopover;
+//    UIViewController *popVC = UIApplication.sharedApplication.keyWindow.rootViewController;
+//    if (popVC.presentedViewController) {
+//        popVC = popVC.presentedViewController;
+//    }
+//    [popVC presentViewController:nav animated:YES completion:nil];
+
 #else
-            NSWindow *newWindow = [[NSWindow alloc] initWithContentRect:CGRectMake(0, 0, 300, 600) styleMask:NSWindowStyleMaskClosable|NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
-            newWindow.contentViewController = [[MCFrontendKitViewController alloc] initWithNibName:nil bundle:[self resourceBundle]];
-            newWindow.title = @"环境配置";
-            newWindow.hasShadow = YES;
-            [newWindow center];
-            [newWindow orderFront:nil];
+    NSWindow *newWindow = [[NSWindow alloc] initWithContentRect:CGRectMake(0, 0, 300, 600) styleMask:NSWindowStyleMaskClosable|NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:YES];
+    newWindow.contentViewController = [[MCFrontendKitViewController alloc] initWithNibName:nil bundle:[self resourceBundle]];
+    newWindow.title = @"环境配置";
+    newWindow.hasShadow = YES;
+    [newWindow center];
+    [newWindow orderFront:nil];
 #endif
-        });
-    };
-    
-    [self fetchRemoteConfig:showController];
+}
+
+- (void)hide {
+    [self.coverWindow removeFromSuperview];
+    self.coverWindow = nil;
 }
 
 - (void)fetchRemoteConfig:(void (^)(void))completion {
@@ -144,7 +159,7 @@
 
 - (void)startLogMonitor:(NSDictionary<NSString *,NSString *> *(^)(void))customProfileBlock {
     MCLogger.sharedInstance.customProfileBlock = customProfileBlock;
-    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@/channel", self.baseURL.host]]];
+    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/channel", self.baseURL.scheme, self.baseURL.host]]];
 }
 
 - (NSBundle *)resourceBundle {

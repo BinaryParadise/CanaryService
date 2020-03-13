@@ -131,6 +131,11 @@ if (MCFrontendKit.manager.enableDebug) {\
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
     TRACE(@"❌ %@ %@", webSocket.url, error);
+    if (error.code == 2133) {
+        NSURLComponents *components = [NSURLComponents componentsWithString:self.webSocketURL];
+        components.scheme = @"wss";
+        self.webSocketURL = components.URL.absoluteString;
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {

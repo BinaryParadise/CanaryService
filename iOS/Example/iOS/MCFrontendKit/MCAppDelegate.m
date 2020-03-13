@@ -22,7 +22,7 @@
     }
     MCFrontendKit.manager.appKey = @"com.binaryparadise.neverland";
     MCFrontendKit.manager.enableDebug = YES;
-    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"https://y.neverland.life/v2/conf/full"];
+    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"https://y.neverland.life/api/conf/full"];
     MCFrontendKit.manager.currentName = @"奶味蓝";
     [MCFrontendKit.manager startLogMonitor:^NSDictionary<NSString *,NSString *> *{
         return @{@"PushToken": @"fjejfliejglaje",

@@ -16,7 +16,6 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, copy) NSArray *remoteConfig;
 
-
 @end
 
 @implementation MCFrontendKitViewController
@@ -40,10 +39,20 @@
     [self.tableView registerClass:MCRemoteConfigViewCell.class forCellReuseIdentifier:@"ConfigCell"];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStyleDone target:self action:@selector(closeView:)];
+    
+    __weak typeof(self) self_weak = self;
+    [[MCFrontendKit manager] fetchRemoteConfig:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self_weak.tableView reloadData];
+        });
+    }];
 }
 
 - (IBAction)closeView:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [MCFrontendKit.manager hide];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [MCFrontendKit.manager hide];
+    }];
 }
 
 #pragma mark - UITableViewDataSource

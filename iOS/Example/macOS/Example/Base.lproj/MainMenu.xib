@@ -683,7 +683,7 @@
                     </menu>
                 </menuItem>
             </items>
-            <point key="canvasLocation" x="-43" y="23"/>
+            <point key="canvasLocation" x="-55" y="-18"/>
         </menu>
         <window title="Example" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g" customClass="MainWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -703,6 +703,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="testLogger:" target="QvC-M9-y7g" id="hyc-xe-duD"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9wT-cw-p7a">
+                        <rect key="frame" x="106" y="304" width="94" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="远程配置" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YqS-UD-WWG">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" size="13" name=".PingFangSC-Regular"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="remoteConfig:" target="QvC-M9-y7g" id="FVD-fp-1me"/>
                         </connections>
                     </button>
                 </subviews>

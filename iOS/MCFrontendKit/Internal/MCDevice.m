@@ -28,6 +28,12 @@
         self.osName = UIDevice.currentDevice.systemName;
         self.osVersion = UIDevice.currentDevice.systemVersion;
         self.modelName = UIDevice.currentDevice.localizedModel;
+#else
+        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+        self.name = NSHost.currentHost.localizedName;
+        self.osName = dict[@"ProductName"];
+        self.osVersion = [dict objectForKey:@"ProductVersion"];
+        self.modelName = [self modelIdentifier];
 #endif
         self.ipAddrs = [self getIPAddresses];
         self.appVersion = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleShortVersionString"];
@@ -36,6 +42,25 @@
     }
     return self;
 }
+
+#if TARGET_OS_OSX
+- (NSString *)modelIdentifier{
+    NSString *result=@"Mac";
+    size_t size;
+    sysctlbyname("hw.model", NULL, &size, NULL, 0);
+    
+    char *answer = malloc(size);
+    sysctlbyname("hw.model", answer, &size, NULL, 0);
+    
+    NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+    free(answer);
+    if (results.length) {
+        return results;
+    }
+    
+    return result;
+}
+#endif
 
 - (NSString *)getIPAddress:(BOOL)preferIPv4
 {

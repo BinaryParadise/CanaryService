@@ -43,6 +43,7 @@
     __weak typeof(self) self_weak = self;
     [[MCFrontendKit manager] fetchRemoteConfig:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            self_weak.remoteConfig = MCFrontendKit.manager.remoteConfig;
             [self_weak.tableView reloadData];
         });
     }];

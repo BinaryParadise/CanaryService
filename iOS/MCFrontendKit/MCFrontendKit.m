@@ -21,8 +21,9 @@
 @property (nonatomic, copy) NSArray *remoteConfig;
 @property (nonatomic, strong) NSUserDefaults *frontendDefaults;
 @property (nonatomic, copy) NSDictionary *selectedConfig;
+#if TARGET_OS_IOS
 @property (nonatomic, strong) UIWindow *coverWindow;
-
+#endif
 @end
 
 @implementation MCFrontendKit
@@ -69,11 +70,12 @@
 }
 
 - (void)show {
+#if TARGET_OS_IOS
     [self show:UIWindowLevelStatusBar+9];
 }
 
 - (void)show:(UIWindowLevel)level {
-#if TARGET_OS_IOS
+
     UIWindow *window = [UIWindow.alloc initWithFrame:UIScreen.mainScreen.bounds];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:MCFrontendKitViewController.new];
     window.rootViewController = nav;
@@ -97,10 +99,12 @@
 #endif
 }
 
+#if TARGET_OS_IOS
 - (void)hide {
     [self.coverWindow removeFromSuperview];
     self.coverWindow = nil;
 }
+#endif
 
 - (void)fetchRemoteConfig:(void (^)(void))completion {
     NSString *confURL = [NSString stringWithFormat:@"%@?appkey=%@", self.baseURL.absoluteURL, self.appKey];
@@ -159,11 +163,11 @@
 
 - (void)startLogMonitor:(NSDictionary<NSString *,NSString *> *(^)(void))customProfileBlock {
     MCLogger.sharedInstance.customProfileBlock = customProfileBlock;
-    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/channel", self.baseURL.scheme, self.baseURL.host]]];
+    [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/channel", self.baseURL.scheme, self.baseURL.host, self.baseURL.port?[NSString stringWithFormat:@":%@",self.baseURL.port]:@""]]];
 }
 
 - (NSBundle *)resourceBundle {
-    return [NSBundle bundleWithPath:[[NSBundle bundleForClass:self.class] pathForResource:@"MCFrontendKit.bundle" ofType:nil]];
+    return [NSBundle bundleForClass:self.class];
 }
 
 @end

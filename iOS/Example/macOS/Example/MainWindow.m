@@ -8,6 +8,7 @@
 
 #import "MainWindow.h"
 #import <CocoaLumberjack/CocoaLumberjack.h>
+#import <MCFrontendKit/MCFrontendKit.h>
 
 static DDLogLevel ddLogLevel = DDLogLevelVerbose;
 
@@ -19,6 +20,10 @@ static DDLogLevel ddLogLevel = DDLogLevelVerbose;
     DDLogInfo(@"%@", @"info message.");
     DDLogDebug(@"%@", @"debug message.");
     DDLogVerbose(@"%@", @"verbose message.");
+}
+
+- (IBAction)remoteConfig:(id)sender {
+    [MCFrontendKit.manager show];
 }
 
 @end

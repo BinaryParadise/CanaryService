@@ -37,7 +37,9 @@
 @property (nonatomic, assign) BOOL enableDebug;
 
 - (void)show;
+#if TARGET_OS_IOS
 - (void)show:(UIWindowLevel)level;
+#endif
 - (void)hide;
 
 - (void)fetchRemoteConfig:(void (^)(void))completion;

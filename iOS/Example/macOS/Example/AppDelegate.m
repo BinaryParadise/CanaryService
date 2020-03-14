@@ -26,7 +26,8 @@
     }
     MCFrontendKit.manager.appKey = @"com.binaryparadise.neverland";
     MCFrontendKit.manager.enableDebug = YES;
-    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"http://frontend.xinc818.com/api/full"];
+    //MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"https://y.neverland.life/api/conf/full"];
+    MCFrontendKit.manager.baseURL = [NSURL URLWithString:@"http://127.0.0.1:8080/api/conf/full"];
     MCFrontendKit.manager.currentName = @"奶味蓝";
     [MCFrontendKit.manager startLogMonitor:^NSDictionary<NSString *,id> *{
         return @{@"PushToken": @"fjejfliejglaje",

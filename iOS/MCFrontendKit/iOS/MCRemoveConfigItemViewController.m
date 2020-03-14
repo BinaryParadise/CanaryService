@@ -82,6 +82,7 @@
 - (IBAction)applyConfig:(id)sender {
     MCFrontendKit.manager.currentName = self.item[@"name"];
     [self dismissViewControllerAnimated:YES completion:nil];
+    [MCFrontendKit.manager hide];
 }
 
 #pragma mark - UITableViewDataSource

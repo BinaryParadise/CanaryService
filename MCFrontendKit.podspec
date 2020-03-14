@@ -28,7 +28,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/BinaryParadise/MCFrontendService.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.osx.deployment_target = '10.10'
+  s.osx.deployment_target = '10.11'
   s.ios.deployment_target = '9.0'
 
   s.ios.source_files = ['iOS/MCFrontendKit/*.{h,m}',
@@ -36,12 +36,10 @@ TODO: Add long description of the pod here.
                         'iOS/MCFrontendKit/iOS/*']
   s.osx.source_files = ['iOS/MCFrontendKit/*.{h,m}',
                         'iOS/MCFrontendKit/Internal/**/*',
-                        'iOS/MCFrontendKit/OSX/*']
+                        'iOS/MCFrontendKit/OSX/**/*{h,m}']
   s.private_header_files = 'iOS/MCFrontendKit/Internal/**/*.h'
   
-   s.osx.resource_bundles = {
-     'MCFrontendKit' => ['iOS/MCFrontendKit/OSX/Assets/*']
-   }
+  s.osx.resources = ['iOS/MCFrontendKit/OSX/**/*.{xib,storyboard,png}']
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

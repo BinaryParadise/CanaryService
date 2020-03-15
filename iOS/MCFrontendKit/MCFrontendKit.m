@@ -32,11 +32,6 @@
 {
     self = [super init];
     if (self) {
-        if (@available(iOS 10.0, macOS 10.12, tvOS 10.0, watchOS 3.0, *)) {
-            DDOSLogger.sharedInstance.logFormatter = [MCFrontendLogFormatter new];
-        } else {
-            DDTTYLogger.sharedInstance.logFormatter = [MCFrontendLogFormatter new];
-        }
         self.appKey = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleIdentifier"];
         self.deviceId = [MCLoggerUtils identifier];
         self.frontendDefaults = [[NSUserDefaults alloc] initWithSuiteName:kMCSuiteName];
@@ -162,6 +157,8 @@
 #pragma mark - 日志监控
 
 - (void)startLogMonitor:(NSDictionary<NSString *,NSString *> *(^)(void))customProfileBlock {
+    DDTTYLogger.sharedInstance.logFormatter = [MCFrontendLogFormatter new];
+    [DDLog addLogger:DDTTYLogger.sharedInstance];
     MCLogger.sharedInstance.customProfileBlock = customProfileBlock;
     [MCLogger.sharedInstance startWithAppKey:self.appKey domain:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@%@/channel", self.baseURL.scheme, self.baseURL.host, self.baseURL.port?[NSString stringWithFormat:@":%@",self.baseURL.port]:@""]]];
 }

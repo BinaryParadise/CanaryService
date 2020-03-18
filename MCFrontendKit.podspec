@@ -39,7 +39,7 @@ TODO: Add long description of the pod here.
                         'sdk/Classes/OSX/**/*{h,m}']
   s.private_header_files = 'sdk/Classes/Internal/**/*.h'
   
-  s.osx.resources = ['iOS/Classes/OSX/**/*.{xib,storyboard,png}']
+  s.osx.resources = ['sdk/Classes/OSX/**/*.{xib,storyboard,png}']
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

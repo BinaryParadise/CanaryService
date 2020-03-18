@@ -210,6 +210,7 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				E2B7FEDA04ADB86AC7D827FB /* [CP] Embed Pods Frameworks */,
+				302F6C452CAA5F36E9C0CBE2 /* [MC] Fetch Remote Config */,
 			);
 			buildRules = (
 			);
@@ -324,6 +325,25 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MCFrontendKit_Tests/Pods-MCFrontendKit_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		302F6C452CAA5F36E9C0CBE2 /* [MC] Fetch Remote Config */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			comments = 1;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[MC] Fetch Remote Config";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$CONFIGURATION\" != \"Release\" ]; then\nexport LANG=en_US.UTF-8\nexport LANGUAGE=en_US.UTF-8\nexport LC_ALL=en_US.UTF-8\nruby \"/Users/rakeyang/Github/MCFrontendService/sdk/Classes/ProjectConfigurator.rb\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}${WRAPPER_SUFFIX}\" \"com.binaryparadise.neverland\" https://y.neverland.life\nfi\n";
 		};
 		CECDB75EAFFA94E3319ECFC7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

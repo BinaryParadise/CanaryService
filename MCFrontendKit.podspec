@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MCFrontendKit'
-  s.version          = '0.3.0'
+  s.version          = '0.3.1'
   s.summary          = 'A short description of MCFrontendService.'
 
 # This description is used to generate tags and improve search results.
@@ -31,15 +31,15 @@ TODO: Add long description of the pod here.
   s.osx.deployment_target = '10.11'
   s.ios.deployment_target = '9.0'
 
-  s.ios.source_files = ['iOS/MCFrontendKit/*.{h,m}',
-                        'iOS/MCFrontendKit/Internal/**/*',
-                        'iOS/MCFrontendKit/iOS/*']
-  s.osx.source_files = ['iOS/MCFrontendKit/*.{h,m}',
-                        'iOS/MCFrontendKit/Internal/**/*',
-                        'iOS/MCFrontendKit/OSX/**/*{h,m}']
-  s.private_header_files = 'iOS/MCFrontendKit/Internal/**/*.h'
+  s.ios.source_files = ['sdk/Classes/*.{h,m,rb}',
+                        'sdk/Classes/Internal/**/*',
+                        'sdk/Classes/iOS/*']
+  s.osx.source_files = ['sdk/Classes/*.{h,m,rb}',
+                        'sdk/Classes/Internal/**/*',
+                        'sdk/Classes/OSX/**/*{h,m}']
+  s.private_header_files = 'sdk/Classes/Internal/**/*.h'
   
-  s.osx.resources = ['iOS/MCFrontendKit/OSX/**/*.{xib,storyboard,png}']
+  s.osx.resources = ['iOS/Classes/OSX/**/*.{xib,storyboard,png}']
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

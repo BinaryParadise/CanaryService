@@ -12,7 +12,7 @@ else
 end
 
 target 'Example' do
-  pod 'MCFrontendKit', :path => '../../..'
+  pod 'MCFrontendKit', :path => '../..'
 
   target 'MCFrontendKit_Tests' do
     inherit! :search_paths
@@ -22,4 +22,9 @@ target 'Example' do
     pod 'FBSnapshotTestCase'
     pod 'Expecta+Snapshots'
   end
+end
+
+post_install do |installer|
+  require_relative '../Classes/ProjectConfigurator.rb'
+  ProjectConfigurator::configure_project(installer, 'com.binaryparadise.neverland', 'https://y.neverland.life')
 end

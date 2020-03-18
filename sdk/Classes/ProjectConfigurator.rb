@@ -11,7 +11,7 @@ class ProjectConfigurator
 
   def self.configure_project(installer, appkey, url)
     podspec = installer.sandbox.development_pods['MCFrontendKit']
-    @ruby_path = podspec ? podspec.dirname.to_s+"/iOS" : "Pods"
+    @ruby_path = podspec ? podspec.dirname.to_s+"/sdk" : "Pods"
 
     installer.analysis_result.targets.each do |target|
       if target.user_project_path.exist? && target.user_target_uuids.any?
@@ -35,7 +35,7 @@ class ProjectConfigurator
         end
       end
 
-      rubyfile = @ruby_path + "/MCFrontendKit/ProjectConfigurator.rb"
+      rubyfile = @ruby_path + "/Classes/ProjectConfigurator.rb"
 
       phase = self.fetch_exist_phase(BUILD_PHASE_NAME_FETCH_ENV, project_target)
       if phase.nil?
@@ -98,19 +98,16 @@ class DefaultEnvFetcher
     DefaultEnvFetcher::end_fetching(start_time)
   end
 
-  def self.fetch_to(destination_file, appkey, url)
-    uri = URI.parse(url)
-    http = Net::HTTP.new(uri.host, 80)
-    path = "/api/conf/full?appkey=#{appkey}&os=iOS"
-    puts "GET "+uri.to_s+path
-    request = Net::HTTP::Get.new(path)
-    request['Content-Type'] = 'application/json'
-
-    puts "body: #{request.body}"
-    print '... '
-
+  def self.fetch_to(destination_file, appkey, url)    
     begin
-      response = http.request(request)
+      getURI = URI.parse(url+"/api/conf/full?appkey=#{appkey}&os=iOS")
+      puts "GET "+getURI.to_s
+      response = Net::HTTP.get_response(getURI)
+      puts "body: #{response.body}"
+    
+      if response.code == "301"
+        response = Net::HTTP.get_response(URI(response['location']))
+      end
     rescue Exception => e
       puts "\033[31m#{e.message}\033[0m\n"
       return
@@ -123,21 +120,21 @@ class DefaultEnvFetcher
 
     begin
       response_body = JSON.parse(response.body + '')
-      puts "#{response_body}"
+
+      code = response_body['code'].to_i
+      error = response_body['error']
+      if code != 0
+        puts "`request error, code: #{code}, error: #{error}`"
+      end
+    
+      data = response_body['data']
+      default_routing_table_json_file = File.new("#{destination_file}", 'w+')
+      default_routing_table_json_file.write(data.to_json)
+      default_routing_table_json_file.close
+
     rescue JSON::ParserError => e
       puts "response error, invalid json string: #{response.body}"
     end
-
-    code = response_body['code'].to_i
-    error = response_body['error']
-    if code != 0
-      puts "`request error, code: #{code}, error: #{error}`"
-    end
-
-    data = response_body['data']
-    default_routing_table_json_file = File.new("#{destination_file}", 'w+')
-    default_routing_table_json_file.write(data.to_json)
-    default_routing_table_json_file.close
   end
 
   def self.start_fetching(destination_file)

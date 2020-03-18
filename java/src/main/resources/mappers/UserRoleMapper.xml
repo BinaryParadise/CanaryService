@@ -31,6 +31,7 @@
 
   <select id="findUserList" resultType="com.frontend.domain.MCUserInfo">
     SELECT
+    null as password,
     a.*,
     b.name AS rolename,
     b.level as rolelevel
@@ -60,6 +61,7 @@
 
   <select id="findByLogin" resultType="com.frontend.domain.MCUserInfo">
     SELECT
+    null as password,
     a.*,
     b.name AS rolename,
     b.level AS rolelevel

@@ -48,6 +48,11 @@ public class MCApiFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
+    if (request.getRequestURI().equalsIgnoreCase("/v2/channel")) {
+      response.setHeader("upgrade", "websocket");
+      filterChain.doFilter(request, response);
+      return;
+    }
 
     response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,x-requested-with");

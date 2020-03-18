@@ -1,9 +1,10 @@
-import { wsPath } from '../common/config'
+import { wsPath, baseURI } from '../common/config'
 
 export default {
   messagers: [],
   create: function (deviceid) {
-    this.url = (window.location.protocol == "http:" ? 'ws://' : 'wss://') + window.location.hostname + wsPath + '/web/' + deviceid
+    let apiURL = new URL(baseURI).host?new URL(baseURI):window.location
+    this.url = (apiURL.protocol=="http:"?"ws://":"wss://") + apiURL.hostname + (apiURL.port?":"+apiURL.port:"") + wsPath + '/web/' + deviceid
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)

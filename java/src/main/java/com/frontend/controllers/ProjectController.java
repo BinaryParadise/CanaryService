@@ -4,19 +4,15 @@ import com.frontend.domain.MCAppInfo;
 import com.frontend.mappers.ProjectMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
-import com.frontend.websocket.WCWebSocket;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
-import java.util.HashMap;
 
 @RestController
 @EnableSwagger2

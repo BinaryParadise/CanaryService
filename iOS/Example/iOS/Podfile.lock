@@ -50,7 +50,7 @@ SPEC CHECKSUMS:
   Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
   "Expecta+Snapshots": dcff217eef506dabd6dfdc7864ea2da321fafbb8
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  MCFrontendKit: 0dd7b47abb2f4d69a03d379b6a14d0516cd30190
+  MCFrontendKit: d73ca3ace56cd231c6c2db99b8eb6d09363a6faf
   MJExtension: 635f2c663dcb1bf76fa4b715b2570a5710aec545
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
@@ -58,4 +58,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 543a743fb977e440068997ca6be077d2d8d25414
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.9.1

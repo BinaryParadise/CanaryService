@@ -11,7 +11,7 @@ class ProjectConfigurator
 
   def self.configure_project(installer, appkey, url)
     podspec = installer.sandbox.development_pods['MCFrontendKit']
-    @ruby_path = podspec ? podspec.dirname.to_s+"/sdk" : "Pods"
+    @ruby_path = podspec ? podspec.dirname.to_s : "Pods/MCFrontendKit"
 
     installer.analysis_result.targets.each do |target|
       if target.user_project_path.exist? && target.user_target_uuids.any?
@@ -35,7 +35,7 @@ class ProjectConfigurator
         end
       end
 
-      rubyfile = @ruby_path + "/Classes/ProjectConfigurator.rb"
+      rubyfile = @ruby_path + "/sdk/Classes/ProjectConfigurator.rb"
 
       phase = self.fetch_exist_phase(BUILD_PHASE_NAME_FETCH_ENV, project_target)
       if phase.nil?

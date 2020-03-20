@@ -39,7 +39,9 @@
         self.remoteConfig = [self.frontendDefaults objectForKey:kMCRemoteConfig];
         if (!self.remoteConfig) {
             NSString *configPath = [NSBundle.mainBundle pathForResource:@"Peregrine.bundle/RemoteConfig.json" ofType:nil];
-            self.remoteConfig = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:configPath] options:NSJSONReadingMutableLeaves error:nil];
+            if (configPath) {
+                self.remoteConfig = [NSJSONSerialization JSONObjectWithData:[NSData dataWithContentsOfFile:configPath] options:NSJSONReadingMutableLeaves error:nil];
+            }
         }
         _currentName = [self.frontendDefaults objectForKey:kMCCurrentName];
         [self switchToCurrentConfig];

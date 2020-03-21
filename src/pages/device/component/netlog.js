@@ -18,7 +18,7 @@ export default class NetLogPage extends React.Component {
         return (<Drawer
             width={800}
             height={600}
-            title={''}
+            title={'总览'}
             placement="bottom"
             closable={true}
             onClose={this.props.onClose}

@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.binaryparadise.client</groupId>
-  <artifactId>com.binaryparadise.frontend</artifactId>
+  <groupId>com.binaryparadise.neverland</groupId>
+  <artifactId>com.binaryparadise.canary</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.9</version>
-  <name>frontend api service</name>
+  <version>0.3.0</version>
+  <name>canary api service</name>
 
   <!-- inherit parent package -->
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.4.3.RELEASE</version>
+    <version>2.0.0.RELEASE</version>
   </parent>
 
   <repositories>
@@ -151,7 +151,7 @@
   <properties>
     <start-class>com.frontend.MCApplication</start-class>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.boot.version>1.4.3.RELEASE</spring.boot.version>
+    <spring.boot.version>2.0.0.RELEASE</spring.boot.version>
   </properties>
 
 </project>

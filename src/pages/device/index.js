@@ -93,6 +93,10 @@ export default class IndexPage extends React.Component {
     wsInstance.connect(this.onMessage)
   }
 
+  componentWillUnmount() {
+    wsInstance.close()
+  }
+
   onMessage = (msg) => {
     if (msg.code == 0) {
       switch (msg.type) {

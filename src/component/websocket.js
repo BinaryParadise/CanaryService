@@ -1,10 +1,11 @@
 import { wsPath, baseURI } from '../common/config'
+import URL from 'url'
 
 export default {
   messagers: [],
   create: function (deviceid) {
-    let apiURL = new URL(baseURI).host?new URL(baseURI):window.location
-    this.url = (apiURL.protocol=="http:"?"ws://":"wss://") + apiURL.hostname + (apiURL.port?":"+apiURL.port:"") + wsPath + '/web/' + deviceid
+    let apiURL = URL.parse(baseURI).host ? URL.parse(baseURI) : window.location
+    this.url = (apiURL.protocol == "http:" ? "ws://" : "wss://") + apiURL.hostname + (apiURL.port ? ":" + apiURL.port : "") + wsPath + '/web/' + deviceid
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)
@@ -53,16 +54,22 @@ export default {
         }
       }
       sock.onclose = e => {
-        if (e.type === 'error' || e.type === 'close') {
-          console.error("[WS]连接已断开，10秒稍后自动重连")
-          // context.onMessage({ code: 1, type: 0, msg: "连接已断开，10秒稍后自动重连" })
+        if (e.code != 1000) {
+          context.onMessage({ code: 1, type: 0, msg: "连接已断开，10秒稍后自动重连" })
           setTimeout(function () {
             context.connect.apply(context)
           }, 10000)
+        } else {
+          console.info("[WS]正常关闭")
         }
       }
       this.sock = sock
     }
+  },
+  close: function () {
+    this.sock.close()
+    this.sock = undefined
+    this.messagers = []
   },
   onMessage: function (obj) {
     for (let messager of this.messagers) {

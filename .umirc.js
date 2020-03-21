@@ -50,7 +50,7 @@ export default {
         antd: true,
         dva: true,
         dynamicImport: false,
-        title: process.env.title ? process.env.title : '奶味蓝的乐园',
+        title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
         dll: false,
         routes: {
           exclude: [

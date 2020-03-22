@@ -58,6 +58,23 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
       webSessions.put(session.getId(), session);
     } else {
       clientSessions.put(session.getId(), session);
+
+      // 通知前端页面设备已连接
+      for (WebSocketSession destSession : webSessions.values()) {
+        String deviceId = (String) session.getAttributes().get("deviceid");
+        if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
+          && destSession.isOpen()) {
+          try {
+            MCMessage msg = new MCMessage();
+            msg.setType(11);
+            msg.setMsg("设备已连接...");
+            msg.setData("1");
+            destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
     }
   }
 
@@ -68,6 +85,24 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
     } else {
       clientSessions.remove(session.getId());
       devices.remove(session.getAttributes().get("deviceid"));
+      logger.info("【" + session.getAttributes().get("deviceid") + "】设备已离线...");
+
+      // 通知前端页面设备已关闭
+      for (WebSocketSession destSession : webSessions.values()) {
+        String deviceId = (String) session.getAttributes().get("deviceid");
+        if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
+          && destSession.isOpen()) {
+          try {
+            MCMessage msg = new MCMessage();
+            msg.setType(11);
+            msg.setMsg("设备已离线...");
+            msg.setData("0");
+            destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
     }
   }
 
@@ -110,18 +145,31 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
     if (info.getDeviceId() == null) {
       logger.error("注册设备必须包含deviceId");
     } else {
-//      MCAppInfo appInfo = appsMapper.findByAppKey(info.getAppKey());
-//      if (appInfo != null) {
-//        info.setAppId(appInfo.getId());
-//      }
       devices.put(info.getDeviceId(), info);
-      logger.info("设备注册成功: " + info.getDeviceId());
+      Integer count = 0;
+      for (WebSocketSession destSession : webSessions.values()) {
+        String deviceId = (String) session.getAttributes().get("deviceid");
+        if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
+          && destSession.isOpen()) {
+          try {
+            count++;
+            MCMessage pingMsg = new MCMessage();
+            pingMsg.setType(2);
+            pingMsg.setMsg("Ping");
+            destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(pingMsg))));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      logger.info("【" + info.getDeviceId() + "】设备已更新，观察者:[ " + count+"]");
     }
   }
 
   void messageHandlerForType11(MCMessage msg, WebSocketSession session) {
     List<MCDeviceInfo> list = new ArrayList<>();
-    for(MCDeviceInfo device : devices.values()) {
+    for (MCDeviceInfo device : devices.values()) {
       if (device.getAppKey().equalsIgnoreCase(msg.getAppKey())) {
         list.add(device);
       }

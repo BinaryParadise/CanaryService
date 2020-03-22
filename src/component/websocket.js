@@ -55,7 +55,8 @@ export default {
       }
       sock.onclose = e => {
         if (e.code != 1000) {
-          context.onMessage({ code: 1, type: 0, msg: "连接已断开，10秒稍后自动重连" })
+          console.error(e)
+          context.onMessage({ code: 1, type: 0, msg: "服务连接已断开，10秒稍后自动重连" })
           setTimeout(function () {
             context.connect.apply(context)
           }, 10000)

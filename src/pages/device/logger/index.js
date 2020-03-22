@@ -58,11 +58,10 @@ export default class LoggerMonitor extends React.Component {
     }
 
     formatDate = obj => {
-        return new Date(obj.timestamp).Format('HH:mm:ss.S')
+        return new Date(obj.timestamp||new Date().getTime()).Format('HH:mm:ss.S')
     }
 
     formatFunc = obj => {
-        // return "";//自带函数名称和代码行
         if (obj.function === undefined) {
             return ""
         }
@@ -174,7 +173,6 @@ export default class LoggerMonitor extends React.Component {
     }
 
     onMessage = (obj) => {
-        this.setState({ avaiable: obj.code == 0 })
         if (obj.code != 0) {
             notification['error']({
                 message: '错误',
@@ -183,17 +181,20 @@ export default class LoggerMonitor extends React.Component {
             });
             return
         }
+        const { logs } = this.state
         switch (obj.type) {
-            case 1:
-                console.warn(obj)
-                notification['info']({
-                    message: '信息',
-                    description: obj.msg
-                });
+            case 1: notification['success']({
+                message: '信息',
+                description:
+                    obj.msg,
+            });
+                return true;
+            case 11:
+                this.setState({ avaiable: obj.code == 0 })
+                this.setState({ logs: [...logs, { flat: 4, message: obj.msg, key: 'key-' + logs.length, type: 1 }] })
                 return true;
             case 30://本地日志
             case 31://网络日志
-                const { logs } = this.state
                 obj.data.key = 'key-' + logs.length
                 this.setState({ logs: [...logs, obj.data] })
                 return true;

@@ -129,6 +129,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
 
   @Override
   protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+    logger.info("【"+(String) session.getAttributes().get("deviceid")+"】发来一个Pong");
     super.handlePongMessage(session, message);
   }
 
@@ -153,17 +154,16 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
           && destSession.isOpen()) {
           try {
             count++;
-            MCMessage pingMsg = new MCMessage();
-            pingMsg.setType(2);
-            pingMsg.setMsg("Ping");
-            destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(pingMsg))));
+            PingMessage pingMessage = new PingMessage();
+            destSession.sendMessage(pingMessage);
           } catch (IOException e) {
             e.printStackTrace();
+            logger.error("ping", e);
           }
         }
       }
 
-      logger.info("【" + info.getDeviceId() + "】设备已更新，观察者:[ " + count+"]");
+      logger.info("【" + info.getDeviceId() + "】设备已更新，观察者:[" + count+"]");
     }
   }
 

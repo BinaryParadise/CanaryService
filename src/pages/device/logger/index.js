@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './logger.css';
 import PropTypes from 'prop-types'
-import { Popover, Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
+import { Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
 import WebSocket from '../../../component/websocket'
 import router from 'umi/router';
+import NetLog from '../component/netlog'
 
 // 日志标记
 const Error = (1 << 0)
@@ -34,19 +35,22 @@ export default class LoggerMonitor extends React.Component {
         logs: [],
         autoscroll: true,
         avaiable: false,
-        logLevel: LevelVerbose
+        logLevel: LevelVerbose,
+        visiable: false
     }
+    wsInstance = WebSocket.create(this.state.data.deviceId)
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.state.data == undefined) {
             router.push('/device')
             return
         }
+        this.wsInstance.connect(this.onMessage)
+        this.scrollToBottom()
     }
 
-    componentDidMount() {
-        WebSocket.create(this.state.data.deviceId).connect(this.onMessage)
-        this.scrollToBottom()
+    componentWillUnmount() {
+        this.wsInstance.close()
     }
 
     componentDidUpdate() {
@@ -54,11 +58,10 @@ export default class LoggerMonitor extends React.Component {
     }
 
     formatDate = obj => {
-        return new Date(obj.timestamp).Format('HH:mm:ss.S')
+        return new Date(obj.timestamp||new Date().getTime()).Format('HH:mm:ss.S')
     }
 
     formatFunc = obj => {
-        // return "";//自带函数名称和代码行
         if (obj.function === undefined) {
             return ""
         }
@@ -67,13 +70,7 @@ export default class LoggerMonitor extends React.Component {
 
     formatMessage = obj => {
         if (obj.type !== 1) {
-            if (obj.mimeType.indexOf('image/') === 0) {
-                return (<span>{'🌐' + obj.statusCode + ' '}<Popover placement='topLeft' style={{ backgroundColor: 'transparent' }} content={<img src={'data:' + obj.mimeType + ';base64,' + obj.responseBody} alt='' />}>
-                    {obj.url}
-                </Popover></span>
-                )
-            }
-            return '🌐' + obj.statusCode + ' ' + obj.url
+            return '🌐' + obj.method + ' ' + obj.url
         }
         return obj.message;
     }
@@ -86,6 +83,16 @@ export default class LoggerMonitor extends React.Component {
 
     onMenuClick = (item) => {
         this.setState({ logLevel: parseInt(item.key) })
+    }
+
+    onLogClick = (item) => {
+        if (item.type == 2) {
+            this.setState({ curData: item })
+        }
+    }
+
+    onLogClose = (item) => {
+        this.setState({ curData: null })
     }
 
     logMenu = () => {
@@ -107,6 +114,9 @@ export default class LoggerMonitor extends React.Component {
     }
 
     logClass = obj => {
+        if (obj.type == 2) {
+            return styles.yellow;
+        }
         switch (obj.flag) {
             case Verbose: return styles.verbose;
             case Debug: return styles.green;
@@ -137,7 +147,7 @@ export default class LoggerMonitor extends React.Component {
                 <div className={styles.logbody}>
                     <pre className={styles.ansi} ref={(el) => { this.messagesEnd = el }}>
                         {
-                            filterLogs.map((record) => <div className={styles.log_line} key={record.key}><a href='#'></a>
+                            filterLogs.map((record) => <div onClick={() => this.onLogClick(record)} className={styles.log_line} key={record.key}><a href='#'></a>
                                 <span id={record.key} className={this.logClass(record) + " " + styles.bold}>{this.formatDate(record) + ' '}{this.formatFunc(record)}{this.formatMessage(record)}</span>
                             </div>)
                         }
@@ -157,12 +167,12 @@ export default class LoggerMonitor extends React.Component {
                         <a>{levelInfo.name}<Icon type="down"></Icon></a>
                     </Dropdown>
                 </Affix>
+                <NetLog data={this.state.curData} onClose={this.onLogClose}></NetLog>
             </div >
         )
     }
 
     onMessage = (obj) => {
-        this.setState({ avaiable: obj.code == 0 })
         if (obj.code != 0) {
             notification['error']({
                 message: '错误',
@@ -171,10 +181,20 @@ export default class LoggerMonitor extends React.Component {
             });
             return
         }
+        const { logs } = this.state
         switch (obj.type) {
+            case 1: notification['success']({
+                message: '信息',
+                description:
+                    obj.msg,
+            });
+                return true;
+            case 11:
+                this.setState({ avaiable: obj.code == 0 })
+                this.setState({ logs: [...logs, { flat: 4, message: obj.msg, key: 'key-' + logs.length, type: 1 }] })
+                return true;
             case 30://本地日志
             case 31://网络日志
-                const { logs } = this.state
                 obj.data.key = 'key-' + logs.length
                 this.setState({ logs: [...logs, obj.data] })
                 return true;

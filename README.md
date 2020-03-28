@@ -2,7 +2,7 @@
 
 管理员账号: admin
 
-密码: frontend
+密码: admin
 
 ## [iOS SDK集成说明](iOS/README.md)
 

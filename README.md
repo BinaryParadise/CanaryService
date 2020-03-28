@@ -1,10 +1,20 @@
-# 如何使用
+# 金丝雀
 
-管理员账号: admin
+提供前端开发的辅助功能，提升工作效率
 
-密码: admin
+主要功能：
+- 远程配置
+- 日志监控
+- 网络日志抓取
 
-## [iOS SDK集成说明](iOS/README.md)
+## 如何使用
+
+ > 管理员账号: admin 
+
+ > 密码: admin
+
+- [接口文档](SpringBoot)
+- [iOS SDK](https://github.com/BinaryParadise/Canary)
 
 ## 开发环境搭建
 

@@ -68,7 +68,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
             MCMessage msg = new MCMessage();
             msg.setType(11);
             msg.setMsg("设备已连接...");
-            msg.setData("1");
+            msg.setData(JSONObject.parse("{\"avaiable\":true}"));
             destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
           } catch (IOException e) {
             e.printStackTrace();
@@ -96,7 +96,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
             MCMessage msg = new MCMessage();
             msg.setType(11);
             msg.setMsg("设备已离线...");
-            msg.setData("0");
+            msg.setData(JSONObject.parse("{\"avaiable\":false}"));
             destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
           } catch (IOException e) {
             e.printStackTrace();

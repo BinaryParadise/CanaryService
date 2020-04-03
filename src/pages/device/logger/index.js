@@ -58,7 +58,7 @@ export default class LoggerMonitor extends React.Component {
     }
 
     formatDate = obj => {
-        return new Date(obj.timestamp||new Date().getTime()).Format('HH:mm:ss.S')
+        return new Date(obj.timestamp || new Date().getTime()).Format('HH:mm:ss.S')
     }
 
     formatFunc = obj => {
@@ -127,6 +127,12 @@ export default class LoggerMonitor extends React.Component {
         }
     }
 
+    transformIp = (data) => {
+        const ipv4 = (data.ipAddrs || {}).ipv4
+        let key = Object.keys(ipv4).filter(item => !ipv4[item].startsWith('169') && item.startsWith('en'))[0]
+        return ipv4[key]
+    }
+
     render() {
         const { autoscroll, data, avaiable, logLevel } = this.state
         const filterLogs = this.state.logs.filter(item => item.flag & logLevel)
@@ -141,7 +147,7 @@ export default class LoggerMonitor extends React.Component {
                         <a href="/device">设备列表</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Badge status={avaiable ? 'success' : 'default'}></Badge> {data.name}（{(data.ipAddrs || {}).ipv4.en0}）
+                        <Badge status={avaiable ? 'processing' : 'default'}></Badge> {data.name}（<span style={{color:'orange'}}>{this.transformIp(data)}</span>）
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={styles.logbody}>
@@ -190,8 +196,8 @@ export default class LoggerMonitor extends React.Component {
             });
                 return true;
             case 11:
-                this.setState({ avaiable: obj.code == 0 })
-                this.setState({ logs: [...logs, { flat: 4, message: obj.msg, key: 'key-' + logs.length, type: 1 }] })
+                this.setState({ avaiable: obj.data.avaiable })
+                this.setState({ logs: [...logs, { flag: 8, message: obj.msg, key: 'key-' + logs.length, type: 1 }] })
                 return true;
             case 30://本地日志
             case 31://网络日志

@@ -18,7 +18,7 @@ export default class NetLogPage extends React.Component {
         return (<Drawer
             width={800}
             height={600}
-            title={'总览'}
+            title={<span><span style={{ color: 'red', marginRight: 6 }}>{data.statusCode}</span><span style={{ color: 'purple', marginRight: 6 }}>{data.method}</span><span style={{ color: 'orange' }}>{data.url}</span></span>}
             placement="bottom"
             closable={true}
             onClose={this.props.onClose}
@@ -26,23 +26,12 @@ export default class NetLogPage extends React.Component {
             getContainer={false}
             style={{ position: 'absolute' }}
         >
-            <Tabs defaultActiveKey="1" size="small">
-                <Tabs.TabPane tab="请求" key="1">
-                    <Descriptions column={1} size='small' layout="horizontal" bordered>
-                        <Descriptions.Item key={0} label="Url"><b>{data.url}</b></Descriptions.Item>
-                        <Descriptions.Item key={1} label="Method">{data.method}</Descriptions.Item>
-                        <Descriptions.Item key={2} label="Headers"><ReactJson src={data.requestfields} name={false}></ReactJson></Descriptions.Item>
-                        <Descriptions.Item key={2} label="Body"><ReactJson src={data.requestbody || {}} name={false}></ReactJson></Descriptions.Item>
-                    </Descriptions>
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="响应" key="2">
-                    <Descriptions column={1} size='scp small' layout="horizontal" bordered>
-                        <Descriptions.Item key={1} label="StatusCode"><b style={{ color: "sandybrown" }}>{data.statusCode}</b></Descriptions.Item>
-                        <Descriptions.Item key={2} label="Headers"><ReactJson src={data.responsefields} name={false}></ReactJson></Descriptions.Item>
-                        <Descriptions.Item key={3} label="Body"><ReactJson src={data.responsebody || {}} name={false}></ReactJson></Descriptions.Item>
-                    </Descriptions>
-                </Tabs.TabPane>
-            </Tabs>
+            <Descriptions title="" column={2} size='small' layout="vertical" bordered>
+                <Descriptions.Item label={<b>请求</b>} className={styles.logtop}><ReactJson src={data.requestfields} name={'Headers'}></ReactJson></Descriptions.Item>
+                <Descriptions.Item label={<b>响应</b>} className={styles.logtop}><ReactJson src={data.responsefields} name={'Headers'}></ReactJson></Descriptions.Item>
+                <Descriptions.Item label="Body" className={styles.logtop}><ReactJson src={data.requestbody || {}} name={false}></ReactJson></Descriptions.Item>
+                <Descriptions.Item label="Body" className={styles.logtop}><ReactJson src={data.responsebody || {}} name={false}></ReactJson></Descriptions.Item>
+            </Descriptions>
         </Drawer>)
     }
 }

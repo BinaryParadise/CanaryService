@@ -63,7 +63,14 @@ export default {
         },
       },
     ],
-  ]
+  ],
+  proxy: {
+    '/api': {
+      target: 'http://127.0.0.1:9001/v2',
+      pathRewrite: { '^/api': '' },
+      changeOrigin: true
+    }
+  }
   // cssLoaderOptions: {
   //   localIdentName: '[local]'
   // }

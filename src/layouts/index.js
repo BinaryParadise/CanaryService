@@ -141,7 +141,7 @@ class BasicLayout extends React.Component {
                 <Icon type="link" />
                 <span>路由配置</span>
               </Menu.Item>
-              <Menu.Item key="/package" hidden={true}>
+              <Menu.Item key="/package" hidden={false}>
                 <Icon type="appstore" />
                 <span>测试包管理</span>
               </Menu.Item>

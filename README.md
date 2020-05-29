@@ -20,15 +20,10 @@
 
 Web和Java服务部署推荐使用nginx
 
-```bash
-#下载代码
-git clone git@github.com:BinaryParadise/MCFrontendService.git
-```
-
 ### 搭建Java API服务
 
 ```bash
-cd MCFrontendService java
+cd SpringBoot java
 idea .
 #点击启动调试即可
 ```
@@ -70,4 +65,25 @@ npm start
 
 ## [预览](http://127.0.0.1:8000)
 
+### 远程配置
+
+![image](https://user-images.githubusercontent.com/8289395/83214277-c4f86180-a196-11ea-8656-39c83808387b.png)
+![image](https://user-images.githubusercontent.com/8289395/83214335-eeb18880-a196-11ea-9ea8-9aa82bb35a01.png)
+![image](https://user-images.githubusercontent.com/8289395/83214360-fec96800-a196-11ea-8ff8-fbb4ee62787d.png)
+
+
 ![image](https://user-images.githubusercontent.com/8289395/58154303-e4b39a80-7ca3-11e9-80ca-b8e0af1b0ec8.png)
+
+### 日志监控（可监控网络接口调用）&设备信息查看
+
+![image](https://user-images.githubusercontent.com/8289395/83214577-82835480-a197-11ea-8571-9735df093f28.png)
+![image](https://user-images.githubusercontent.com/8289395/83214834-2240e280-a198-11ea-94fc-0f0762224dff.png)
+
+
+### 项目管理
+
+![image](https://user-images.githubusercontent.com/8289395/83214440-2ae4e900-a197-11ea-9385-38eee08af08b.png)
+
+### 用户管理
+
+![image](https://user-images.githubusercontent.com/8289395/83214395-143e9200-a197-11ea-8554-dd841ee05dc8.png)

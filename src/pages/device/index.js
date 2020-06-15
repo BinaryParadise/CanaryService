@@ -31,7 +31,7 @@ export default class IndexPage extends React.Component {
         dataIndex: 'modelName',
         width: 180,
         render: (text, record) => {
-          return <span><Tag color="#87d068">{text}</Tag> <Badge status={text ? 'warning' : 'success'} text={text ? '模拟器' : '真机'} /></span>
+          return <span><Tag color="#87d068">{text}</Tag> <Badge status={record.simulator ? 'warning' : 'success'} text={record.simulator ? '模拟器' : '真机'} /></span>
         }
       },
       {

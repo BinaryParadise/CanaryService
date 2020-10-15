@@ -65,7 +65,11 @@ export default class LoggerMonitor extends React.Component {
         if (obj.function === undefined) {
             return ""
         }
-        return obj.function + '+' + obj.line + ' '
+        var funcName = obj.function === undefined ? "":obj.function
+        if ((obj.file||"").endsWith(".swift")) {
+            funcName = obj.fileName+"."+funcName
+        }
+        return funcName + '+' + obj.line + ' '
     }
 
     formatMessage = obj => {

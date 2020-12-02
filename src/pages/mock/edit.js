@@ -1,6 +1,6 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import { Form, Input, Checkbox } from 'antd'
+import { Form, Input, Checkbox, Select } from 'antd'
 import { AuthUser } from '../../common/util'
 
 const formItemLayout = {
@@ -9,15 +9,23 @@ const formItemLayout = {
         sm: { span: 6 },
     },
     wrapperCol: {
-        xs: { span: 24 },
+        xs: { span: 32 },
         sm: { span: 16 },
     },
 };
 
-class ProjectEditForm extends React.Component {
+class MockEditForm extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form
         const { data } = this.props
+        const methodSelecor = getFieldDecorator('method', {
+            initialValue: data.method,
+            rules: [{ required: true, message: '选择方法' }],
+        })(<Select initialValue={data.method ?? "GET"} placeholder="请选择方法" style={{ width: 115 }}>
+            <Select.Option key="GET">GET</Select.Option>
+            <Select.Option key="POST">POST</Select.Option>
+        </Select>)
+
         return (
             <Form {...formItemLayout} layout="horizontal">
                 {data.id > 0 &&
@@ -38,6 +46,12 @@ class ProjectEditForm extends React.Component {
                         rules: [{ required: true, message: '请输入名称!' }],
                     })(<Input />)}
                 </Form.Item>
+                <Form.Item label="方法/路径">
+                    {getFieldDecorator('path', {
+                        initialValue: data.path,
+                        rules: [{ required: true, message: '请输入路径!' }],
+                    })(<Input addonBefore={methodSelecor} />)}
+                </Form.Item>
                 <Form.Item label="公开">
                     {getFieldDecorator('shared', {
                         valuePropName: 'checked',
@@ -48,4 +62,4 @@ class ProjectEditForm extends React.Component {
         )
     }
 }
-export default Form.create()(ProjectEditForm)
+export default Form.create()(MockEditForm)

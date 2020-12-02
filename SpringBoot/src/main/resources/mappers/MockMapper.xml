@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.frontend.mappers.MockMapper">
+
+  <insert id="insertNew" parameterType="com.frontend.domain.MCMockInfo" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO MockData(name,path,appId, updateTime) values(#{name},#{path},#{appId},
+    STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
+  </insert>
+
+  <update id="update" parameterType="com.frontend.domain.MCMockInfo">
+    UPDATE Project set name=#{name}, method=#{method}, path=#{path}, updateTime=(STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)) where id=#{id}
+  </update>
+
+  <select id="findAllByPage" resultType="com.frontend.domain.MCMockInfo">
+    SELECT * FROM MockData where appId=#{0} LIMIT #{1.begin},#{1.end}
+  </select>
+
+</mapper>

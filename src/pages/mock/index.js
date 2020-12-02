@@ -1,29 +1,25 @@
 import React from 'react'
 import { Table, Popconfirm, Layout, Button, message, Modal, Badge, Breadcrumb } from "antd";
 import axios from '../../component/axios'
-import ProjectEditForm from './edit'
+import MockEditForm from './edit'
 import moment from 'moment'
 
-export default class ProjectPage extends React.Component {
+export default class MockIndexPage extends React.Component {
     columns = [
         {
-            title: '应用名称',
+            title: '名称',
             dataIndex: 'name',
-            width: 300,
-            editable: true,
+            width: 300
         },
         {
-            title: 'AppSecret',
+            title: '方法',
             width: 300,
-            dataIndex: 'identify'
+            dataIndex: 'method'
         },
         {
-            title: '公开',
+            title: '路径',
             width: 100,
-            dataIndex: 'shared',
-            render: (text) => {
-                return <Badge status={text ? 'success' : 'default'} text={text ? '公开' : '私有'} />;
-            }
+            dataIndex: 'path'
         },
         {
             dataIndex: 'updateTime',
@@ -55,23 +51,24 @@ export default class ProjectPage extends React.Component {
     state = {
         loading: false,
         listData: [],
+        queryParam: {
+            pid: (window.__config__.projectInfo || {}).id,
+            pageSize: 20,
+            pageIndex: 1
+        },
         editItem: {
             visible: false,
             data: {}
         }
     }
 
-    onEdit = (record) => {
-        this.setState({ editItem: { visible: true, data: record } })
+    saveFormRef = (formRef) => {
+        this.formRef = formRef
     }
 
-    componentDidMount() {
-        this.getAppList();
-    }
-
-    // 获应用列表
-    getAppList = () => {
-        return axios.get('/project/list', {}).then(result => {
+    queryAll = () => {
+        const { queryParam } = this.state
+        return axios.get('/mock/list', { params: queryParam }).then(result => {
             if (result.code != 0) {
                 return
             }
@@ -79,21 +76,8 @@ export default class ProjectPage extends React.Component {
         })
     }
 
-    handleDelete = (record) => {
-        return axios.post("/project/delete/" + record.id).then(result => {
-            if (result.code == 0) {
-                const dataSource = [...this.state.listData];
-                this.setState({ listData: dataSource.filter(item => item.id !== record.id) });
-                message.success("刪除成功");
-            } else {
-                message.error(result.error);
-            }
-        })
-    }
-
-    onCancel = () => {
-        const { editItem } = this.state
-        this.setState({ editItem: { ...editItem, visible: false } })
+    onEdit = (record) => {
+        this.setState({ editItem: { visible: true, data: record } })
     }
 
     onSave = () => {
@@ -105,28 +89,18 @@ export default class ProjectPage extends React.Component {
 
             this.submit(values, () => {
                 form.resetFields()
-                this.getAppList()
+                this.queryAll()
             });
         });
     }
 
-    resetAppSecret = (record) => {
-        return axios.post("/project/appsecret/reset", record).then(result => {
-            if (result.code == 0) {
-                message.success("重置成功");
-                this.getAppList()
-            } else {
-                message.error(result.error);
-            }
-        })
-    }
-
-    saveFormRef = (formRef) => {
-        this.formRef = formRef
+    onCancel = () => {
+        const { editItem } = this.state
+        this.setState({ editItem: { ...editItem, visible: false } })
     }
 
     submit = (values, callback) => {
-        return axios.post('/project/update', values).then(result => {
+        return axios.post('/mock/update', values).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")
                 callback()
@@ -134,6 +108,10 @@ export default class ProjectPage extends React.Component {
                 message.error(result.error)
             }
         });
+    }
+
+    componentDidMount() {
+        this.queryAll()
     }
 
     render() {
@@ -144,10 +122,12 @@ export default class ProjectPage extends React.Component {
                     <Breadcrumb.Item>
                         <a href="/">首页</a>
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item>应用管理</Breadcrumb.Item>
+                    <Breadcrumb.Item>Mock数据</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Button type="primary" style={{ width: 80, marginBottom: 12 }} onClick={() => this.onEdit({})}>添加</Button>
+                <Button type="primary" style={{ width: 100, marginBottom: 12 }} onClick={() => this.onEdit({})}>+添加接口</Button>
+
+                <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns}></Table>
                 <Modal
                     visible={editItem.visible}
                     title={editItem.data == null ? "新增" : "修改"}
@@ -156,11 +136,9 @@ export default class ProjectPage extends React.Component {
                     onCancel={this.onCancel}
                     onOk={this.onSave}
                 >
-                    <ProjectEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data || {}}></ProjectEditForm>
+                    <MockEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data || {}}></MockEditForm>
                 </Modal>
-                <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns}></Table>
             </Layout>
         )
     }
-
 }

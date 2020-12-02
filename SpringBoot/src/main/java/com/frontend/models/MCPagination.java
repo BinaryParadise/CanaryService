@@ -5,7 +5,7 @@ public class MCPagination {
   Integer end;
 
   public MCPagination(Integer pageIndex, Integer pageSize) {
-    pageIndex = pageIndex == null ? 0 : pageIndex;
+    pageIndex = pageIndex == null ? 1 : pageIndex;
     pageSize = pageSize == null ? 20 : pageSize;
     begin = (pageIndex - 1) * pageSize;
     end = pageIndex * pageSize;

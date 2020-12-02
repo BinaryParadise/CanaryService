@@ -1,6 +1,6 @@
 const DefaultConfig = {
   development: {
-    baseURI: "http://127.0.0.1:8080/api",
+    baseURI: "/api",
     wsPath: "/channel"
   },
   production: {

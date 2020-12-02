@@ -1,5 +1,7 @@
 package com.frontend.domain;
 
+import java.sql.Timestamp;
+
 public class MCAppInfo {
   int id;
   String identify;
@@ -8,6 +10,16 @@ public class MCAppInfo {
   Integer uid;
   String author;
   Boolean shared;
+
+  public Timestamp getUpdateTime() {
+    return updateTime;
+  }
+
+  public void setUpdateTime(Timestamp updateTime) {
+    this.updateTime = updateTime;
+  }
+
+  Timestamp updateTime;
 
   public MCAppInfo() {
     orderno = 1;

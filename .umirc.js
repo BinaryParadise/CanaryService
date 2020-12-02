@@ -36,8 +36,8 @@ export default {
           component: '../pages/envparam'
         },
         {
-          path: '/package',
-          component: '../pages/package'
+          path: '/mock',
+          component: '../pages/mock'
         },
         {
           path: '/',

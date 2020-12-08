@@ -1,6 +1,7 @@
 package com.frontend.controllers;
 
 import com.frontend.domain.MCAppInfo;
+import com.frontend.domain.MCMockGroup;
 import com.frontend.domain.MCMockInfo;
 import com.frontend.mappers.MockMapper;
 import com.frontend.models.MCPagination;
@@ -27,18 +28,18 @@ public class MockController {
   private MockMapper mockMapper;
 
   @GetMapping("/list")
-  public MCResult mockList(Integer pid, Integer pageSize, Integer pageIndex) {
-    MCResult result = MCResult.Success(mockMapper.findAllByPage(pid, new MCPagination(pageIndex, pageSize)));
+  public MCResult mockList(Integer appid, Integer groupid, Integer pageSize, Integer pageIndex) {
+    MCResult result = MCResult.Success(mockMapper.findAllByPage(appid, new MCPagination(pageIndex, pageSize), groupid));
     return result;
   }
 
   @PostMapping("/update")
   public MCResult update(@RequestBody MCMockInfo mock) {
     try {
-      if (mock.getId() > 0) {
-        mockMapper.update(mock);
-      } else {
+      if (mock.getId() == null) {
         mockMapper.insertNew(mock);
+      } else {
+        mockMapper.update(mock);
       }
       return MCResult.Success();
     } catch (UncategorizedSQLException e) {
@@ -49,4 +50,39 @@ public class MockController {
       return MCResult.Failed(MybatisError.InsertFaield);
     }
   }
+
+  @PostMapping("/group/update")
+  public MCResult updateGroup(@RequestBody MCMockGroup group) {
+    try {
+      mockMapper.updateGroup(group);
+      return MCResult.Success();
+    } catch (UncategorizedSQLException e) {
+      SQLiteException se = (SQLiteException) e.getCause();
+      if (se.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+        return MCResult.Failed(MybatisError.DuplicateEntry);
+      }
+      return MCResult.Failed(MybatisError.InsertFaield);
+    }
+  }
+
+  @GetMapping("/group/list")
+  public MCResult groupList(Integer appid) {
+    MCResult result = MCResult.Success(mockMapper.findAllGroup(appid));
+    return result;
+  }
+
+  @PostMapping("/group/delete")
+  public MCResult deleteGroup(@RequestBody MCMockGroup group) {
+    try {
+      mockMapper.deleteGroup(group);
+      return MCResult.Success();
+    } catch (UncategorizedSQLException e) {
+      SQLiteException se = (SQLiteException) e.getCause();
+      if (se.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+        return MCResult.Failed(MybatisError.DuplicateEntry);
+      }
+      return MCResult.Failed(MybatisError.InsertFaield);
+    }
+  }
+
 }

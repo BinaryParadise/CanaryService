@@ -26,7 +26,7 @@ export default class EnvConfig extends React.Component {
       appId: (window.__config__.projectInfo || {}).id,
       type: 0,
       pageSize: 5,
-      pageIndex: 1
+      pageIndex: 1,
     }
   }
 
@@ -37,9 +37,9 @@ export default class EnvConfig extends React.Component {
     this.setState({ tableLoading: true, modalData: { ...this.state.modalData, visible: false } })
     const newParams = Object.assign(this.state.params)
 
-    axios.get('/conf/list', { params: newParams })
+    axios.get('/conf/list', { params: newParams }, { withCredentials: true })
       .then(result => {
-        if ((result||{}).code == 0) {
+        if ((result || {}).code == 0) {
           this.setState({ listData: result.data })
         }
       }).finally(() => this.setState({ tableLoading: false, params: newParams }))

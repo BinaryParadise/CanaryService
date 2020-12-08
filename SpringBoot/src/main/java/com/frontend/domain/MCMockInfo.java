@@ -3,18 +3,18 @@ package com.frontend.domain;
 import java.sql.Timestamp;
 
 public class MCMockInfo {
-  int id;
+  Integer id;
   String name;
   String method;
   String path;
-  Timestamp updateTime;
-  int appId;
+  Timestamp updatetime;
+  Integer groupid;
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -42,19 +42,19 @@ public class MCMockInfo {
     this.path = path;
   }
 
-  public Timestamp getUpdateTime() {
-    return updateTime;
+  public Timestamp getUpdatetime() {
+    return updatetime;
   }
 
-  public void setUpdateTime(Timestamp updateTime) {
-    this.updateTime = updateTime;
+  public void setUpdatetime(Timestamp updatetime) {
+    this.updatetime = updatetime;
   }
 
-  public int getAppId() {
-    return appId;
+  public Integer getGroupid() {
+    return groupid;
   }
 
-  public void setAppId(int appId) {
-    this.appId = appId;
+  public void setGroupid(Integer groupid) {
+    this.groupid = groupid;
   }
 }

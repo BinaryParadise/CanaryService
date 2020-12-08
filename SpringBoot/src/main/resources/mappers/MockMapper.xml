@@ -4,16 +4,48 @@
 <mapper namespace="com.frontend.mappers.MockMapper">
 
   <insert id="insertNew" parameterType="com.frontend.domain.MCMockInfo" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO MockData(name,path,appId, updateTime) values(#{name},#{path},#{appId},
+    INSERT INTO MockData(name, method, path, groupid, updateTime) values(#{name}, #{method}, #{path},#{groupid},
     STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
   </insert>
 
+  <delete id="delete">
+    DELETE FROM MockData WHERE id=#{0};
+    DELETE FROM MockSence WHERE mockid=#{0};
+  </delete>
+
   <update id="update" parameterType="com.frontend.domain.MCMockInfo">
-    UPDATE Project set name=#{name}, method=#{method}, path=#{path}, updateTime=(STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)) where id=#{id}
+    UPDATE MockData set name=#{name}, method=#{method}, path=#{path}, groupid=#{groupid}, updateTime=(STRFTIME('%s', 'now')*1000 +
+    SUBSTR(STRFTIME('%f', 'now'), 4)) where id=#{id}
   </update>
 
   <select id="findAllByPage" resultType="com.frontend.domain.MCMockInfo">
-    SELECT * FROM MockData where appId=#{0} LIMIT #{1.begin},#{1.end}
+    <if test="#{0} == null">
+      SELECT a.* FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{0}
+      LIMIT #{1.begin},#{1.end}
+    </if>
+    <if test="#{0} != null">
+      SELECT a.* FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{0} and b.id=#{2}
+      LIMIT #{1.begin},#{1.end}
+    </if>
   </select>
+
+  <!-- 接口分类 -->
+
+  <update id="updateGroup" parameterType="com.frontend.domain.MCMockGroup" useGeneratedKeys="true" keyProperty="id">
+    <if test="id != null">
+      UPDATE MockGroup SET name=#{name} WHERE appid=#{appid}
+    </if>
+    <if test="id == null">
+      INSERT INTO MockGroup(name,appid) VALUES(#{name}, #{appid})
+    </if>
+  </update>
+
+  <select id="findAllGroup" resultType="com.frontend.domain.MCMockGroup">
+    SELECT * FROM MockGroup WHERE appid=#{0}
+  </select>
+
+  <delete id="deleteGroup" parameterType="com.frontend.domain.MCMockGroup">
+    DELETE FROM MockGroup where id=#{id}
+  </delete>
 
 </mapper>

@@ -5,6 +5,8 @@ import { baseURI } from '../../common/config'
 import router from 'umi/router'
 import { notification } from 'antd'
 
+axios.withCredentials=true;
+
 function throwHttpError(message, code) {
   const error = new Error(message)
   error.name = 'HttpError'
@@ -20,6 +22,7 @@ const instance = axios.create({
     // 如果项目约定格式为 form.js，请修改 'Content-Type' 为: 'application/x-www-form.js-urlencoded'
     'Content-Type': 'application/json;charset=utf-8'
   },
+  withCredentials: true, //允许携带cookie
   paramsSerializer(params) {
     params = paramsUtil.parseParams(params, { skipEmpty: true })
 

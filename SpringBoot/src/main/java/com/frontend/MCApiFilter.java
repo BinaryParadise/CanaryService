@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -54,16 +55,25 @@ public class MCApiFilter extends OncePerRequestFilter {
       return;
     }
 
-    response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-    response.setHeader("Access-Control-Allow-Headers", "Content-Type,Access-Token,x-requested-with");
+    response.setHeader("Access-Control-Allow-Origin", "127.0.0.1:8081");
+    response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+    response.setHeader("Access-Control-Max-Age", "3600");
+    //设置允许访问cookie
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
     if (publicUrls.contains(request.getRequestURI())) {
       logger.info("pass filter: " + request.getRequestURI());
     } else {
-      if (!request.getMethod().equalsIgnoreCase("OPTIONS")) {
+      if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
+      } else {
+        System.out.println(request.getSession().getId());
         response.setContentType("application/json; charset=utf-8");
         String token = request.getHeader("Access-Token");
-        MCUserInfo user = userMapper.findByToken(token, System.currentTimeMillis());
+        MCUserInfo user = (MCUserInfo) request.getSession().getAttribute("user");
+        if (user == null) {
+          user = userMapper.findByToken(token, System.currentTimeMillis());
+        }
         if (token == null || token.length() == 0 || user == null) {
           response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "用户鉴权失败")));
           return;
@@ -73,6 +83,7 @@ public class MCApiFilter extends OncePerRequestFilter {
           response.getWriter().write(JSON.toJSONString(MCResult.Failed(101, "您没有操作权限")));
           return;
         }
+        request.getSession().setAttribute("user", user);
       }
     }
     filterChain.doFilter(request, response);

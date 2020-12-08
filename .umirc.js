@@ -1,5 +1,6 @@
 // ref: https://umijs.org/config/
 
+var headers = ""
 export default {
   treeShaking: true,
   routes: [
@@ -72,10 +73,19 @@ export default {
     '/api': {
       target: 'http://127.0.0.1:9001/v2',
       pathRewrite: { '^/api': '' },
-      changeOrigin: true
+      changeOrigin: false,
+      cookieDomainRewrite: {
+        "*": "127.0.0.1"
+      }
+    },
+    onProxyReq(onProxyReq, req, res) {
+      req.headers["xxxxx"] = "fjealjg"
+      req.headers["Cookies"] = headers
+    },
+    onProxyRes(proxyRes) {
+      debugger
+      headers = proxyRes.headers["set-cookie"]
+      console.log(proxyRes)
     }
   }
-  // cssLoaderOptions: {
-  //   localIdentName: '[local]'
-  // }
 };

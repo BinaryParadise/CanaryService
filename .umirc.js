@@ -71,21 +71,9 @@ export default {
   ],
   proxy: {
     '/api': {
-      target: 'http://127.0.0.1:9001/v2',
-      pathRewrite: { '^/api': '' },
-      changeOrigin: false,
-      cookieDomainRewrite: {
-        "*": "127.0.0.1"
-      }
-    },
-    onProxyReq(onProxyReq, req, res) {
-      req.headers["xxxxx"] = "fjealjg"
-      req.headers["Cookies"] = headers
-    },
-    onProxyRes(proxyRes) {
-      debugger
-      headers = proxyRes.headers["set-cookie"]
-      console.log(proxyRes)
+      target: 'http://127.0.0.1:9001',
+      // pathRewrite: { '^/api': '' },
+      changeOrigin: false
     }
   }
 };

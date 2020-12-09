@@ -55,12 +55,14 @@ public class MCApiFilter extends OncePerRequestFilter {
       return;
     }
 
-    response.setHeader("Access-Control-Allow-Origin", "127.0.0.1:8081");
-    response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-    response.setHeader("Access-Control-Max-Age", "3600");
-    //设置允许访问cookie
-    response.setHeader("Access-Control-Allow-Credentials", "true");
-    response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    if (request.getHeader("Origin") != null) {
+//      response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+//      response.setHeader("Access-Control-Allow-Methods", request.getHeader("Access-Control-Request-Method"));
+//      response.setHeader("Access-Control-Max-Age", "3600");
+//      //设置允许访问cookie
+//      response.setHeader("Access-Control-Allow-Credentials", "true");
+//      response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+    }
 
     if (publicUrls.contains(request.getRequestURI())) {
       logger.info("pass filter: " + request.getRequestURI());

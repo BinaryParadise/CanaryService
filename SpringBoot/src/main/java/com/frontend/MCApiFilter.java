@@ -35,11 +35,21 @@ public class MCApiFilter extends OncePerRequestFilter {
   @Override
   protected void initFilterBean() throws ServletException {
     super.initFilterBean();
-    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error");
+    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error", "/mock/whole");
     publicUrls.replaceAll(item -> getServletContext().getContextPath() + item);
 
     adminUrls = Arrays.asList("/user/add", "/user/update", "/user/role/list");
     adminUrls.replaceAll(item -> getServletContext().getContextPath() + item);
+  }
+
+  Boolean shouldAuthentication(HttpServletRequest request) {
+    String requestURI = request.getRequestURI();
+    if (publicUrls.contains(requestURI)) {
+      return false;
+    } else if (requestURI.startsWith(getServletContext().getContextPath() + "/mock/app/scene")) {
+      return false;
+    }
+    return true;
   }
 
   @Override
@@ -55,38 +65,23 @@ public class MCApiFilter extends OncePerRequestFilter {
       return;
     }
 
-    if (request.getHeader("Origin") != null) {
-//      response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-//      response.setHeader("Access-Control-Allow-Methods", request.getHeader("Access-Control-Request-Method"));
-//      response.setHeader("Access-Control-Max-Age", "3600");
-//      //设置允许访问cookie
-//      response.setHeader("Access-Control-Allow-Credentials", "true");
-//      response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
-    }
-
-    if (publicUrls.contains(request.getRequestURI())) {
-      logger.info("pass filter: " + request.getRequestURI());
-    } else {
-      if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
-      } else {
-        System.out.println(request.getSession().getId());
-        response.setContentType("application/json; charset=utf-8");
-        String token = request.getHeader("Access-Token");
-        MCUserInfo user = (MCUserInfo) request.getSession().getAttribute("user");
-        if (user == null) {
-          user = userMapper.findByToken(token, System.currentTimeMillis());
-        }
-        if (token == null || token.length() == 0 || user == null) {
-          response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "用户鉴权失败")));
-          return;
-        }
-        request.setAttribute("uid", user.getId());
-        if (adminUrls.contains(request.getRequestURI()) && user.getRolelevel() > 0) {
-          response.getWriter().write(JSON.toJSONString(MCResult.Failed(101, "您没有操作权限")));
-          return;
-        }
-        request.getSession().setAttribute("user", user);
+    if (shouldAuthentication(request)) {
+      response.setContentType("application/json; charset=utf-8");
+      String token = request.getHeader("Access-Token");
+      MCUserInfo user = (MCUserInfo) request.getSession().getAttribute("user");
+      if (user == null) {
+        user = userMapper.findByToken(token, System.currentTimeMillis());
       }
+      if (token == null || token.length() == 0 || user == null) {
+        response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "用户鉴权失败")));
+        return;
+      }
+      request.setAttribute("uid", user.getId());
+      if (adminUrls.contains(request.getRequestURI()) && user.getRolelevel() > 0) {
+        response.getWriter().write(JSON.toJSONString(MCResult.Failed(101, "您没有操作权限")));
+        return;
+      }
+      request.getSession().setAttribute("user", user);
     }
     filterChain.doFilter(request, response);
   }

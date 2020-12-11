@@ -3,6 +3,7 @@
 
 <mapper namespace="com.frontend.mappers.MockMapper">
 
+
   <insert id="insertNew" parameterType="com.frontend.domain.MCMockInfo" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO MockData(name, method, path, groupid, updateTime) values(#{name}, #{method}, #{path},#{groupid},
     STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
@@ -14,19 +15,24 @@
   </delete>
 
   <update id="update" parameterType="com.frontend.domain.MCMockInfo">
-    UPDATE MockData set name=#{name}, method=#{method}, path=#{path}, groupid=#{groupid}, updateTime=(STRFTIME('%s', 'now')*1000 +
+    UPDATE MockData set name=#{name}, method=#{method}, path=#{path}, groupid=#{groupid}, updateTime=(STRFTIME('%s',
+    'now')*1000 +
     SUBSTR(STRFTIME('%f', 'now'), 4)) where id=#{id}
   </update>
 
-  <select id="findAllByPage" resultType="com.frontend.domain.MCMockInfo">
-    <if test="#{0} == null">
-      SELECT a.* FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{0}
-      LIMIT #{1.begin},#{1.end}
-    </if>
-    <if test="#{0} != null">
-      SELECT a.* FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{0} and b.id=#{2}
-      LIMIT #{1.begin},#{1.end}
-    </if>
+  <select id="findAllMock" resultType="com.frontend.domain.MCMockInfo">
+
+    SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{appid}
+
+    <choose>
+      <when test="groupid != null">
+        and b.id=#{groupid}
+      </when>
+      <otherwise>
+      </otherwise>
+    </choose>
+
+    LIMIT #{page.begin},#{page.end}
   </select>
 
   <!-- 接口分类 -->
@@ -40,6 +46,10 @@
     </if>
   </update>
 
+  <select id="findFullGroup" resultType="com.frontend.domain.MCMockGroup">
+    SELECT * FROM MockGroup WHERE appId IN (SELECT appid FROM Project WHERE identify=#{param1})
+  </select>
+
   <select id="findAllGroup" resultType="com.frontend.domain.MCMockGroup">
     SELECT * FROM MockGroup WHERE appid=#{0}
   </select>
@@ -47,5 +57,27 @@
   <delete id="deleteGroup" parameterType="com.frontend.domain.MCMockGroup">
     DELETE FROM MockGroup where id=#{id}
   </delete>
+
+  <!-- 场景 -->
+  <update id="updateScene" parameterType="com.frontend.domain.MCMockScene" useGeneratedKeys="true" keyProperty="id">
+    <if test="id != null">
+      UPDATE MockScene SET name=#{name}, response=#{response}, updatetime=null WHERE id=#{id}
+    </if>
+    <if test="id == null">
+      INSERT INTO MockScene(name,response, mockid) VALUES(#{name}, #{response}, #{mockid})
+    </if>
+  </update>
+
+  <delete id="deleteScene" parameterType="com.frontend.domain.MCMockGroup">
+    DELETE FROM MockScene where id=#{id}
+  </delete>
+
+  <select id="findAllScene" resultType="com.frontend.domain.MCMockScene">
+    SELECT * FROM MockScene WHERE mockid=#{0}
+  </select>
+
+  <select id="findScene" resultType="com.frontend.domain.MCMockScene">
+    SELECT * FROM MockScene WHERE id=#{0}
+  </select>
 
 </mapper>

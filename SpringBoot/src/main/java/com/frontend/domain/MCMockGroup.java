@@ -1,9 +1,13 @@
 package com.frontend.domain;
 
+import java.util.List;
+
 public class MCMockGroup {
   Integer id;
   String name;
   Integer appid;
+
+  List<MCMockInfo> mocks;
 
   public Integer getId() {
     return id;
@@ -27,5 +31,13 @@ public class MCMockGroup {
 
   public void setAppid(Integer appid) {
     this.appid = appid;
+  }
+
+  public List<MCMockInfo> getMocks() {
+    return mocks;
+  }
+
+  public void setMocks(List<MCMockInfo> mocks) {
+    this.mocks = mocks;
   }
 }

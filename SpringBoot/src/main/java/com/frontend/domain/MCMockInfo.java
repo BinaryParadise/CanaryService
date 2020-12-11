@@ -1,6 +1,7 @@
 package com.frontend.domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class MCMockInfo {
   Integer id;
@@ -9,6 +10,9 @@ public class MCMockInfo {
   String path;
   Timestamp updatetime;
   Integer groupid;
+  String template;
+  String groupname;
+  List<MCMockScene> scenes;
 
   public Integer getId() {
     return id;
@@ -56,5 +60,29 @@ public class MCMockInfo {
 
   public void setGroupid(Integer groupid) {
     this.groupid = groupid;
+  }
+
+  public String getTemplate() {
+    return template;
+  }
+
+  public void setTemplate(String template) {
+    this.template = template;
+  }
+
+  public String getGroupname() {
+    return groupname;
+  }
+
+  public void setGroupname(String groupname) {
+    this.groupname = groupname;
+  }
+
+  public List<MCMockScene> getScenes() {
+    return scenes;
+  }
+
+  public void setScenes(List<MCMockScene> scenes) {
+    this.scenes = scenes;
   }
 }

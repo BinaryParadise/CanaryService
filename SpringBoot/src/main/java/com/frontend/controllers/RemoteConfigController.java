@@ -23,8 +23,6 @@ import java.util.Map;
  * 环境配置控制器
  */
 @RestController
-@EnableSwagger2
-@Api(tags = "远程配置")
 @RequestMapping(value = "/conf")
 public class RemoteConfigController {
   @Autowired

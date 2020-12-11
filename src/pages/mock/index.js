@@ -3,11 +3,13 @@ import { Table, Popconfirm, Layout, Button, message, Modal, Dropdown, Breadcrumb
 import axios from '../../component/axios'
 import MockEditForm from './edit'
 import moment from 'moment'
+import { routerURL } from '../../common/util'
+import { Link } from 'react-router-dom'
 
 export default class MockIndexPage extends React.Component {
     columns = [
         {
-            title: '名称',
+            title: '接口名称',
             dataIndex: 'name',
             width: 180
         },
@@ -22,7 +24,12 @@ export default class MockIndexPage extends React.Component {
             dataIndex: 'path'
         },
         {
-            dataIndex: 'updateTime',
+            title: '分类',
+            width: 100,
+            dataIndex: 'groupname'
+        },
+        {
+            dataIndex: 'updatetime',
             title: '更新时间',
             width: 200,
             render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
@@ -36,9 +43,8 @@ export default class MockIndexPage extends React.Component {
                     }>
                         <a>删除</a>
                     </Popconfirm >
-                    <a style={{ marginLeft: 5 }} onClick={() => this.onEdit(record)}>编辑</a>
-                    <a style={{ marginLeft: 5, color: "#e02a31" }} onClick={() => this.onEdit(record)}>编辑模板</a>
-
+                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
+                    <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>编辑场景</Link>
                 </span>
                 )
             }

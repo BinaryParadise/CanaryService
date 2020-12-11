@@ -1,35 +1,46 @@
 package com.frontend.controllers;
 
-import com.frontend.domain.MCAppInfo;
 import com.frontend.domain.MCMockGroup;
 import com.frontend.domain.MCMockInfo;
+import com.frontend.domain.MCMockScene;
+import com.frontend.jsonutil.JSON;
 import com.frontend.mappers.MockMapper;
 import com.frontend.models.MCPagination;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
+import java.util.List;
 
 @RestController
-@EnableSwagger2
-@Api(tags = "Mock数据")
 @RequestMapping("/mock")
 public class MockController {
   @Autowired
   private MockMapper mockMapper;
 
+  @GetMapping("/whole")
+  @ResponseBody
+  @JSON(type = MCMockScene.class, include = "id,name")
+  public MCResult whole(String appsecret) {
+    if (appsecret == null || appsecret.length() == 0) {
+      return MCResult.Failed(MybatisError.ParamFailed);
+    }
+    List<MCMockGroup> groups = mockMapper.findFullGroup(appsecret);
+    for (MCMockGroup group : groups) {
+      List<MCMockInfo> mocks = mockMapper.findAllMock(group.getAppid(), group.getId(), new MCPagination(1, 1000));
+      mocks.forEach(m -> m.setScenes(mockMapper.findAllScene(m.getId())));
+      group.setMocks(mocks);
+    }
+    return MCResult.Success(groups);
+  }
+
   @GetMapping("/list")
   public MCResult mockList(Integer appid, Integer groupid, Integer pageSize, Integer pageIndex) {
-    MCResult result = MCResult.Success(mockMapper.findAllByPage(appid, new MCPagination(pageIndex, pageSize), groupid));
+    MCResult result = MCResult.Success(mockMapper.findAllMock(appid, groupid, new MCPagination(pageIndex, pageSize)));
     return result;
   }
 
@@ -85,4 +96,47 @@ public class MockController {
     }
   }
 
+  @GetMapping("/app/scene/{id}")
+  public String scene(@PathVariable("id") Integer id) {
+    MCMockScene scene = mockMapper.findScene(id);
+    if (scene == null) {
+      return "scene id " + id + " not found.";
+    } else {
+      return scene.getResponse();
+    }
+  }
+
+  @GetMapping("/scene/list")
+  public MCResult sceneList(Integer mockid) {
+    MCResult result = MCResult.Success(mockMapper.findAllScene(mockid));
+    return result;
+  }
+
+  @PostMapping("/scene/update")
+  public MCResult updateScene(@RequestBody MCMockScene scene) {
+    try {
+      mockMapper.updateScene(scene);
+      return MCResult.Success();
+    } catch (UncategorizedSQLException e) {
+      SQLiteException se = (SQLiteException) e.getCause();
+      if (se.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+        return MCResult.Failed(MybatisError.DuplicateEntry);
+      }
+      return MCResult.Failed(MybatisError.InsertFaield);
+    }
+  }
+
+  @PostMapping("/scene/delete")
+  public MCResult deleteScene(@RequestBody MCMockScene scene) {
+    try {
+      mockMapper.deleteScene(scene.getId());
+      return MCResult.Success();
+    } catch (UncategorizedSQLException e) {
+      SQLiteException se = (SQLiteException) e.getCause();
+      if (se.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+        return MCResult.Failed(MybatisError.DuplicateEntry);
+      }
+      return MCResult.Failed(MybatisError.InsertFaield);
+    }
+  }
 }

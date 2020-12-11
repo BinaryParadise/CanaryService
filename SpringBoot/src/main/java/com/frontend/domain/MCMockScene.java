@@ -3,17 +3,17 @@ package com.frontend.domain;
 import java.sql.Timestamp;
 
 public class MCMockScene {
-  int id;
+  Integer id;
   String name;
-  String body;
+  String response;
   Timestamp updatetime;
-  int mockid;
+  Integer mockid;
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -25,12 +25,12 @@ public class MCMockScene {
     this.name = name;
   }
 
-  public String getBody() {
-    return body;
+  public String getResponse() {
+    return response;
   }
 
-  public void setBody(String body) {
-    this.body = body;
+  public void setResponse(String response) {
+    this.response = response;
   }
 
   public Timestamp getUpdatetime() {
@@ -41,11 +41,11 @@ public class MCMockScene {
     this.updatetime = updatetime;
   }
 
-  public int getMockid() {
+  public Integer getMockid() {
     return mockid;
   }
 
-  public void setMockid(int mockid) {
+  public void setMockid(Integer mockid) {
     this.mockid = mockid;
   }
 }

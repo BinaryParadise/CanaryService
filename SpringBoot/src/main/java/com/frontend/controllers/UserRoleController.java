@@ -5,12 +5,8 @@ import com.frontend.mappers.UserRoleMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
 import com.frontend.utils.TokenProccessor;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-@EnableSwagger2
-@Api(tags = "用户中心")
 public class UserRoleController {
   @Autowired
   UserRoleMapper userMapper;

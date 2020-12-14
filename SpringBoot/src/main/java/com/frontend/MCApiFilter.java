@@ -59,7 +59,7 @@ public class MCApiFilter extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-    if (request.getRequestURI().equalsIgnoreCase("/v2/channel")) {
+    if (request.getRequestURI().equalsIgnoreCase(request.getContextPath() + "/channel")) {
       response.setHeader("upgrade", "websocket");
       filterChain.doFilter(request, response);
       return;

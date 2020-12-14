@@ -1,21 +1,16 @@
 package com.frontend.controllers;
 
-import com.frontend.mappers.EnvConfigItemMapper;
 import com.frontend.domain.MCEnvConfigItem;
+import com.frontend.mappers.EnvConfigItemMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 环境配置控制器
  */
 @RestController
-@EnableSwagger2
-@Api(tags = "远程配置子项", value = "这个是什么呀")
 public class RemoteConfigItemController {
 
   @Autowired

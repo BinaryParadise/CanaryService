@@ -4,22 +4,16 @@ import com.frontend.domain.MCAppInfo;
 import com.frontend.mappers.ProjectMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @RestController
-@EnableSwagger2
-@Api(tags = "项目管理")
 @RequestMapping("/project")
 public class ProjectController {
   @Autowired

@@ -9,6 +9,7 @@ import com.frontend.models.MCPagination;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
@@ -96,7 +97,7 @@ public class MockController {
     }
   }
 
-  @GetMapping("/app/scene/{id}")
+  @RequestMapping(value = "/app/scene/{id}", produces = "application/json; charset=utf-8", method = {RequestMethod.GET, RequestMethod.POST})
   public String scene(@PathVariable("id") Integer id) {
     MCMockScene scene = mockMapper.findScene(id);
     if (scene == null) {

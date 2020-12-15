@@ -27,7 +27,7 @@ class MockScenePage extends React.Component {
         },
         {
             title: '响应结果',
-            width: 300,
+            width: 666,
             dataIndex: 'response',
             ellipsis: true
         },

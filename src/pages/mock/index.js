@@ -20,7 +20,7 @@ export default class MockIndexPage extends React.Component {
         },
         {
             title: '路径',
-            width: 300,
+            width: 666,
             dataIndex: 'path'
         },
         {

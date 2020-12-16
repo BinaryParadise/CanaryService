@@ -138,7 +138,7 @@ class MockScenePage extends React.Component {
                     title={editItem.data == null ? "新增" : "修改"}
                     cancelText="取消"
                     okText="保存"
-                    width={680}
+                    width={1500}
                     onCancel={this.onCancel}
                     onOk={this.onSave}
                     destroyOnClose={true}

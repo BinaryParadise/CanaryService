@@ -178,6 +178,7 @@ export default class MockIndexPage extends React.Component {
                     title={editItem.data == null ? "新增" : "修改"}
                     cancelText="取消"
                     okText="保存"
+                    width={900}
                     onCancel={this.onCancel}
                     onOk={this.onSave}
                     destroyOnClose={true}

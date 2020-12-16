@@ -6,12 +6,12 @@ import axios from '../../component/axios'
 
 const formItemLayout = {
     labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
+        xs: { span: 6 },
+        sm: { span: 3 },
     },
     wrapperCol: {
-        xs: { span: 32 },
-        sm: { span: 16 },
+        xs: { span: 18 },
+        sm: { span: 21 },
     },
 };
 
@@ -120,7 +120,7 @@ class MockEditForm extends React.Component {
                                 <Select.Option key={item.id} value={item.id} label={item.name}>{item.name}</Select.Option>
                             ))
                         }
-                    </Select><a style={{ marginLeft: 4 }} onClick={() => this.showGroup(visiable)}>管理分类</a></div>)}
+                    </Select><a style={{ marginLeft: 8 }} onClick={() => this.showGroup(visiable)}>管理分类</a></div>)}
                 </Form.Item>
                 {
                     visiable && <Form.Item>

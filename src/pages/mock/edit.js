@@ -108,7 +108,7 @@ class MockEditForm extends React.Component {
                     {getFieldDecorator('path', {
                         initialValue: data.path,
                         rules: [{ required: true, message: '请输入路径!' }],
-                    })(<Input addonBefore={methodSelecor} placeholder="请输入路径，以相对路径/开头" />)}
+                    })(<Input addonBefore={methodSelecor} placeholder="请输入路径，以相对路径/开头，并支持路径参数,例入{param0}、{param1}..." />)}
                 </Form.Item>
                 <Form.Item label="接口分类">
                     {getFieldDecorator('groupid', {

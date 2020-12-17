@@ -47,7 +47,7 @@ class MockScenePage extends React.Component {
                     <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
                     <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>复制</a>
                     <a style={{ marginLeft: 8, color: "#0b8235" }} href={"/api/mock/app/scene/" + record.id} target="_blank">查看</a>
-                    < Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record)
+                    < Popconfirm title="确认删除?" onConfirm={() => this.onDeleteScene(record)
                     }>
                         <a style={{ marginLeft: 8, color: "red" }}>删除</a>
                     </Popconfirm >

@@ -38,13 +38,7 @@ class ProjectEditForm extends React.Component {
                         rules: [{ required: true, message: '请输入名称!' }],
                     })(<Input />)}
                 </Form.Item>
-                <Form.Item label="唯一标识">
-                    {getFieldDecorator('identify', {
-                        initialValue: data.identify,
-                        rules: [{ required: true, message: '请输入唯一标识!' }]
-                    })(<Input />)}
-                </Form.Item>
-                <Form.Item label="共享">
+                <Form.Item label="公开">
                     {getFieldDecorator('shared', {
                         valuePropName: 'checked',
                         initialValue: data.share || true

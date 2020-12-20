@@ -119,7 +119,7 @@ export default class LoggerMonitor extends React.Component {
 
     logClass = obj => {
         if (obj.type == 2) {
-            return styles.yellow;
+            return styles.pink;
         }
         switch (obj.flag) {
             case Verbose: return styles.verbose;

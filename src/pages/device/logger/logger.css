@@ -45,6 +45,11 @@
     color: #FFFF91
 }
 
+.ansi .pink {
+    color: #ea2fff;
+    font-weight: bold;
+}
+
 .ansi .blue {
     color: #96CBFE
 }

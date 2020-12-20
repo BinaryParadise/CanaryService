@@ -7,7 +7,9 @@ public enum MybatisError {
   UpdateFaield(802, "啊咧，莫名更新失败了!"),
   SelectFaield(803, "啊咧，查询也能失败 ，膜拜大神!"),
   DuplicateEntry(804, "记录已存在，换个名称试试!"),
-  NotFoundEntry(805, "没有这个条记录，别想冒充");
+  NotFoundEntry(805, "没有这个条记录，别想冒充"),
+  InternalFailed(806, "内部逻辑错误"),
+  ParamFailed(807, "缺少参数");
 
   private int code;
   private String msg;

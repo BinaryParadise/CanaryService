@@ -1,5 +1,6 @@
 // ref: https://umijs.org/config/
 
+var headers = ""
 export default {
   treeShaking: true,
   routes: [
@@ -36,8 +37,12 @@ export default {
           component: '../pages/envparam'
         },
         {
-          path: '/package',
-          component: '../pages/package'
+          path: '/mock',
+          component: '../pages/mock'
+        },
+        {
+          path: '/mock/scene',
+          component: '../pages/mock/scene'
         },
         {
           path: '/',
@@ -70,12 +75,9 @@ export default {
   ],
   proxy: {
     '/api': {
-      target: 'http://127.0.0.1:9001/v2',
-      pathRewrite: { '^/api': '' },
-      changeOrigin: true
+      target: 'http://127.0.0.1:9001',
+      // pathRewrite: { '^/api': '' },
+      changeOrigin: false
     }
   }
-  // cssLoaderOptions: {
-  //   localIdentName: '[local]'
-  // }
 };

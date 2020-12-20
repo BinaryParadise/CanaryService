@@ -4,8 +4,13 @@ import URL from 'url'
 export default {
   messagers: [],
   create: function (deviceid) {
-    let apiURL = URL.parse(baseURI).host ? URL.parse(baseURI) : window.location
-    this.url = (apiURL.protocol == "http:" ? "ws://" : "wss://") + apiURL.hostname + (apiURL.port ? ":" + apiURL.port : "") + wsPath + '/web/' + deviceid
+    console.log(URL.parse(wsPath))
+    if (URL.parse(wsPath).protocol == null) {
+      let apiURL = URL.parse(baseURI).host ? URL.parse(baseURI) : window.location
+      this.url = (apiURL.protocol == "http:" ? "ws://" : "wss://") + apiURL.hostname + (apiURL.port ? ":" + apiURL.port : "") + wsPath + '/web/' + deviceid
+    } else {
+      this.url = wsPath + '/web/' + deviceid
+    }
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)

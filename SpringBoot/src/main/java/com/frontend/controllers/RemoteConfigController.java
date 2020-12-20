@@ -2,29 +2,24 @@ package com.frontend.controllers;
 
 import com.frontend.domain.*;
 import com.frontend.jsonutil.JSON;
-import com.frontend.mappers.*;
-import com.frontend.models.MCPagination;
+import com.frontend.mappers.EnvConfigItemMapper;
+import com.frontend.mappers.EnvConfigMapper;
+import com.frontend.mappers.EnvSchemeMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 环境配置控制器
  */
 @RestController
-@EnableSwagger2
-@Api(tags = "远程配置")
 @RequestMapping(value = "/conf")
 public class RemoteConfigController {
   @Autowired

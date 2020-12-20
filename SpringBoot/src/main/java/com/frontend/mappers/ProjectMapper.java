@@ -3,10 +3,8 @@ package com.frontend.mappers;
 import com.frontend.domain.MCAppInfo;
 import com.frontend.domain.MCLogCondition;
 import com.frontend.models.LogMessage;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.frontend.models.MCPagination;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +20,7 @@ public interface ProjectMapper {
 
     Boolean update(MCAppInfo project);
 
-    MCAppInfo findByAppKey(@Param("appKey") String appKey);
+    Boolean reset(MCAppInfo project);
 
     List<MCAppInfo> findAll(Integer uid);
 }

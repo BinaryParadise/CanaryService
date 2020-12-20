@@ -42,7 +42,7 @@ class BasicLayout extends React.Component {
 
   confirmSwitchProject = () => {
     if (this.state.selectedItem == null) {
-      message.error('请先选择一个项目');
+      message.error('请选择应用');
       return;
     }
 
@@ -50,7 +50,7 @@ class BasicLayout extends React.Component {
     localStorage.setItem("projectInfo", JSON.stringify(projectInfo))
     window.__config__.projectInfo = projectInfo
     this.setState({ project: false })
-    message.success("项目切换成功!")
+    message.success("应用切换成功!")
     router.push("/")
   }
 
@@ -100,7 +100,7 @@ class BasicLayout extends React.Component {
     return (
       <ConfigProvider locale={zhCN}>
         <Layout className={styles.normal}>
-          <Modal visible={this.state.project} title="请选择项目" onOk={this.confirmSwitchProject} onCancel={() => this.setState({ project: false })}>
+          <Modal visible={this.state.project} title="请选择应用" onOk={this.confirmSwitchProject} onCancel={() => this.setState({ project: false })}>
             <Select placeholder="请选择" style={{ width: 180 }} onChange={this.onChange}>
               {
                 appData.map(item => {
@@ -141,13 +141,13 @@ class BasicLayout extends React.Component {
                 <Icon type="link" />
                 <span>路由配置</span>
               </Menu.Item>
-              <Menu.Item key="/package" hidden={false}>
-                <Icon type="appstore" />
-                <span>测试包管理</span>
+              <Menu.Item key="/mock">
+                <Icon type="container" />
+                <span>Mock数据</span>
               </Menu.Item>
               <Menu.Item key="/project" hidden={!Auth('project')}>
                 <Icon type="project" />
-                <span>项目管理</span>
+                <span>应用管理</span>
               </Menu.Item>
               <Menu.Item key="/user" hidden={!Auth('user')}>
                 <Icon type="user" />
@@ -158,7 +158,7 @@ class BasicLayout extends React.Component {
           <Header className={styles.header}>
             <Icon type="unordered-list" className={styles.logo} onMouseOver={this.showDrawer} />
             <Button className={styles.title} onClick={this.switchProject}>
-              {projectInfo == undefined ? "未选择项目" : projectInfo.name}
+              {projectInfo == undefined ? "未选择应用" : projectInfo.name}
             </Button>
             <span style={{ float: "right" }}>
               <Dropdown overlay={(

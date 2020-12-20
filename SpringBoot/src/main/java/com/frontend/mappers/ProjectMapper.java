@@ -1,9 +1,6 @@
 package com.frontend.mappers;
 
 import com.frontend.domain.MCAppInfo;
-import com.frontend.domain.MCLogCondition;
-import com.frontend.models.LogMessage;
-import com.frontend.models.MCPagination;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

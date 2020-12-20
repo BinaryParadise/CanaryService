@@ -1,4 +1,4 @@
-package com.frontend.domain;
+package com.frontend.mockable;
 
 import java.sql.Timestamp;
 import java.util.List;

@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 @RestController
@@ -25,7 +29,9 @@ public class MockController {
 
   @GetMapping("/app/whole")
   @ResponseBody
+  @JSON(type = MCMockInfo.class, include = "id,name,path,scenes")
   @JSON(type = MCMockScene.class, include = "id,name,params")
+  @JSON(type = MCMockParam.class, include = "id,name,value")
   public MCResult appWhole(String appsecret) {
     if (appsecret == null || appsecret.length() == 0) {
       return MCResult.Failed(MybatisError.ParamFailed);
@@ -111,11 +117,13 @@ public class MockController {
   }
 
   @RequestMapping(value = "/app/scene/{id}", produces = "application/json; charset=utf-8", method = {RequestMethod.GET, RequestMethod.POST})
-  public String scene(@PathVariable("id") Integer id) {
+  public String appScene(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
     MCMockScene scene = mockMapper.findScene(id);
     if (scene == null) {
       return "scene id " + id + " not found.";
     } else {
+      response.setHeader("scene_id", scene.getId().toString());
+      response.setHeader("scene_name", URLEncoder.encode(scene.getName(), "utf-8"));
       return scene.getResponse();
     }
   }

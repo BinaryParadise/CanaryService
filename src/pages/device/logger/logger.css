@@ -59,11 +59,11 @@
 }
 
 .ansi .magenta {
-    color: #FF73FD
+    color: #faad15
 }
 
 .ansi .magenta.bold {
-    color: #FF9CFE
+    color: #faad15
 }
 
 .ansi .verbose {

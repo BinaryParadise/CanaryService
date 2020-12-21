@@ -152,16 +152,16 @@ class MockScenePage extends React.Component {
             {
                 title: '参数名称',
                 dataIndex: 'name',
-                width: 100
+                width: 160
             },
             {
                 title: '参数值',
                 dataIndex: 'value',
-                width: 100
+                width: 168
             },
             {
                 title: '参数说明',
-                width: 100,
+                width: 210,
                 dataIndex: 'comment',
                 ellipsis: true
             },

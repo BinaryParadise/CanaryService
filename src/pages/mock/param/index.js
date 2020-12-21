@@ -15,8 +15,8 @@ class MockParamForm extends React.Component {
         },
         {
             title: '说明',
-            width: 80,
-            dataIndex: 'method'
+            width: 260,
+            dataIndex: 'comment'
         },
         {
             dataIndex: 'updatetime',
@@ -26,14 +26,13 @@ class MockParamForm extends React.Component {
         },
         {
             title: '操作',
-            dataIndex: 'orderno',
+            dataIndex: 'id',
             render: (text, record) => {
                 return (<span>
-                    < Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record)
+                    < Popconfirm title="确认删除?" onConfirm={() => this.onDeleteParam(record)
                     }>
                         <a>删除</a>
                     </Popconfirm >
-                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
                 </span>
                 )
             }
@@ -55,7 +54,7 @@ class MockParamForm extends React.Component {
             if (result.code != 0) {
                 return
             }
-            this.setState({ groups: result.data })
+            this.setState({ listData: result.data })
         })
     }
 
@@ -121,7 +120,7 @@ class MockParamForm extends React.Component {
                         添加</Button>
                 </Form.Item>
             </Form>
-            <Table columns={listData} columns={this.columns}>
+            <Table dataSource={listData} columns={this.columns}>
 
             </Table>
         </div >

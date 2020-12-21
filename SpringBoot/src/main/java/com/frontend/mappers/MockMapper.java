@@ -35,5 +35,5 @@ public interface MockMapper {
 
   List<MCMockParam> findAllParam(MCMockParam param);
   Boolean updateParam(MCMockParam param);
-  Boolean deleteParam(Integer sceneid);
+  Boolean deleteParam(Integer paramid);
 }

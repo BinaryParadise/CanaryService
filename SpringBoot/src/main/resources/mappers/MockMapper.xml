@@ -73,7 +73,7 @@
   </delete>
 
   <select id="findAllScene" resultType="com.frontend.mockable.MCMockScene">
-    SELECT * FROM MockScene WHERE mockid=#{0}
+    SELECT * FROM MockScene WHERE mockid=#{0} order by updatetime desc
   </select>
 
   <select id="findScene" resultType="com.frontend.mockable.MCMockScene">
@@ -82,7 +82,10 @@
 
   <!-- 参数 -->
   <select id="findAllParam" resultType="com.frontend.mockable.MCMockParam">
-    SELECT * FROM MockParam WHERE appid=#{appid}
+    SELECT * FROM MockParam WHERE 1=1
+    <if test="appid != null">
+      AND appid=#{appid}
+    </if>
     <if test="sceneid != null">
       AND sceneid=#{sceneid}
     </if>
@@ -93,8 +96,12 @@
       UPDATE MockParam SET name=#{name}, comment=#{comment}, updatetime=null WHERE id=#{id}
     </if>
     <if test="id == null">
-      INSERT INTO MockParam(name,comment, sceneid, appid, updatetime) VALUES(#{name}, #{comment}, #{sceneid}, #{appid}, NULL)
+      INSERT INTO MockParam(name, value, comment, sceneid, appid, updatetime) VALUES(#{name}, #{value}, #{comment}, #{sceneid}, #{appid}, NULL)
     </if>
   </update>
+
+  <delete id="deleteParam">
+    DELETE FROM MockParam where id=#{0}
+  </delete>
 
 </mapper>

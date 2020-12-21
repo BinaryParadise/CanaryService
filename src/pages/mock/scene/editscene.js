@@ -44,11 +44,6 @@ class SceneEditForm extends React.Component {
                         })(<Input type="hidden"></Input>)}
                     </Form.Item>
                 }
-                <Form.Item style={{ display: 'none' }}>
-                    {getFieldDecorator('uid', {
-                        initialValue: AuthUser().id
-                    })(<Input type="hidden"></Input>)}
-                </Form.Item>
                 <Form.Item label="场景名称">
                     {getFieldDecorator('name', {
                         initialValue: data.name,

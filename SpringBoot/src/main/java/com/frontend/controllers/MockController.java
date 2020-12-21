@@ -23,17 +23,30 @@ public class MockController {
   @Autowired
   private MockMapper mockMapper;
 
-  @GetMapping("/whole")
+  @GetMapping("/app/whole")
   @ResponseBody
-  @JSON(type = MCMockScene.class, include = "id,name")
-  public MCResult whole(String appsecret) {
+  @JSON(type = MCMockScene.class, include = "id,name,params")
+  public MCResult appWhole(String appsecret) {
     if (appsecret == null || appsecret.length() == 0) {
       return MCResult.Failed(MybatisError.ParamFailed);
     }
     List<MCMockGroup> groups = mockMapper.findFullGroup(appsecret);
     for (MCMockGroup group : groups) {
       List<MCMockInfo> mocks = mockMapper.findAllMock(group.getAppid(), group.getId(), new MCPagination(1, 1000));
-      mocks.forEach(m -> m.setScenes(mockMapper.findAllScene(m.getId())));
+      mocks.forEach(m -> {
+        m.setScenes(mockMapper.findAllScene(m.getId()));
+        m.getScenes().forEach(s -> {
+            MCMockParam param = new MCMockParam();
+            param.setSceneid(s.getId());
+            s.setParams(mockMapper.findAllParam(param));
+          }
+        );
+        MCMockScene scene = new MCMockScene();
+        scene.setId(-1);
+        scene.setName("自动");
+        scene.setMockid(m.getId());
+        m.getScenes().add(0, scene);
+      });
       group.setMocks(mocks);
     }
     return MCResult.Success(groups);
@@ -109,7 +122,16 @@ public class MockController {
 
   @GetMapping("/scene/list")
   public MCResult sceneList(Integer mockid) {
-    MCResult result = MCResult.Success(mockMapper.findAllScene(mockid));
+    List<MCMockScene> scenes = mockMapper.findAllScene(mockid);
+    for (MCMockScene scene : scenes) {
+      MCMockParam param = new MCMockParam();
+      param.setSceneid(scene.getId());
+      scene.setParams(mockMapper.findAllParam(param));
+      if (scene.getParams().size() == 0) {
+        scene.getParams().add(param);
+      }
+    }
+    MCResult result = MCResult.Success(scenes);
     return result;
   }
 
@@ -164,7 +186,7 @@ public class MockController {
   @PostMapping("/param/delete")
   public MCResult paramDelete(@RequestBody MCMockParam param) {
     try {
-      mockMapper.deleteScene(param.getId());
+      mockMapper.deleteParam(param.getId());
       return MCResult.Success();
     } catch (UncategorizedSQLException e) {
       SQLiteException se = (SQLiteException) e.getCause();

@@ -35,7 +35,7 @@ public class MCApiFilter extends OncePerRequestFilter {
   @Override
   protected void initFilterBean() throws ServletException {
     super.initFilterBean();
-    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error", "/mock/whole");
+    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error", "/mock/app/whole");
     publicUrls.replaceAll(item -> getServletContext().getContextPath() + item);
 
     adminUrls = Arrays.asList("/user/add", "/user/update", "/user/role/list");

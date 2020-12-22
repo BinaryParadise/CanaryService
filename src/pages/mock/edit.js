@@ -19,6 +19,7 @@ class MockEditForm extends React.Component {
     state = {
         visiable: false,
         groups: [],
+        data: this.props.data,
         appid: (window.__config__.projectInfo || {}).id
     }
 
@@ -31,6 +32,10 @@ class MockEditForm extends React.Component {
             visiable: !visiable,
         });
     };
+
+    onGroupChange = (id) => {
+        this.props.form.setFieldsValue({ groupid: id })
+    }
 
     queryAll() {
         return axios.get('/mock/group/list', { params: { appid: this.state.appid } }).then(result => {
@@ -71,8 +76,7 @@ class MockEditForm extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form
-        const { data } = this.props
-        const { visiable, groups } = this.state
+        const { visiable, groups, data } = this.state
         if (data.groupid == undefined && groups.length > 0) {
             data.groupid = groups[0].id
         }
@@ -114,7 +118,7 @@ class MockEditForm extends React.Component {
                     {getFieldDecorator('groupid', {
                         initialValue: data.groupid,
                         rules: [{ required: true, message: '请选择分类' }],
-                    })(<div><Select placeholder="请选择分类" defaultValue={data.groupid} style={{ width: 245 }}>
+                    })(<div><Select placeholder="请选择分类" defaultValue={data.groupid} style={{ width: 245 }} onChange={(e) => this.onGroupChange(e)}>
                         {
                             groups.map(item => (
                                 <Select.Option key={item.id} value={item.id} label={item.name}>{item.name}</Select.Option>
@@ -138,7 +142,7 @@ class MockEditForm extends React.Component {
                     </Form.Item>
                 }
             </Form >
-        </div>
+        </div >
         )
     }
 }

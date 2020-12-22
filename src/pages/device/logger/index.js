@@ -65,9 +65,9 @@ export default class LoggerMonitor extends React.Component {
         if (obj.function === undefined) {
             return ""
         }
-        var funcName = obj.function === undefined ? "":obj.function
-        if ((obj.file||"").endsWith(".swift")) {
-            funcName = obj.fileName+"."+funcName
+        var funcName = obj.function === undefined ? "" : obj.function
+        if ((obj.file || "").endsWith(".swift")) {
+            funcName = obj.fileName + "." + funcName
         }
         return funcName + '+' + obj.line + ' '
     }
@@ -119,7 +119,7 @@ export default class LoggerMonitor extends React.Component {
 
     logClass = obj => {
         if (obj.type == 2) {
-            return styles.pink;
+            return obj.flag == Warning ? styles.magenta : styles.pink;
         }
         switch (obj.flag) {
             case Verbose: return styles.verbose;
@@ -151,7 +151,7 @@ export default class LoggerMonitor extends React.Component {
                         <a href="/device">设备列表</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Badge status={avaiable ? 'processing' : 'default'}></Badge> {data.name}（<span style={{color:'orange'}}>{this.transformIp(data)}</span>）
+                        <Badge status={avaiable ? 'processing' : 'default'}></Badge> {data.name}（<span style={{ color: 'orange' }}>{this.transformIp(data)}</span>）
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={styles.logbody}>

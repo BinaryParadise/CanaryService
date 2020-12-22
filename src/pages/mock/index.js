@@ -44,7 +44,7 @@ export default class MockIndexPage extends React.Component {
                         <a>删除</a>
                     </Popconfirm >
                     <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
-                    <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>编辑场景</Link>
+                    <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>编辑模板</Link>
                 </span>
                 )
             }

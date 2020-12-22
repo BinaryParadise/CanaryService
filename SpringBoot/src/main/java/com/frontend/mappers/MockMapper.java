@@ -1,8 +1,9 @@
 package com.frontend.mappers;
 
-import com.frontend.domain.MCMockGroup;
-import com.frontend.domain.MCMockInfo;
-import com.frontend.domain.MCMockScene;
+import com.frontend.mockable.MCMockGroup;
+import com.frontend.mockable.MCMockInfo;
+import com.frontend.mockable.MCMockParam;
+import com.frontend.mockable.MCMockScene;
 import com.frontend.models.MCPagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,4 +32,8 @@ public interface MockMapper {
   MCMockScene findScene(Integer sceneid);
   Boolean updateScene(MCMockScene scene);
   Boolean deleteScene(Integer sceneid);
+
+  List<MCMockParam> findAllParam(MCMockParam param);
+  Boolean updateParam(MCMockParam param);
+  Boolean deleteParam(Integer paramid);
 }

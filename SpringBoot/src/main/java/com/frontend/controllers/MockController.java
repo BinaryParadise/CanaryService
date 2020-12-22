@@ -1,20 +1,24 @@
 package com.frontend.controllers;
 
-import com.frontend.domain.MCMockGroup;
-import com.frontend.domain.MCMockInfo;
-import com.frontend.domain.MCMockScene;
+import com.frontend.mockable.MCMockGroup;
+import com.frontend.mockable.MCMockInfo;
 import com.frontend.jsonutil.JSON;
 import com.frontend.mappers.MockMapper;
+import com.frontend.mockable.MCMockParam;
+import com.frontend.mockable.MCMockScene;
 import com.frontend.models.MCPagination;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.web.bind.annotation.*;
 import org.sqlite.SQLiteErrorCode;
 import org.sqlite.SQLiteException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 @RestController
@@ -23,17 +27,32 @@ public class MockController {
   @Autowired
   private MockMapper mockMapper;
 
-  @GetMapping("/whole")
+  @GetMapping("/app/whole")
   @ResponseBody
-  @JSON(type = MCMockScene.class, include = "id,name")
-  public MCResult whole(String appsecret) {
+  @JSON(type = MCMockInfo.class, include = "id,name,path,scenes")
+  @JSON(type = MCMockScene.class, include = "id,name,params")
+  @JSON(type = MCMockParam.class, include = "id,name,value")
+  public MCResult appWhole(String appsecret) {
     if (appsecret == null || appsecret.length() == 0) {
       return MCResult.Failed(MybatisError.ParamFailed);
     }
     List<MCMockGroup> groups = mockMapper.findFullGroup(appsecret);
     for (MCMockGroup group : groups) {
       List<MCMockInfo> mocks = mockMapper.findAllMock(group.getAppid(), group.getId(), new MCPagination(1, 1000));
-      mocks.forEach(m -> m.setScenes(mockMapper.findAllScene(m.getId())));
+      mocks.forEach(m -> {
+        m.setScenes(mockMapper.findAllScene(m.getId()));
+        m.getScenes().forEach(s -> {
+            MCMockParam param = new MCMockParam();
+            param.setSceneid(s.getId());
+            s.setParams(mockMapper.findAllParam(param));
+          }
+        );
+        MCMockScene scene = new MCMockScene();
+        scene.setId(-1);
+        scene.setName("自动");
+        scene.setMockid(m.getId());
+        m.getScenes().add(0, scene);
+      });
       group.setMocks(mocks);
     }
     return MCResult.Success(groups);
@@ -98,18 +117,29 @@ public class MockController {
   }
 
   @RequestMapping(value = "/app/scene/{id}", produces = "application/json; charset=utf-8", method = {RequestMethod.GET, RequestMethod.POST})
-  public String scene(@PathVariable("id") Integer id) {
+  public String appScene(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
     MCMockScene scene = mockMapper.findScene(id);
     if (scene == null) {
       return "scene id " + id + " not found.";
     } else {
+      response.setHeader("scene_id", scene.getId().toString());
+      response.setHeader("scene_name", URLEncoder.encode(scene.getName(), "utf-8"));
       return scene.getResponse();
     }
   }
 
   @GetMapping("/scene/list")
   public MCResult sceneList(Integer mockid) {
-    MCResult result = MCResult.Success(mockMapper.findAllScene(mockid));
+    List<MCMockScene> scenes = mockMapper.findAllScene(mockid);
+    for (MCMockScene scene : scenes) {
+      MCMockParam param = new MCMockParam();
+      param.setSceneid(scene.getId());
+      scene.setParams(mockMapper.findAllParam(param));
+      if (scene.getParams().size() == 0) {
+        scene.getParams().add(param);
+      }
+    }
+    MCResult result = MCResult.Success(scenes);
     return result;
   }
 
@@ -140,4 +170,39 @@ public class MockController {
       return MCResult.Failed(MybatisError.InsertFaield);
     }
   }
+
+  @GetMapping("/param/list")
+  public MCResult paramList(MCMockParam param) {
+    MCResult result = MCResult.Success(mockMapper.findAllParam(param));
+    return result;
+  }
+
+  @PostMapping("/param/update")
+  public MCResult paramUpdate(@RequestBody MCMockParam param) {
+    try {
+      mockMapper.updateParam(param);
+      return MCResult.Success();
+    } catch (UncategorizedSQLException e) {
+      SQLiteException se = (SQLiteException) e.getCause();
+      if (se.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+        return MCResult.Failed(MybatisError.DuplicateEntry);
+      }
+      return MCResult.Failed(MybatisError.InsertFaield);
+    }
+  }
+
+  @PostMapping("/param/delete")
+  public MCResult paramDelete(@RequestBody MCMockParam param) {
+    try {
+      mockMapper.deleteParam(param.getId());
+      return MCResult.Success();
+    } catch (UncategorizedSQLException e) {
+      SQLiteException se = (SQLiteException) e.getCause();
+      if (se.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {
+        return MCResult.Failed(MybatisError.DuplicateEntry);
+      }
+      return MCResult.Failed(MybatisError.InsertFaield);
+    }
+  }
+
 }

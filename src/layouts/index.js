@@ -126,6 +126,7 @@ class BasicLayout extends React.Component {
               style={{ width: 256, margin: -24 }}
               mode="inline"
               theme="light"
+              openKeys={["mockgroup"]}
               inlineCollapsed={this.state.collapsed}
               onSelect={this.onMenuSelect}
             >
@@ -141,10 +142,23 @@ class BasicLayout extends React.Component {
                 <Icon type="link" />
                 <span>路由配置</span>
               </Menu.Item>
-              <Menu.Item key="/mock">
-                <Icon type="container" />
-                <span>Mock数据</span>
+              <Menu.Item key="/tool">
+                <Icon type="tool"></Icon>
+                <span>工具箱</span>
               </Menu.Item>
+              <Menu.SubMenu key="mockgroup" title={
+                <span>
+                  <Icon type="container" />
+                  <span>Mock数据</span>
+                </span>
+              }>
+                <Menu.Item key="/mock/data">
+                  <span>接口配置</span>
+                </Menu.Item>
+                <Menu.Item key="/mock/param">
+                  <span>参数配置</span>
+                </Menu.Item>
+              </Menu.SubMenu>
               <Menu.Item key="/project" hidden={!Auth('project')}>
                 <Icon type="project" />
                 <span>应用管理</span>

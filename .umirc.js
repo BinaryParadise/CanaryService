@@ -37,7 +37,7 @@ export default {
           component: '../pages/envparam'
         },
         {
-          path: '/mock',
+          path: '/mock/data',
           component: '../pages/mock'
         },
         {
@@ -45,9 +45,17 @@ export default {
           component: '../pages/mock/scene'
         },
         {
+          path: '/mock/param',
+          component: '../pages/mock/param'
+        },
+        {
           path: '/',
           component: '../pages/envconfig',
         },
+        {
+          path: '/tool',
+          component: '../pages/toolbox'
+        }
       ],
     },
   ],

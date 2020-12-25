@@ -1,5 +1,6 @@
 package com.frontend.controllers;
 
+import com.frontend.domain.MCAppInfo;
 import com.frontend.domain.MCUserInfo;
 import com.frontend.mappers.UserRoleMapper;
 import com.frontend.models.MCResult;
@@ -31,7 +32,7 @@ public class UserRoleController {
   }
 
   @PostMapping("/login")
-  MCResult login(@RequestBody Map<String, Object> data, HttpServletResponse response) {
+  MCResult login(@RequestBody Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
     try {
       data.put("token", TokenProccessor.getInstance().makeToken());
       data.put("stamp", System.currentTimeMillis() + 3600 * 24 * 7000);
@@ -41,6 +42,7 @@ public class UserRoleController {
       }
       MCUserInfo user = userMapper.findByLogin(data);
       if (user != null) {
+        request.getSession().setAttribute("user", user);
         response.addCookie(new Cookie("token", user.getToken()));
       }
       return MCResult.Success(user);
@@ -91,5 +93,12 @@ public class UserRoleController {
       e.printStackTrace();
       return MCResult.Failed(MybatisError.SelectFaield);
     }
+  }
+
+  @PostMapping(value = "/change/app")
+  MCResult changeApp(@RequestBody MCAppInfo app, HttpServletRequest request) {
+    MCUserInfo user = (MCUserInfo) request.getSession().getAttribute("user");
+    userMapper.changeApp(app.getId(), user.getId());
+    return MCResult.Success(userMapper.findByToken(user.getToken(), System.currentTimeMillis()));
   }
 }

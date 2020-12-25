@@ -1,5 +1,6 @@
 package com.frontend.controllers;
 
+import com.frontend.Global;
 import com.frontend.mockable.MCMockGroup;
 import com.frontend.mockable.MCMockInfo;
 import com.frontend.jsonutil.JSON;
@@ -59,8 +60,8 @@ public class MockController {
   }
 
   @GetMapping("/list")
-  public MCResult mockList(Integer appid, Integer groupid, Integer pageSize, Integer pageIndex) {
-    MCResult result = MCResult.Success(mockMapper.findAllMock(appid, groupid, new MCPagination(pageIndex, pageSize)));
+  public MCResult mockList(Integer groupid, Integer pageSize, Integer pageIndex) {
+    MCResult result = MCResult.Success(mockMapper.findAllMock(Global.getUser().getApp().getId(), groupid, new MCPagination(pageIndex, pageSize)));
     return result;
   }
 
@@ -97,8 +98,8 @@ public class MockController {
   }
 
   @GetMapping("/group/list")
-  public MCResult groupList(Integer appid) {
-    MCResult result = MCResult.Success(mockMapper.findAllGroup(appid));
+  public MCResult groupList() {
+    MCResult result = MCResult.Success(mockMapper.findAllGroup(Global.getAppId()));
     return result;
   }
 

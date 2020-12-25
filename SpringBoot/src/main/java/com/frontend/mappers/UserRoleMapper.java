@@ -27,4 +27,6 @@ public interface UserRoleMapper {
 
   List<MCUserInfo> findUserList();
   List<MCUserRole> findRoleList();
+
+  Integer changeApp(Integer appid, Integer userid);
 }

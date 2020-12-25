@@ -2,6 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.frontend.mappers.UserRoleMapper">
+
+  <resultMap id="userWithApp" type="com.frontend.domain.MCUserInfo">
+    <id column="id" property="id"></id>
+    <result column="username" property="username"></result>
+    <result column="password" property="password"></result>
+    <result column="name" property="name"></result>
+    <result column="token" property="token"></result>
+    <result column="roleid" property="roleid"></result>
+    <result column="rolename" property="rolename"></result>
+    <result column="rolelevel" property="rolelevel"></result>
+    <result column="expire" property="expire"></result>
+    <association property="app" javaType="com.frontend.domain.MCAppInfo">
+      <id column="app_id" property="id"></id>
+      <result column="app_identify" property="identify"></result>
+      <result column="app_name" property="name"></result>
+      <result column="app_shared" property="shared"></result>
+    </association>
+  </resultMap>
   <insert id="inserUser">
     INSERT INTO User (username,password,name,roleid) VALUES(#{username},#{password},#{name},#{roleid});
   </insert>
@@ -59,28 +77,43 @@
     AND password = #{password} and deleteTag=0;
   </update>
 
-  <select id="findByLogin" resultType="com.frontend.domain.MCUserInfo">
+  <update id="changeApp">
+    UPDATE User set appid=#{0} where id=#{1}
+  </update>
+
+  <select id="findByLogin" resultMap="userWithApp">
     SELECT
     null as password,
     a.*,
     b.name AS rolename,
-    b.level AS rolelevel
+    b.level AS rolelevel,
+    c.id AS app_id,
+    c.name AS app_name,
+    c.identify AS app_identify,
+    c.shared AS app_shared
     FROM
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id
+    LEFT JOIN Project c ON a.appid = c.id
     WHERE
     a.username = #{username}
     AND a.password = #{password} AND a.token is not NULL AND expire&gt;#{stamp};
   </select>
 
-  <select id="findByToken" resultType="com.frontend.domain.MCUserInfo">
+  <select id="findByToken" resultMap="userWithApp">
     SELECT
+    null as password,
     a.*,
     b.name AS rolename,
-    b.level AS rolelevel
+    b.level AS rolelevel,
+    c.id AS app_id,
+    c.name AS app_name,
+    c.identify AS app_identify,
+    c.shared AS app_shared
     FROM
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id
+    LEFT JOIN Project c ON a.appid = c.id
     WHERE a.token=#{0} AND expire&gt;#{1} and a.deleteTag=0;
   </select>
 

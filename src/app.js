@@ -11,15 +11,10 @@ export const dva = {
   },
 };
 
-const prj = localStorage.getItem('projectInfo')
 const xxx = process.env
 window.__config__ = {
-  envTypeList: [{ 'type': 0, 'title': '测试', 'key': '0' }, { 'type': 1, 'title': '开发', 'key': '1' }, { 'type': 2, 'title': '生产', 'key': '2' }],
-  platforms: [{ 'platform': 0, 'title': '全部' }, { 'platform': 1, 'title': 'iOS' }, { 'platform': 2, 'title': 'Android' }],
-  env: xxx
-}
-if (prj != undefined) {
-  window.__config__.projectInfo = JSON.parse(prj)
+  env: xxx,
+  user: JSON.parse(localStorage.getItem('user'))
 }
 
 /*

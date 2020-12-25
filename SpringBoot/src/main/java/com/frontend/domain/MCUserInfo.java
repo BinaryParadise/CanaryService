@@ -1,5 +1,7 @@
 package com.frontend.domain;
 
+import java.sql.Timestamp;
+
 public class MCUserInfo {
   Integer id;
   String username;
@@ -9,7 +11,8 @@ public class MCUserInfo {
   int roleid;
   String rolename;
   int rolelevel;
-  long expire;
+  Timestamp expire;
+  MCAppInfo app;
 
   public String getName() {
     return name;
@@ -43,11 +46,11 @@ public class MCUserInfo {
     this.rolename = rolename;
   }
 
-  public long getExpire() {
+  public Timestamp getExpire() {
     return expire;
   }
 
-  public void setExpire(long expire) {
+  public void setExpire(Timestamp expire) {
     this.expire = expire;
   }
 
@@ -85,5 +88,13 @@ public class MCUserInfo {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public MCAppInfo getApp() {
+    return app;
+  }
+
+  public void setApp(MCAppInfo app) {
+    this.app = app;
   }
 }

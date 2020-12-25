@@ -12,7 +12,6 @@ import ParamEditForm from '../param/edit'
 
 class MockScenePage extends React.Component {
     state = {
-        appid: (window.__config__.projectInfo || {}).id,
         loading: false,
         mock: this.props.location.state,
         listData: [],

@@ -17,8 +17,7 @@ const formItemLayout = {
 
 class SceneEditForm extends React.Component {
     state = {
-        visiable: false,
-        appid: (window.__config__.projectInfo || {}).id
+        visiable: false
     }
 
     componentDidMount() {

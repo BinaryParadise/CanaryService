@@ -1,5 +1,6 @@
 package com.frontend.controllers;
 
+import com.frontend.Global;
 import com.frontend.domain.*;
 import com.frontend.jsonutil.JSON;
 import com.frontend.mappers.EnvConfigItemMapper;
@@ -7,6 +8,7 @@ import com.frontend.mappers.EnvConfigMapper;
 import com.frontend.mappers.EnvSchemeMapper;
 import com.frontend.models.MCResult;
 import com.frontend.utils.MybatisError;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +40,8 @@ public class RemoteConfigController {
    * @return
    */
   @GetMapping(value = "/list")
-  public MCResult list(Integer appId, Integer type, Integer pageSize, Integer pageIndex) {
-    if (appId == null) {
-      return MCResult.Failed(1, "缺少参数appId");
-    }
-    Object data = envMapper.findByAppId(appId, type == null ? 0 : type);
+  public MCResult list(Integer type, Integer pageSize, Integer pageIndex) {
+    Object data = envMapper.findByAppId(Global.getAppId(), type == null ? 0 : type);
 //    Object data = envMapper.findByAppIdPage(appId, type == null ? 0 : type, new MCPagination(pageIndex, pageSize));
     return MCResult.Success(data);
   }
@@ -63,6 +62,7 @@ public class RemoteConfigController {
   @Transactional
   public MCResult update(@PathVariable(value = "id") int envid, @RequestBody MCEnvConfig config, @RequestAttribute(name = "uid") int uid) {
     config.setUid(uid);
+    config.setAppId(Global.getAppId());
     if (envid > 0) {
       //更新环境配置
       return envMapper.update(config) > 0 ? MCResult.Success(null) : MCResult.Failed(MybatisError.UpdateFaield);
@@ -115,6 +115,9 @@ public class RemoteConfigController {
   @JSON(type = MCSchemeGroup.class, include = "name,comment,subItems,value")
   @JSON(type = MCSchemeItem.class, include = "value,comment")
   public MCResult full(String appkey, String platform) {
+    if (appkey == null) {
+      appkey = Global.getIdentify();
+    }
     if (appkey != null && appkey.length() > 0) {
       List<MCEnvConfigGroup> groups = new ArrayList<>();
       //环境列表

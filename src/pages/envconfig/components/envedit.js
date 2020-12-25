@@ -30,15 +30,10 @@ class EnvEditForm extends React.Component {
   }
 
   getEnvTemplate = () => {
-    axios.get("/conf/full", {
-      params: {
-        appkey: (window.__config__.projectInfo || {}).identify
-      }
-    }).then(result => this.setState({ listData: result.data }))
+    axios.get("/conf/full", {}).then(result => this.setState({ listData: result.data }))
   }
 
   render() {
-    const { envTypeList } = window.__config__
     const { getFieldDecorator } = this.props.form
     const { data } = this.props
     const { listData } = this.state
@@ -89,7 +84,7 @@ class EnvEditForm extends React.Component {
             initialValue: data.type,
             rules: [{ required: false }]
           })(<Radio.Group name='envtypes'>
-            {envTypeList.map(record => <Radio.Button key={record.type}
+            {this.envTypeList.map(record => <Radio.Button key={record.type}
               value={record.type}>{record.title}</Radio.Button>)}
           </Radio.Group>)}
         </Form.Item>

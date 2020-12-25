@@ -16,21 +16,22 @@ export default class EnvConfig extends React.Component {
     modalData: {
       visible: false,
       loading: false,
-      appId: (window.__config__.projectInfo || {}).id,
       key: 0,
       title: "新增",
       data: null
     },
     record: {},
     params: {
-      appId: (window.__config__.projectInfo || {}).id,
       type: 0,
       pageSize: 5,
       pageIndex: 1,
     }
   }
 
-
+  envTypeList = [
+    { type: 0, title: '测试', key: '0' },
+    { type: 1, title: '开发', key: '1' },
+    { type: 2, title: '生产', key: '2' }]
 
   // 环境列表
   query = () => {
@@ -57,7 +58,7 @@ export default class EnvConfig extends React.Component {
         visible: true,
         key: modalData.key + 1,
         title: '新增',
-        data: { id: 0, appId: params.appId, name: '', type: 0, comment: '' }
+        data: { id: 0, name: '', type: 0, comment: '' }
       }
     })
   }
@@ -109,7 +110,7 @@ export default class EnvConfig extends React.Component {
 
   render() {
     const { listData, tableLoading, modalData, params } = this.state
-    const { envTypeList } = window.__config__
+
     return (<Layout>
       <Breadcrumb style={{ marginBottom: 12 }}>
         <Breadcrumb.Item>
@@ -130,7 +131,7 @@ export default class EnvConfig extends React.Component {
       <Menu mode="horizontal" selectedKeys={[params.type.toString()]} onClick={this.onTypeSelect}
         style={{ marginBottom: '6px' }}>
         {
-          envTypeList.map(record => <Menu.Item key={record.type}>{record.title}</Menu.Item>)
+          this.envTypeList.map(record => <Menu.Item key={record.type}>{record.title}</Menu.Item>)
         }
       </Menu>
 

@@ -1,5 +1,6 @@
 package com.frontend.controllers;
 
+import com.frontend.Global;
 import com.frontend.domain.MCSchemeGroup;
 import com.frontend.domain.MCSchemeItem;
 import com.frontend.mappers.EnvSchemeMapper;
@@ -18,8 +19,8 @@ public class EnvSchemeController {
 
   @RequestMapping(value = "scheme/list", method = RequestMethod.GET)
   @ResponseBody
-  public MCResult list(Integer appId) {
-    List<MCSchemeGroup> result = schemeMapper.findByAppId(appId);
+  public MCResult list() {
+    List<MCSchemeGroup> result = schemeMapper.findByAppId(Global.getAppId());
     for (MCSchemeGroup item : result) {
       item.setSubItems(schemeMapper.findByGroupId(item.getId()));
     }

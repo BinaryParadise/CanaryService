@@ -27,7 +27,7 @@ class NormalLoginForm extends React.Component {
         return axios.post('/user/login', params).then(result => {
             if (result.code == 0) {
                 localStorage.setItem("user", JSON.stringify(result.data))
-                message.success("登录成功,即将跳转", 2.5)
+                message.success("登录成功,即将跳转", 0.5)
                     .then(() => router.push('/'))
             } else {
                 message.error(result.error);

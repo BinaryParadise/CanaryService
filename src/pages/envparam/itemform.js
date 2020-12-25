@@ -4,10 +4,13 @@ import { Form, Input, Modal, message, Switch, Icon, Radio } from 'antd'
 import axios from '../../component/axios'
 
 class EnvItemDetailForm extends React.Component {
+  platforms = [
+    { platform: 0, title: '全部' },
+    { platform: 1, title: 'iOS' },
+    { platform: 2, title: 'Android' }]
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { platforms } = window.__config__
     const { data } = this.props
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -36,7 +39,7 @@ class EnvItemDetailForm extends React.Component {
             initialValue: 0,
             rules: [{ required: false }]
           })(<Radio.Group name='envtypes'>
-            {platforms.map(record => <Radio.Button key={record.platform}
+            {this.platforms.map(record => <Radio.Button key={record.platform}
               value={record.platform}>{record.title}</Radio.Button>)}
           </Radio.Group>)}
         </Form.Item>

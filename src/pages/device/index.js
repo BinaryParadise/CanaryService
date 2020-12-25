@@ -123,7 +123,7 @@ export default class IndexPage extends React.Component {
   // 获取设备列表
   getDeviceList = () => {
     this.setState({ loading: true });
-    wsInstance.sendMessage({ type: 11, appKey: window.__config__.projectInfo.identify })
+    wsInstance.sendMessage({ type: 11, appKey: window.__config__.user.app.identify })
   }
 
   render() {

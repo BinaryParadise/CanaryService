@@ -47,11 +47,13 @@ class BasicLayout extends React.Component {
     }
 
     const projectInfo = this.state.appData.filter(item => item.id == this.state.selectedItem)[0];
-    localStorage.setItem("projectInfo", JSON.stringify(projectInfo))
-    window.__config__.projectInfo = projectInfo
-    this.setState({ project: false })
-    message.success("应用切换成功!")
-    router.push("/")
+    return axios.post('/user/change/app', projectInfo).then(result => {
+      localStorage.setItem("user", JSON.stringify(result.data))
+      window.__config__.user = result.data
+      this.setState({ project: false })
+      message.success("应用切换成功!")
+      router.push('/')
+    })
   }
 
   onChange = (value) => {
@@ -75,16 +77,14 @@ class BasicLayout extends React.Component {
   }
 
   componentDidMount() {
-    if (AuthUser().id && window.__config__.projectInfo == undefined) {
-      router.push('/project')
-    }
+
   }
 
   render() {
-    const { projectInfo } = window.__config__
+    const { user } = window.__config__
     const { appData } = this.state
     const { pathname } = this.props.location
-    if (pathname === "/login" && localStorage.getItem("user") == null) {
+    if (pathname === "/login") {
       return (
         <Layout style={{ padding: "180px", height: '100vh' }}>
           <Row>
@@ -172,7 +172,7 @@ class BasicLayout extends React.Component {
           <Header className={styles.header}>
             <Icon type="unordered-list" className={styles.logo} onMouseOver={this.showDrawer} />
             <Button className={styles.title} onClick={this.switchProject}>
-              {projectInfo == undefined ? "未选择应用" : projectInfo.name}
+              {(user || {}).app == undefined ? "未选择应用" : user.app.name}
             </Button>
             <span style={{ float: "right" }}>
               <Dropdown overlay={(

@@ -1,5 +1,6 @@
 package com.frontend.websocket;
 
+import com.frontend.Global;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;

@@ -1,0 +1,88 @@
+PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
+  - Canary (0.6.0):
+    - SnapKit
+    - SocketRocket (~> 0.5)
+    - SwifterSwift
+    - SwiftyJSON
+  - CocoaLumberjack/Core (3.7.0)
+  - CocoaLumberjack/Swift (3.7.0):
+    - CocoaLumberjack/Core
+  - Nimble (7.3.4)
+  - Quick (1.2.0)
+  - SnapKit (4.2.0)
+  - SocketRocket (0.5.1)
+  - SwifterSwift (5.1.0):
+    - SwifterSwift/AppKit (= 5.1.0)
+    - SwifterSwift/CoreGraphics (= 5.1.0)
+    - SwifterSwift/CoreLocation (= 5.1.0)
+    - SwifterSwift/Dispatch (= 5.1.0)
+    - SwifterSwift/Foundation (= 5.1.0)
+    - SwifterSwift/MapKit (= 5.1.0)
+    - SwifterSwift/SceneKit (= 5.1.0)
+    - SwifterSwift/SpriteKit (= 5.1.0)
+    - SwifterSwift/SwiftStdlib (= 5.1.0)
+    - SwifterSwift/UIKit (= 5.1.0)
+  - SwifterSwift/AppKit (5.1.0)
+  - SwifterSwift/CoreGraphics (5.1.0)
+  - SwifterSwift/CoreLocation (5.1.0)
+  - SwifterSwift/Dispatch (5.1.0)
+  - SwifterSwift/Foundation (5.1.0)
+  - SwifterSwift/MapKit (5.1.0)
+  - SwifterSwift/SceneKit (5.1.0)
+  - SwifterSwift/SpriteKit (5.1.0)
+  - SwifterSwift/SwiftStdlib (5.1.0)
+  - SwifterSwift/UIKit (5.1.0)
+  - SwiftyJSON (5.0.0)
+
+DEPENDENCIES:
+  - AFNetworking
+  - Canary (from `../..`)
+  - CocoaLumberjack/Swift
+  - Nimble (~> 7.0)
+  - Quick (~> 1.2.0)
+  - SocketRocket
+
+SPEC REPOS:
+  trunk:
+    - AFNetworking
+    - CocoaLumberjack
+    - Nimble
+    - Quick
+    - SnapKit
+    - SocketRocket
+    - SwifterSwift
+    - SwiftyJSON
+
+EXTERNAL SOURCES:
+  Canary:
+    :path: "../.."
+
+SPEC CHECKSUMS:
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  Canary: 8faadd9cadcc16bf30fdc880cec61e78f74e2a89
+  CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
+  Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+
+PODFILE CHECKSUM: ab7d477506a9cdb39be0b24535e2a02e0326b8df
+
+COCOAPODS: 1.10.0

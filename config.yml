@@ -1,0 +1,7 @@
+workspace: Demo.workspace
+schemes:
+  - vip8:
+    team_id: FC8D66H8
+    profiles:
+      - Test: adhoc.test
+      - Release: production.release

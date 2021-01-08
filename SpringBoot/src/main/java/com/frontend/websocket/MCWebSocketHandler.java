@@ -2,6 +2,7 @@ package com.frontend.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.frontend.Global;
 import com.frontend.domain.MCAppInfo;
 import com.frontend.mappers.ProjectMapper;
 import com.frontend.models.LogMessage;
@@ -130,7 +131,9 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
   @Override
   protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
     logger.info("【"+(String) session.getAttributes().get("deviceid")+"】发来一个Pong");
-    super.handlePongMessage(session, message);
+    ByteBuffer wrap = ByteBuffer.wrap(JSON.toJSONBytes(Global.getUpdateTime()));
+    PongMessage pong = new PongMessage(wrap);
+    super.handlePongMessage(session, pong);
   }
 
   @Override

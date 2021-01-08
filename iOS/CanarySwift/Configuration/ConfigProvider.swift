@@ -47,17 +47,13 @@ public class ConfigProvider {
     }
 
     func fetchRemoteConfig(completion: @escaping (() -> Void)) {
-        var confURL = "\(CanarySwift.shared.baseURL!)/api/conf/full?appkey=\(CanarySwift.shared.appSecret)"
-        URLSession.shared.dataTask(with: URL(string: confURL)!) { [weak self] (data, response, error) in
-            if error == nil {
-                do {
-                    try self?.processRemoteConfig(dict: JSON(data))
-                } catch {
-                    print("\(#file).\(#function)+\(#line)\(error)")
-                }
+        var confURL = "/api/conf/full?appkey=\(CanarySwift.shared.appSecret)"
+        URLRequest.get(with: confURL) { [weak self] (result, error) in
+            if result.code == 0 {
+                self?.processRemoteConfig(dict: result.data)
             }
             completion()
-        }.resume()
+        }
     }
 
     func processRemoteConfig(dict: JSON?) {

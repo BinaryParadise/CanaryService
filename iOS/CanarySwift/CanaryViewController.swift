@@ -24,7 +24,7 @@ class CanaryViewController: UIViewController {
             return UITableView(frame: .zero, style: .grouped)
         }
     }()
-    let datas = ["环境配置", "Mock数据", "WKWebView"]
+    var datas: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +33,8 @@ class CanaryViewController: UIViewController {
         view.backgroundColor = UIColor(hex: 0xF4F5F6)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .done, target: self, action: #selector(onBackButton))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "设置", style: .done, target: self, action: #selector(onProfileButton))
+        
         tableView.backgroundColor = view.backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
@@ -49,8 +51,27 @@ class CanaryViewController: UIViewController {
         tableView.register(cellWithClass: UITableViewCell.self)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        reloadData()
+    }
+    
+    func reloadData() -> Void {
+        datas =  ["环境配置", "Mock数据", "WKWebView"]
+        tableView.reloadData()
+    }
+    
     @objc func onBackButton() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func onProfileButton() {
+        navigationController?.pushViewController(ProfileViewController(), animated: true)
+    }
+    
+    deinit {
+        CanarySwift.shared.lock.unlock()
     }
 }
 

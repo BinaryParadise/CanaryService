@@ -22,7 +22,7 @@
 
   <select id="findAllMock" resultType="com.frontend.mockable.MCMockInfo">
 
-    SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{appid}
+    SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE b.appid=#{user.app.id} and b.uid=#{user.id}
 
     <choose>
       <when test="groupid != null">
@@ -42,16 +42,12 @@
       UPDATE MockGroup SET name=#{name} WHERE appid=#{appid}
     </if>
     <if test="id == null">
-      INSERT INTO MockGroup(name,appid) VALUES(#{name}, #{appid})
+      INSERT INTO MockGroup(name,appid, uid) VALUES(#{name}, #{appid}, #{uid})
     </if>
   </update>
 
-  <select id="findFullGroup" resultType="com.frontend.mockable.MCMockGroup">
-    SELECT * FROM MockGroup WHERE appId IN (SELECT appid FROM Project WHERE identify=#{param1})
-  </select>
-
   <select id="findAllGroup" resultType="com.frontend.mockable.MCMockGroup">
-    SELECT * FROM MockGroup WHERE appid=#{0}
+    SELECT * FROM MockGroup WHERE appid=#{0} and uid=#{1}
   </select>
 
   <delete id="deleteGroup" parameterType="com.frontend.mockable.MCMockGroup">

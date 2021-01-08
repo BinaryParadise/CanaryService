@@ -33,13 +33,10 @@ public class MockController {
   @JSON(type = MCMockInfo.class, include = "id,name,path,scenes")
   @JSON(type = MCMockScene.class, include = "id,name,params")
   @JSON(type = MCMockParam.class, include = "id,name,value")
-  public MCResult appWhole(String appsecret) {
-    if (appsecret == null || appsecret.length() == 0) {
-      return MCResult.Failed(MybatisError.ParamFailed);
-    }
-    List<MCMockGroup> groups = mockMapper.findFullGroup(appsecret);
+  public MCResult appWhole() {
+    List<MCMockGroup> groups = mockMapper.findAllGroup(Global.getAppId(), Global.getUser().getId());
     for (MCMockGroup group : groups) {
-      List<MCMockInfo> mocks = mockMapper.findAllMock(group.getAppid(), group.getId(), new MCPagination(1, 1000));
+      List<MCMockInfo> mocks = mockMapper.findAllMock(Global.getUser(), group.getId(), new MCPagination(1, 1000));
       mocks.forEach(m -> {
         m.setScenes(mockMapper.findAllScene(m.getId()));
         m.getScenes().forEach(s -> {
@@ -60,8 +57,8 @@ public class MockController {
   }
 
   @GetMapping("/list")
-  public MCResult mockList(Integer groupid, Integer pageSize, Integer pageIndex) {
-    MCResult result = MCResult.Success(mockMapper.findAllMock(Global.getUser().getApp().getId(), groupid, new MCPagination(pageIndex, pageSize)));
+  public MCResult mockList(Integer groupid, Integer pageSize, Integer current) {
+    MCResult result = MCResult.Success(mockMapper.findAllMock(Global.getUser(), groupid, new MCPagination(current, pageSize)));
     return result;
   }
 
@@ -73,6 +70,7 @@ public class MockController {
       } else {
         mockMapper.update(mock);
       }
+      Global.update();
       return MCResult.Success();
     } catch (UncategorizedSQLException e) {
       SQLiteException se = (SQLiteException) e.getCause();
@@ -86,7 +84,9 @@ public class MockController {
   @PostMapping("/group/update")
   public MCResult updateGroup(@RequestBody MCMockGroup group) {
     try {
+      group.setUid(Global.getUser().getId());
       mockMapper.updateGroup(group);
+      Global.update();
       return MCResult.Success();
     } catch (UncategorizedSQLException e) {
       SQLiteException se = (SQLiteException) e.getCause();
@@ -99,7 +99,7 @@ public class MockController {
 
   @GetMapping("/group/list")
   public MCResult groupList() {
-    MCResult result = MCResult.Success(mockMapper.findAllGroup(Global.getAppId()));
+    MCResult result = MCResult.Success(mockMapper.findAllGroup(Global.getAppId(), Global.getUser().getId()));
     return result;
   }
 

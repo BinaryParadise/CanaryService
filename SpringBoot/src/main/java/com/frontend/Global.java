@@ -6,10 +6,13 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 public class Global {
   static String _loginSessionKey = "login_session";
+  static Long updateTime = System.currentTimeMillis();
 
   /**
    * 获取当前请求session
@@ -51,5 +54,20 @@ public class Global {
       return null;
     }
     return user.getApp().getIdentify();
+  }
+
+  /**
+   * 数据最后更新时间
+   * @return
+   */
+  public static Long getUpdateTime() {
+    return updateTime;
+  }
+
+  /**
+   * 更新时间
+   */
+  public static void update() {
+    Global.updateTime = System.currentTimeMillis();
   }
 }

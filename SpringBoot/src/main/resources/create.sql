@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : frontend
+ Source Server         : product
  Source Server Type    : SQLite
  Source Server Version : 3030001
  Source Schema         : main
@@ -10,7 +10,7 @@
  Target Server Version : 3030001
  File Encoding         : 65001
 
- Date: 28/12/2020 15:10:13
+ Date: 28/12/2020 15:12:59
 */
 
 PRAGMA foreign_keys = false;
@@ -154,36 +154,36 @@ CREATE TABLE sqlite_sequence(name,seq);
 -- ----------------------------
 -- Auto increment value for MockData
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 3 WHERE name = 'MockData';
+UPDATE "main"."sqlite_sequence" SET seq = 7 WHERE name = 'MockData';
 
 -- ----------------------------
 -- Auto increment value for MockGroup
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 8 WHERE name = 'MockGroup';
+UPDATE "main"."sqlite_sequence" SET seq = 2 WHERE name = 'MockGroup';
 
 -- ----------------------------
 -- Auto increment value for MockParam
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockParam';
+UPDATE "main"."sqlite_sequence" SET seq = 8 WHERE name = 'MockParam';
 
 -- ----------------------------
 -- Auto increment value for MockScene
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockScene';
+UPDATE "main"."sqlite_sequence" SET seq = 15 WHERE name = 'MockScene';
 
 -- ----------------------------
 -- Auto increment value for Project
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 2 WHERE name = 'Project';
+UPDATE "main"."sqlite_sequence" SET seq = 1 WHERE name = 'Project';
 
 -- ----------------------------
 -- Auto increment value for RemoteConfig
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 17 WHERE name = 'RemoteConfig';
+UPDATE "main"."sqlite_sequence" SET seq = 31 WHERE name = 'RemoteConfig';
 
 -- ----------------------------
 -- Auto increment value for RemoteConfigParam
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 'RemoteConfigParam';
+UPDATE "main"."sqlite_sequence" SET seq = 85 WHERE name = 'RemoteConfigParam';
 
 PRAGMA foreign_keys = true;

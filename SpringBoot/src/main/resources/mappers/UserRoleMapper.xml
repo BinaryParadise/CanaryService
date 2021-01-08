@@ -47,15 +47,21 @@
     UPDATE User set deleteTag=1 where id = #{0}
   </delete>
 
-  <select id="findUserList" resultType="com.frontend.domain.MCUserInfo">
+  <select id="findUserList" resultMap="userWithApp">
     SELECT
     null as password,
     a.*,
     b.name AS rolename,
-    b.level as rolelevel
+    b.level AS rolelevel,
+    c.id AS app_id,
+    c.name AS app_name,
+    c.identify AS app_identify,
+    c.shared AS app_shared
     FROM
     User a
-    LEFT JOIN UserRole b ON a.roleid = b.id where a.deleteTag=0
+    LEFT JOIN UserRole b ON a.roleid = b.id
+    LEFT JOIN Project c ON a.appid = c.id
+    WHERE a.deleteTag=0
   </select>
 
   <select id="isLogin" resultType="java.lang.Integer">
@@ -63,18 +69,11 @@
   </select>
 
   <update id="login" parameterType="java.util.Map">
-    UPDATE User
-    <set>
-      <if test="token != null">
-        token = #{token},
-      </if>
-      <if test="stamp != null">
-        expire = #{stamp}+86400*7000,
-      </if>
-    </set>
-    WHERE
-    username = #{username}
-    AND password = #{password} and deleteTag=0;
+    INSERT INTO UserSession ( token, expire, uid, platform ) SELECT
+    #{token},
+    #{stamp}+3600*24*28*1000,
+    ( SELECT id FROM User a WHERE a.username = #{username} AND a.password = #{password} and deleteTag=0 ),
+    #{platform}
   </update>
 
   <update id="changeApp">
@@ -82,9 +81,12 @@
   </update>
 
   <select id="findByLogin" resultMap="userWithApp">
-    SELECT
-    null as password,
+    SELECT NULL AS
+    password,
     a.*,
+    d.token,
+    d.expire,
+    d.platform,
     b.name AS rolename,
     b.level AS rolelevel,
     c.id AS app_id,
@@ -95,15 +97,23 @@
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id
     LEFT JOIN Project c ON a.appid = c.id
+    LEFT JOIN UserSession d ON a.id = d.uid
     WHERE
     a.username = #{username}
-    AND a.password = #{password} AND a.token is not NULL AND expire&gt;#{stamp};
+    AND a.password = #{password}
+    AND d.platform = #{platform}
+    AND d.token= #{token}
+    AND d.expire &gt; #{stamp}
+
   </select>
 
   <select id="findByToken" resultMap="userWithApp">
-    SELECT
-    null as password,
+    SELECT NULL AS
+    password,
     a.*,
+    d.token,
+    d.expire,
+    d.platform,
     b.name AS rolename,
     b.level AS rolelevel,
     c.id AS app_id,
@@ -114,8 +124,16 @@
     User a
     LEFT JOIN UserRole b ON a.roleid = b.id
     LEFT JOIN Project c ON a.appid = c.id
-    WHERE a.token=#{0} AND expire&gt;#{1} and a.deleteTag=0;
+    LEFT JOIN UserSession d ON a.id = d.uid
+    WHERE
+    d.platform = #{platform}
+    AND d.token= #{token}
+    AND d.expire &gt; #{stamp}
   </select>
+
+  <update id="updateByToken">
+    UPDATE UserSession SET expire=#{1} WHERE token=#{0}
+  </update>
 
   <select id="findRoleList" resultType="com.frontend.domain.MCUserRole">
     SELECT * FROM UserRole

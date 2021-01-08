@@ -11,6 +11,13 @@ import SwiftyJSON
 let suiteName       = "com.binaryparadise.canary"
 let MockGroupURL    = "/api/mock/app/whole"
 
+struct Result: Codable {
+    var code: Int
+    var error: String?
+    var data: JSON?
+    var timestamp: TimeInterval
+}
+
 /// 接口状态
 struct MockSwitch: Codable {
     var isEnabled: Bool
@@ -72,7 +79,7 @@ struct MockSwitch: Codable {
         userDefaults.synchronize()
     }
     
-    func shouldIntercept(for request: URLRequest) -> (should:Bool, url: URL?) {
+    func checkIntercept(for request: URLRequest) -> (should:Bool, url: URL?) {
         //完全匹配
         let path = request.url?.path ?? ""
         if path == MockGroupURL {
@@ -127,14 +134,13 @@ struct MockSwitch: Codable {
     }
     
     func fetchGroups(completion: @escaping (() -> Void)) -> Void {
-        URLSession.shared.dataTask(with: CanarySwift.shared.requestURL(with: MockGroupURL)) { [weak self] (data, response, error) in
+        URLRequest.get(with: MockGroupURL) { [weak self] (result, error) in
             do {
-                let data = JSON(data)["data"]
-                self?.groups = try JSONDecoder().decode([MockGroup].self, from: data.rawData())
+                self?.groups = try JSONDecoder().decode([MockGroup].self, from: result.data?.rawData() ?? Data())
             } catch {
-                print("\(#file).\(#function)+\(#line) \(error)")
+                print("\(#file).\(#function) +\(#line) \(error)")
             }
             completion()
-        }.resume()
+        }
     }
 }

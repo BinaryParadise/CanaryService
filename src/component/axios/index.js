@@ -5,7 +5,7 @@ import { baseURI } from '../../common/config'
 import router from 'umi/router'
 import { notification } from 'antd'
 
-axios.withCredentials=true;
+axios.withCredentials = true;
 
 function throwHttpError(message, code) {
   const error = new Error(message)
@@ -40,7 +40,7 @@ const instance = axios.create({
     let user = JSON.parse(localStorage.getItem("user"))
     let token = (user || {}).token
     if (token != undefined) {
-      header["Access-Token"] = token
+      header["Canary-Access-Token"] = token
     }
     // 文件上传
     const isMultiPart = header['Content-Type'] === 'multipart/form.js-data'
@@ -61,7 +61,10 @@ const instance = axios.create({
   transformResponse(data, header) {
     const result = JSON.parse(data)
     if (result) {
-      return result
+      if (result.status == undefined) {
+        return result
+      }
+      return JSON.stringify({ code: result.status, error: result.message, timestamp: result.timestamp })
     }
     return JSON.stringify({ code: 500, error: data })
   }
@@ -82,9 +85,9 @@ instance.interceptors.response.use(
   function (error) {
     if (error.response) {
       notification.error({
-        message: '请求失败',
+        message: error.response.statusText,
         description:
-          error.response.statusText,
+          error.message,
       })
       return
       // throwHttpError('请求异常：' + error.response.statusText)

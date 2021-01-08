@@ -22,6 +22,7 @@ PODS:
   - CocoaLumberjack/Core (3.7.0)
   - CocoaLumberjack/Swift (3.7.0):
     - CocoaLumberjack/Core
+  - Masonry (1.1.0)
   - Nimble (7.3.4)
   - Quick (1.2.0)
   - SnapKit (4.2.0)
@@ -53,6 +54,7 @@ DEPENDENCIES:
   - AFNetworking
   - Canary (from `../..`)
   - CocoaLumberjack/Swift
+  - Masonry
   - Nimble (~> 7.0)
   - Quick (~> 1.2.0)
   - SocketRocket
@@ -61,6 +63,7 @@ SPEC REPOS:
   trunk:
     - AFNetworking
     - CocoaLumberjack
+    - Masonry
     - Nimble
     - Quick
     - SnapKit
@@ -76,6 +79,7 @@ SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Canary: 8faadd9cadcc16bf30fdc880cec61e78f74e2a89
   CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
@@ -83,6 +87,6 @@ SPEC CHECKSUMS:
   SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: ab7d477506a9cdb39be0b24535e2a02e0326b8df
+PODFILE CHECKSUM: 7b3e476f870033d8d831238806358b051ffc5a49
 
 COCOAPODS: 1.10.0

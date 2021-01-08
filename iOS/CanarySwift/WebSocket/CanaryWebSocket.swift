@@ -75,7 +75,8 @@ class CanaryWebSocket: NSObject {
     @objc private func pingAction() {
         let state = mySocket.readyState
         if(state == .OPEN) {
-            mySocket.sendPing(Date().timeIntervalSince1970.string.data(using: .utf8))
+            let t = Date().timeIntervalSince1970 * 1000
+            mySocket.sendPing(t.string.data(using: .utf8))
         }else {
             if (retry && (state == .CLOSED || state == .CLOSING)) {
                 print("🍺 \(retryInterval)秒后重试连接");
@@ -95,7 +96,7 @@ extension CanaryWebSocket: SRWebSocketDelegate {
         recivers.forEach { (receiver) in
             receiver.webSocketDidOpen(webSocket: self)
         }
-        print("🍺 WebSocket连接成功：\(webSocket.url)")
+        print("🍺 WebSocket连接成功：\(webSocket.url.absoluteString)")
     }
     
     func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {

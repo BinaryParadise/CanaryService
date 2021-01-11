@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon } from 'antd'
+import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon, Tag } from 'antd'
 import { routerURL } from '../../../common/util'
 import axios from '../../../component/axios'
 import Layout from 'antd/lib/layout/layout'
@@ -33,6 +33,20 @@ class MockScenePage extends React.Component {
             ellipsis: true
         },
         {
+            title: '状态',
+            width: 80,
+            render: (text, record) => {
+                var sceneid = this.state.mock.sceneid
+                if (sceneid == null) {
+                    return <Tag color="orange">自动</Tag>
+                } else if (sceneid == record.id) {
+                    return <Tag color="#87d068">激活</Tag>
+                } else {
+                    return <Tag color="gray">闲置</Tag>
+                }
+            }
+        },
+        {
             dataIndex: 'updatetime',
             title: '更新时间',
             width: 200,
@@ -51,11 +65,29 @@ class MockScenePage extends React.Component {
                     }>
                         <a style={{ marginLeft: 8, color: "red" }}>删除</a>
                     </Popconfirm >
+                    {this.renderSceneAction(record)}
                 </span>
                 )
             }
         }
     ];
+
+    renderSceneAction = (record) => {
+        var sceneid = this.state.mock.sceneid
+        var p = { title: '确认激活?', color: '#35B0D8', btn: '激活', active: true }
+        if (sceneid == null) {
+
+        } else {
+            if (sceneid == record.id) {
+                p.title = "确认切换为自动模式？"
+                p.btn = "自动"
+                p.active = false
+            }
+        }
+        return <Popconfirm title={p.title} onConfirm={() => this.onActive(record, p.active)}>
+            <a style={{ marginLeft: 8, color: p.color }}>{p.btn}</a>
+        </Popconfirm>
+    }
 
     componentDidMount() {
         this.queryAll()
@@ -72,6 +104,24 @@ class MockScenePage extends React.Component {
 
     onEdit = (record) => {
         this.setState({ editItem: { visible: true, data: record } })
+    }
+
+    onActive = (record, active) => {
+        var newR = { ...this.state.mock }
+        if (active) {
+            newR.sceneid = record.id
+        } else {
+            newR.sceneid = null
+        }
+
+        return axios.post('/mock/active', newR).then(result => {
+            if (result.code != 0) {
+                message.error(result.error)
+                return
+            }
+            this.state.mock.sceneid = newR.sceneid
+            this.queryAll()
+        })
     }
 
     onSave = () => {

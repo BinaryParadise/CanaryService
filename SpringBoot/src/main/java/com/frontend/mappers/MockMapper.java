@@ -20,6 +20,8 @@ public interface MockMapper {
 
   Boolean update(MCMockInfo mock);
 
+  Boolean active(MCMockInfo mock);
+
   List<MCMockInfo> findAllMock(@Param("user") MCUserInfo user, @Param("groupid") Integer groupid, @Param("page") MCPagination page);
 
   List<MCMockGroup> findAllGroup(Integer pid, Integer uid);

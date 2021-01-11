@@ -13,6 +13,7 @@ public class MCMockInfo {
   String template;
   String groupname;
   Integer uid;
+  Integer sceneid;
   List<MCMockScene> scenes;
 
   public Integer getId() {
@@ -85,6 +86,14 @@ public class MCMockInfo {
 
   public void setUid(Integer uid) {
     this.uid = uid;
+  }
+
+  public Integer getSceneid() {
+    return sceneid;
+  }
+
+  public void setSceneid(Integer sceneid) {
+    this.sceneid = sceneid;
   }
 
   public List<MCMockScene> getScenes() {

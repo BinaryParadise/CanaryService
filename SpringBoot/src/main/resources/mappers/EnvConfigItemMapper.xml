@@ -3,26 +3,29 @@
 
 <mapper namespace="com.frontend.mappers.EnvConfigItemMapper">
 
-    <resultMap id="list" type="com.frontend.domain.MCEnvConfigItem">
-    </resultMap>
+  <resultMap id="list" type="com.frontend.domain.MCEnvConfigItem">
+  </resultMap>
 
-    <select id="findByEnvId" resultMap="list">
-        select a.*,b.name as author from RemoteConfigParam a LEFT JOIN User b on a.uid=b.id where envid=#{envid} order by updateTime desc
-    </select>
+  <select id="findByEnvId" resultMap="list">
+    select a.*,b.name as author from RemoteConfigParam a LEFT JOIN User b on a.uid=b.id where envid=#{envid} order by
+    updateTime desc
+  </select>
 
-    <insert id="insertNew" parameterType="com.frontend.domain.MCEnvConfigItem">
-        INSERT INTO RemoteConfigParam(`name`, `value`, envid, `comment`, uid,`type`,`platform`, `updateTime`) VALUES(#{name},#{value},#{envid},#{comment},#{uid},#{type},#{platform}, STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
-    </insert>
-    <insert id="copyFromEnvId">
-        INSERT INTO RemoteConfigParam(`name`,`value`,envid,`comment`,`uid`, `type`,`platform`, updateTime)
-        SELECT `name`,`value`,#{0},`comment`,#{1},`type`,`platform`,STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4) FROM RemoteConfigParam a WHERE a.envid = #{2};
-    </insert>
+  <insert id="insertNew" parameterType="com.frontend.domain.MCEnvConfigItem">
+    INSERT INTO RemoteConfigParam(`name`, `value`, envid, `comment`, uid,`type`,`platform`, `updateTime`)
+    VALUES(#{name},#{value},#{envid},#{comment},#{uid},#{type},#{platform})
+  </insert>
+  <insert id="copyFromEnvId">
+    INSERT INTO RemoteConfigParam(`name`,`value`,envid,`comment`,`uid`, `type`,`platform`, updateTime)
+    SELECT `name`,`value`,#{0},`comment`,#{1},`type`,`platform` FROM RemoteConfigParam a WHERE a.envid = #{2};
+  </insert>
 
-    <delete id="delete">
-        DELETE FROM RemoteConfigParam WHERE id = #{0}
-    </delete>
+  <delete id="delete">
+    DELETE FROM RemoteConfigParam WHERE id = #{0}
+  </delete>
 
-    <update id="update" parameterType="com.frontend.domain.MCEnvConfigItem">
-        UPDATE RemoteConfigParam SET `name`=#{name},`value`=#{value},`comment`=#{comment},`uid`=#{uid},`platform`=#{platform}, updateTime=STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4) where id=#{id}
-    </update>
+  <update id="update" parameterType="com.frontend.domain.MCEnvConfigItem">
+    UPDATE RemoteConfigParam SET
+    `name`=#{name},`value`=#{value},`comment`=#{comment},`uid`=#{uid},`platform`=#{platform}, updateTime=null where id=#{id}
+  </update>
 </mapper>

@@ -158,6 +158,12 @@ public class MockController {
     }
   }
 
+  @PostMapping("/active")
+  public MCResult activeScene(@RequestBody MCMockInfo mock) {
+    mockMapper.active(mock);
+    return MCResult.Success();
+  }
+
   @PostMapping("/scene/delete")
   public MCResult deleteScene(@RequestBody MCMockScene scene) {
     try {

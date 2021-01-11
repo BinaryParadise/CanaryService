@@ -25,6 +25,11 @@ class EnvEditForm extends React.Component {
     listData: []
   }
 
+  envTypeList = [
+    { type: 0, title: '测试', key: '0' },
+    { type: 1, title: '开发', key: '1' },
+    { type: 2, title: '生产', key: '2' }]
+
   componentDidMount() {
     this.getEnvTemplate()
   }

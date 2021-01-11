@@ -14,7 +14,7 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - Canary (0.6.0):
+  - Canary (0.6.1):
     - SnapKit
     - SocketRocket (~> 0.5)
     - SwifterSwift
@@ -77,7 +77,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
-  Canary: 8faadd9cadcc16bf30fdc880cec61e78f74e2a89
+  Canary: 6a3f8c3600fdb31fea0d6eb289e01c94f355955e
   CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37

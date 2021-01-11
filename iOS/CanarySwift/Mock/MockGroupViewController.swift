@@ -21,7 +21,6 @@ class MockGroupViewController: UIViewController {
         title = "Mock数据"
         view.backgroundColor = UIColor(hex: 0xF4F5F6)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .done, target: self, action: #selector(onBackButton))
         tableView.backgroundColor = view.backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
@@ -43,10 +42,6 @@ class MockGroupViewController: UIViewController {
                 self?.tableView.reloadData()
             }
         }
-    }
-    
-    @objc func onBackButton() {
-        dismiss(animated: true, completion: nil)
     }
 }
 

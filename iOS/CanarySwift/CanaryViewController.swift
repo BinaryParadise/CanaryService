@@ -33,7 +33,6 @@ class CanaryViewController: UIViewController {
         view.backgroundColor = UIColor(hex: 0xF4F5F6)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .done, target: self, action: #selector(onBackButton))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "设置", style: .done, target: self, action: #selector(onProfileButton))
         
         tableView.backgroundColor = view.backgroundColor
         tableView.dataSource = self
@@ -49,6 +48,10 @@ class CanaryViewController: UIViewController {
         }
         
         tableView.register(cellWithClass: UITableViewCell.self)
+        
+        MockManager.shared.fetchGroups {
+            
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -59,11 +62,14 @@ class CanaryViewController: UIViewController {
     
     func reloadData() -> Void {
         datas =  ["环境配置", "Mock数据", "WKWebView"]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: CanarySwift.shared.user() == nil ? "未登录" : "设置", style: .done, target: self, action: #selector(onProfileButton))
         tableView.reloadData()
     }
     
     @objc func onBackButton() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            CanarySwift.shared.lock.unlock()
+        }
     }
     
     @objc func onProfileButton() {

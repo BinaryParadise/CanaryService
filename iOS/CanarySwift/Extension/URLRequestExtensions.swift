@@ -6,6 +6,13 @@
 //
 
 import Foundation
+import WebKit
+
+#if TARGET_OS_IOS || TARGET_OS_WATCH || TARGET_OS_TV
+import MobileCoreServices
+#else
+import CoreServices
+#endif
 
 extension URLRequest {
     static func get(with path: String, completion: ((Result, Error?) -> Void)?) -> Void {
@@ -14,6 +21,7 @@ extension URLRequest {
         if let user = CanarySwift.shared.user() {
             r.setValue(user.token, forHTTPHeaderField: "Canary-Access-Token")
         }
+        r.setValue(userAgent(), forHTTPHeaderField: "User-Agent")
         print("GET \(r.url?.absoluteString ?? "")")
         URLSession.shared.dataTask(with: r as URLRequest) { (data, response, error) in
             DispatchQueue.main.async {
@@ -39,6 +47,7 @@ extension URLRequest {
         if let user = CanarySwift.shared.user() {
             r.setValue(user.token, forHTTPHeaderField: "Canary-Access-Token")
         }
+        r.setValue(userAgent(), forHTTPHeaderField: "User-Agent")
         r.httpBody = params?.jsonData()
         print("POST \(r.url?.absoluteString ?? "")")
         URLSession.shared.dataTask(with: r as URLRequest) { (data, response, error) in
@@ -47,9 +56,16 @@ extension URLRequest {
                     let result = try JSONDecoder().decode(Result.self, from: data ?? Data())
                     completion?(result, error)
                 } catch {
-                    completion?(Result(code: 1, error: error.localizedDescription, data: nil, timestamp: Date().timeIntervalSince1970), error)
+                    completion?(Result(code: 1, error: data?.string(encoding: .utf8), data: nil, timestamp: Date().timeIntervalSince1970), error)
                 }
             }
         }.resume()
+    }
+    
+    private static func userAgent() -> String {
+        var userAgent = ""
+        let info = Bundle.main.infoDictionary!
+        userAgent = "\(info[kCFBundleExecutableKey as String] ?? "")/\(info["CFBundleShortVersionString"]!) (\(UIDevice.current.model); iOS \(UIDevice.current.systemVersion); Scale/\(UIScreen.main.scale))"
+        return userAgent
     }
 }

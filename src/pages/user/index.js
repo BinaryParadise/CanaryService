@@ -41,12 +41,6 @@ export class UserList extends React.Component {
                 }
             },
             {
-                dataIndex: 'expire', title: '到期时间',
-                render: (text) => {
-                    return text < Date.now() ? <span style={{ color: "orange" }}>已到期</span> : <Countdown valueStyle={{ color: '#3f8600' }} value={text} format="D 天 H 时 m 分"></Countdown>
-                }
-            },
-            {
                 title: '操作',
                 render: (text, record) => {
                     return this.renderActions(record);

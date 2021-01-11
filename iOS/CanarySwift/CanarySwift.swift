@@ -22,6 +22,7 @@ import SwiftyJSON
     let lock = NSLock()
     
     private var _user: UserAuth?
+    private var nav: UINavigationController?
         
     @objc public static let shared = CanarySwift()
     @objc public func show() {
@@ -29,9 +30,9 @@ import SwiftyJSON
         assert(deviceId != nil, "请初始化deviceId")
         assert(appSecret.count > 0, "请初始化AppSecret")
         if lock.try() {
-            let nav = UINavigationController(rootViewController: CanaryViewController())
-            nav.modalPresentationStyle = .fullScreen
-            UIApplication.shared.keyWindow?.rootViewController?.present(nav, animated: true, completion: nil)
+            nav = UINavigationController(rootViewController: CanaryViewController())
+            nav?.modalPresentationStyle = .fullScreen
+            UIApplication.shared.keyWindow?.rootViewController?.present(nav!, animated: true, completion: nil)
         }
     }
     

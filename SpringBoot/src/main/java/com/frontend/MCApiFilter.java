@@ -77,6 +77,9 @@ public class MCApiFilter extends OncePerRequestFilter {
 
       if (user == null) {//会话失效
         user = userMapper.findByToken(data);
+        if (user != null) {
+          request.getSession().setAttribute("user", user);
+        }
       }
       if (token == null || token.length() == 0 || user == null) {
         response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "登录状态失效")));

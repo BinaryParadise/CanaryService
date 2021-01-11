@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : product
+ Source Server         : frontend
  Source Server Type    : SQLite
  Source Server Version : 3030001
  Source Schema         : main
@@ -10,7 +10,7 @@
  Target Server Version : 3030001
  File Encoding         : 65001
 
- Date: 28/12/2020 15:12:59
+ Date: 11/01/2021 10:16:38
 */
 
 PRAGMA foreign_keys = false;
@@ -37,7 +37,8 @@ CREATE TABLE "MockGroup" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" TEXT NOT NULL,
   "appid" INTEGER NOT NULL,
-  CONSTRAINT "name_pid" UNIQUE ("name", "appid")
+  "uid" INTEGER NOT NULL,
+  CONSTRAINT "name_pid" UNIQUE ("name" ASC, "appid" ASC)
 );
 
 -- ----------------------------
@@ -125,8 +126,6 @@ CREATE TABLE "User" (
   "password" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "roleid" INTEGER NOT NULL DEFAULT 2,
-  "token" TEXT,
-  "expire" INTEGER DEFAULT 0,
   "deleteTag" bit NOT NULL DEFAULT 0,
   "appid" INTEGER,
   PRIMARY KEY ("id"),
@@ -146,6 +145,19 @@ CREATE TABLE "UserRole" (
 );
 
 -- ----------------------------
+-- Table structure for UserSession
+-- ----------------------------
+DROP TABLE IF EXISTS "UserSession";
+CREATE TABLE "UserSession" (
+  "id" INTEGER NOT NULL ON CONFLICT REPLACE PRIMARY KEY AUTOINCREMENT,
+  "token" TEXT NOT NULL,
+  "expire" integer NOT NULL,
+  "uid" INTEGER NOT NULL,
+  "platform" TEXT NOT NULL,
+  CONSTRAINT "uk_platform_uid" UNIQUE ("platform" ASC, "platform" ASC) ON CONFLICT REPLACE
+);
+
+-- ----------------------------
 -- Table structure for sqlite_sequence
 -- ----------------------------
 DROP TABLE IF EXISTS "sqlite_sequence";
@@ -154,36 +166,41 @@ CREATE TABLE sqlite_sequence(name,seq);
 -- ----------------------------
 -- Auto increment value for MockData
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 7 WHERE name = 'MockData';
+UPDATE "main"."sqlite_sequence" SET seq = 3 WHERE name = 'MockData';
 
 -- ----------------------------
 -- Auto increment value for MockGroup
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 2 WHERE name = 'MockGroup';
+UPDATE "main"."sqlite_sequence" SET seq = 8 WHERE name = 'MockGroup';
 
 -- ----------------------------
 -- Auto increment value for MockParam
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 8 WHERE name = 'MockParam';
+UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockParam';
 
 -- ----------------------------
 -- Auto increment value for MockScene
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 15 WHERE name = 'MockScene';
+UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockScene';
 
 -- ----------------------------
 -- Auto increment value for Project
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 1 WHERE name = 'Project';
+UPDATE "main"."sqlite_sequence" SET seq = 2 WHERE name = 'Project';
 
 -- ----------------------------
 -- Auto increment value for RemoteConfig
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 31 WHERE name = 'RemoteConfig';
+UPDATE "main"."sqlite_sequence" SET seq = 17 WHERE name = 'RemoteConfig';
 
 -- ----------------------------
 -- Auto increment value for RemoteConfigParam
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 85 WHERE name = 'RemoteConfigParam';
+UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 'RemoteConfigParam';
+
+-- ----------------------------
+-- Auto increment value for UserSession
+-- ----------------------------
+UPDATE "main"."sqlite_sequence" SET seq = 38 WHERE name = 'UserSession';
 
 PRAGMA foreign_keys = true;

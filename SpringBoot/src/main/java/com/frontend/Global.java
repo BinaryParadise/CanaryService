@@ -41,7 +41,7 @@ public class Global {
 
   public static Integer getAppId() {
     MCUserInfo user = getUser();
-    return user == null ? null : user.getId();
+    return user == null || user.getApp() == null ? null : user.getApp().getId();
   }
 
   /**

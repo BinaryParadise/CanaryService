@@ -146,19 +146,10 @@ class BasicLayout extends React.Component {
                 <Icon type="tool"></Icon>
                 <span>工具箱</span>
               </Menu.Item>
-              <Menu.SubMenu key="mockgroup" title={
-                <span>
-                  <Icon type="container" />
-                  <span>Mock数据</span>
-                </span>
-              }>
-                <Menu.Item key="/mock/data">
-                  <span>接口配置</span>
-                </Menu.Item>
-                <Menu.Item key="/mock/param">
-                  <span>参数配置</span>
-                </Menu.Item>
-              </Menu.SubMenu>
+              <Menu.Item key="/mock/data">
+                <Icon type="container" />
+                <span>Mock数据</span>
+              </Menu.Item>
               <Menu.Item key="/project" hidden={!Auth('project')}>
                 <Icon type="project" />
                 <span>应用管理</span>

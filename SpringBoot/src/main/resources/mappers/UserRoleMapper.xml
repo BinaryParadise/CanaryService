@@ -69,7 +69,7 @@
   </select>
 
   <update id="login" parameterType="java.util.Map">
-    INSERT INTO UserSession ( token, expire, uid, platform ) SELECT
+    INSERT OR REPLACE INTO UserSession ( token, expire, uid, platform ) SELECT
     #{token},
     #{stamp}+3600*24*28*1000,
     ( SELECT id FROM User a WHERE a.username = #{username} AND a.password = #{password} and deleteTag=0 ),

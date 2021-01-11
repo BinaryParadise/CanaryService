@@ -41,7 +41,7 @@
     DDLogVerbose(@"verbose");
     DDLogInfo(@"info");
     DDLogWarn(@"warn");
-    DDLogDebug(@"degbu");
+    DDLogDebug(@"debug");
     DDLogError(@"error");
 }
 

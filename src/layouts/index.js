@@ -142,13 +142,13 @@ class BasicLayout extends React.Component {
                 <Icon type="link" />
                 <span>路由配置</span>
               </Menu.Item>
-              <Menu.Item key="/tool">
-                <Icon type="tool"></Icon>
-                <span>工具箱</span>
-              </Menu.Item>
               <Menu.Item key="/mock/data">
                 <Icon type="container" />
                 <span>Mock数据</span>
+              </Menu.Item>
+              <Menu.Item key="/tool">
+                <Icon type="tool"></Icon>
+                <span>工具箱</span>
               </Menu.Item>
               <Menu.Item key="/project" hidden={!Auth('project')}>
                 <Icon type="project" />

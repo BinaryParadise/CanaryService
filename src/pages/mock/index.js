@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Popconfirm, Layout, Button, message, Modal, Dropdown, Breadcrumb, Icon, Menu } from "antd";
+import { Table, Popconfirm, Layout, Button, message, Modal, Dropdown, Breadcrumb, Icon, Menu, Tag, Divider } from "antd";
 import axios from '../../component/axios'
 import MockEditForm from './edit'
 import moment from 'moment'
@@ -58,6 +58,13 @@ export default class MockIndexPage extends React.Component {
                 filterMultiple: false
             },
             {
+                title: '状态',
+                width: 80,
+                render: (text, record) => {
+                    return record.enabled ? <Tag color="#87d068">激活</Tag> : <Tag color="gray">闲置</Tag>
+                }
+            },
+            {
                 dataIndex: 'updatetime',
                 title: '更新时间',
                 width: 200,
@@ -73,8 +80,12 @@ export default class MockIndexPage extends React.Component {
                             <a>删除</a>
                         </Popconfirm >
                         <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
-                        <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>编辑模板</Link>
-                    </span>
+                        <Divider type="vertical"></Divider>
+                        <Popconfirm title={record.enabled ? "确认关闭?" : "确认激活?"} onConfirm={() => this.onActive(record)}>
+                            {record.enabled ? <a style={{ color: "gray" }}>关闭</a> : <a style={{ color: "#87d068" }}>激活</a>}
+                        </Popconfirm>
+                        <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>场景</Link>
+                    </span >
                     )
                 }
             }
@@ -111,6 +122,18 @@ export default class MockIndexPage extends React.Component {
         this.state.queryParam.pageSize = pagination.pageSize
         this.state.queryParam.groupid = (filters.groupname || [null])[0]
         this.queryAll()
+    }
+
+    onActive = (record) => {
+        var newR = { ...record }
+        newR.enabled = !record.enabled
+        return axios.post('/mock/active', newR).then(result => {
+            if (result.code != 0) {
+                message.error(result.error)
+                return
+            }
+            this.queryAll()
+        })
     }
 
     onEdit = (record) => {

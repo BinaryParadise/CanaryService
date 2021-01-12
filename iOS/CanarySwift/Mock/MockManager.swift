@@ -18,18 +18,9 @@ struct Result: Codable {
     var timestamp: TimeInterval
 }
 
-/// 接口状态
-struct MockSwitch: Codable {
-    var isEnabled: Bool
-    var sceneId: Int?
-    var automatic: Bool?
-}
-
 @objc public class MockManager: NSObject {
     private var userDefaults = UserDefaults(suiteName: suiteName)!
     
-    /// 接口开关
-    private var mockSwitchs: [String : MockSwitch] = [:]
     private var mockMap: [String : MockData] = [:]
     var groups: [MockGroup] = [] {
         didSet {
@@ -43,40 +34,9 @@ struct MockSwitch: Codable {
     @objc public static let shared = MockManager()
     override init() {
         super.init()
-        if let data = userDefaults.object(forKey: "switchs") as? Data {
-            do {
-                mockSwitchs = try JSONDecoder().decode([String: MockSwitch].self, from: data)
-            } catch {
-                
-            }
-        }
         fetchGroups {
             
         }
-    }
-    
-    /// 接口开关状态
-    func switchFor(mockid: Int) -> MockSwitch {
-        guard let mockS = mockSwitchs[mockid.string] else { return MockSwitch(isEnabled: false, sceneId: nil, automatic: false) }
-        return mockS
-    }
-    
-    /// 设置接口状态
-    func setSwitch(for mockid:Int, isOn: Bool) {
-        var mockS = switchFor(mockid: mockid)
-        mockS.isEnabled = isOn
-        self.mockSwitchs[mockid.string] = mockS
-        userDefaults.set(object: mockSwitchs, forKey: "switchs")
-        userDefaults.synchronize()
-    }
-    
-    /// 指定场景
-    func setScene(for mockid:Int, sceneid: Int?) {
-        var mockS = switchFor(mockid: mockid)
-        mockS.sceneId = sceneid
-        self.mockSwitchs[mockid.string] = mockS
-        userDefaults.set(object: mockSwitchs, forKey: "switchs")
-        userDefaults.synchronize()
     }
     
     func checkIntercept(for request: URLRequest) -> (should:Bool, url: URL?) {
@@ -103,11 +63,10 @@ struct MockSwitch: Codable {
             })
         }
         guard let mock = matchMock else { return (false, nil) }
-        let match = switchFor(mockid: mock.id)
         var intercept = false
         var url: URL?
-        if match.isEnabled {
-            if let scendid = mock.matchScene(sceneid: match.sceneId, request: request) {
+        if mock.enabled {
+            if let scendid = mock.matchScene(sceneid: mock.sceneid, request: request) {
                 intercept = true
                 var queryStr = ""
                 if let q = request.url?.query {
@@ -133,14 +92,14 @@ struct MockSwitch: Codable {
         return path
     }
     
-    func fetchGroups(completion: @escaping (() -> Void)) -> Void {
+    func fetchGroups(completion: (() -> Void)?) -> Void {
         URLRequest.get(with: MockGroupURL) { [weak self] (result, error) in
             do {
                 self?.groups = try JSONDecoder().decode([MockGroup].self, from: result.data?.rawData() ?? Data())
             } catch {
                 print("\(#file).\(#function) +\(#line) \(error)")
             }
-            completion()
+            completion?()
         }
     }
 }

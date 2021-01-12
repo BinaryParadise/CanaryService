@@ -52,13 +52,13 @@
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration];
     manager.requestSerializer = AFHTTPRequestSerializer.serializer;
     manager.responseSerializer = AFJSONResponseSerializer.serializer;
-    NSURLSessionDataTask *task = [manager GET:@"https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp" parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
+    NSURLSessionDataTask *task = [manager GET:@"https://quan.suning.com/getSysTime.do" parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [self showJSONObject:responseObject];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@", error);
     }];
     [task resume];
-    
 }
 
 - (void)showJSONObject:(id)jsonObject {
@@ -68,11 +68,12 @@
 
 - (IBAction)showNetworkingParam:(id)sender {
 //    NSLog(@"%@", NSURLSessionConfiguration.defaultSessionConfiguration.protocolClasses);
-    
+        
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration];
     manager.requestSerializer = AFHTTPRequestSerializer.serializer;
     manager.responseSerializer = AFJSONResponseSerializer.serializer;
-    NSURLSessionDataTask *task = [manager GET:@"http://quan.suning.com/getSysTime.do" parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/html", @"text/plain", nil];
+    NSURLSessionDataTask *task = [manager GET:@"https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp" parameters:nil headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [self showJSONObject:responseObject];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@", error);

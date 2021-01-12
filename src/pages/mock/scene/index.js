@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon, Tag } from 'antd'
+import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon, Tag, Divider } from 'antd'
 import { routerURL } from '../../../common/util'
 import axios from '../../../component/axios'
 import Layout from 'antd/lib/layout/layout'
@@ -59,13 +59,14 @@ class MockScenePage extends React.Component {
             dataIndex: 'id',
             render: (text, record) => {
                 return (<span>
-                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
-                    <a style={{ marginLeft: 8, color: "#0b8235" }} href={"/api/mock/app/scene/" + record.id} target="_blank">查看</a>
                     < Popconfirm title="确认删除?" onConfirm={() => this.onDeleteScene(record)
                     }>
                         <a style={{ marginLeft: 8, color: "red" }}>删除</a>
                     </Popconfirm >
+                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
+                    <Divider type="vertical"></Divider>
                     {this.renderSceneAction(record)}
+                    <a style={{ marginLeft: 8, color: "#0b8235" }} href={"/api/mock/app/scene/" + record.id} target="_blank">查看</a>
                 </span>
                 )
             }
@@ -80,12 +81,12 @@ class MockScenePage extends React.Component {
         } else {
             if (sceneid == record.id) {
                 p.title = "确认切换为自动模式？"
-                p.btn = "自动"
+                p.btn = "关闭"
                 p.active = false
             }
         }
         return <Popconfirm title={p.title} onConfirm={() => this.onActive(record, p.active)}>
-            <a style={{ marginLeft: 8, color: p.color }}>{p.btn}</a>
+            <a style={{ color: p.color }}>{p.btn}</a>
         </Popconfirm>
     }
 
@@ -251,11 +252,11 @@ class MockScenePage extends React.Component {
                         <a href="/">首页</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item><a href="/mock/data">Mock数据</a></Breadcrumb.Item>
-                    <Breadcrumb.Item>模板配置（{mock.name}）</Breadcrumb.Item>
+                    <Breadcrumb.Item>场景配置</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div style={{ verticalAlign: 'middle' }}>
-                    <span style={{ fontWeight: 'bold' }}>多场景配置</span>
+                    <span style={{ fontWeight: 'bold', fontSize: 18, color: 'orange' }}>{mock.name} {mock.path}</span>
                     <Button type="primary" style={{ width: 100, marginBottom: 12, float: "right" }} onClick={() => this.onEdit({ mockid: mock.id })}>+添加场景</Button>
 
 

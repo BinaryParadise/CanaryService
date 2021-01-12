@@ -18,7 +18,7 @@
   </update>
 
   <update id="active" parameterType="com.frontend.mockable.MCMockInfo">
-    UPDATE MockData set sceneid=#{sceneid}, updatetime=null where id=#{id}
+    UPDATE MockData set sceneid=#{sceneid}, enabled=#{enabled}, updatetime=null where id=#{id}
   </update>
 
   <select id="findAllMock" resultType="com.frontend.mockable.MCMockInfo">

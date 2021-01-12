@@ -10,6 +10,8 @@ import Foundation
 import SwiftyJSON
 
 enum MessageType: Int, Codable {
+    /// 数据需要更新
+    case update = 2
     /// 注册设备信息
     case registerDevice = 10
     //数据库查询请求
@@ -32,7 +34,7 @@ class WebSocketMessage: Codable {
     var code: Int
     var msg: String?
     var data: JSON?
-    var appKey: String
+    var appKey: String?
 
     /**
      是否已处理，默认为NO

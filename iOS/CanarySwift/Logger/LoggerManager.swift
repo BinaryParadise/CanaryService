@@ -59,19 +59,14 @@ extension LoggerManager: WebSocketMessageProtocol {
     }
     
     func webSocket(webSocket: CanaryWebSocket, didReceive message: WebSocketMessage) {
-        
+        if message.type == .update {
+            //更新Mock配置
+            MockManager.shared.fetchGroups(completion: nil)
+        }
     }
     
     func webSocket(webSocket: CanaryWebSocket, didReceive pongPayload: Data?) {
         //更新设备信息
         register(webSocket: webSocket)
-        guard let pongPayload = pongPayload else { return }
-        if updateTime < pongPayload.string(encoding: .utf8)?.double() ?? 0 / 1000.0 {
-            updateTime = Date().timeIntervalSince1970
-            //更新Mock配置
-            MockManager.shared.fetchGroups {
-                
-            }
-        }
     }
 }

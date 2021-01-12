@@ -30,7 +30,7 @@ public class MockController {
 
   @GetMapping("/app/whole")
   @ResponseBody
-  @JSON(type = MCMockInfo.class, include = "id,name,path,scenes")
+  @JSON(type = MCMockInfo.class, include = "id,name,path,enabled,sceneid,scenes")
   @JSON(type = MCMockScene.class, include = "id,name,params")
   @JSON(type = MCMockParam.class, include = "id,name,value")
   public MCResult appWhole() {
@@ -46,7 +46,7 @@ public class MockController {
           }
         );
         MCMockScene scene = new MCMockScene();
-        scene.setId(-1);
+        scene.setId(0);
         scene.setName("自动");
         scene.setMockid(m.getId());
         m.getScenes().add(0, scene);
@@ -161,6 +161,7 @@ public class MockController {
   @PostMapping("/active")
   public MCResult activeScene(@RequestBody MCMockInfo mock) {
     mockMapper.active(mock);
+    Global.update();
     return MCResult.Success();
   }
 

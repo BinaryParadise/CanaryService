@@ -43,6 +43,12 @@ class MockGroupViewController: UIViewController {
             }
         }
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        tableView.reloadData()
+    }
 }
 
 extension MockGroupViewController: UITableViewDataSource, UITableViewDelegate {

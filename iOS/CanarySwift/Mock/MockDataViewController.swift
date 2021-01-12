@@ -33,7 +33,12 @@ class MockDataViewController: UIViewController {
             make.edges.equalToSuperview()
         }
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        tableView.reloadData()
+    }
 }
 
 extension MockDataViewController: UITableViewDataSource, UITableViewDelegate {
@@ -47,6 +52,16 @@ extension MockDataViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withClass: MockDataViewCell.self)
+        cell.onSwitch = { [weak self] (mock, isOn) in
+            URLRequest.post(with: "/api/mock/active", params: ["sceneid": mock.sceneid, "enabled": isOn, "id": mock.id]) { [weak self] (result, error) in
+                if result.code == 0 {
+                    mock.enabled = isOn
+                    self?.tableView.reloadData()
+                } else {
+                    self?.show(faield: result.error)
+                }
+            }
+        }
         cell.config(mock:group?.mocks?[safe: indexPath.section])
         return cell
     }
@@ -77,6 +92,7 @@ class MockDataViewCell: UITableViewCell {
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 4, right: 16)
         return flowLayout;
     }())
+    var onSwitch:((MockData, Bool) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -123,9 +139,8 @@ class MockDataViewCell: UITableViewCell {
     }
     
     @objc func onSwitchChanged(_ sender: UISwitch) -> Void {
-        if let mock = mock {
-            MockManager.shared.setSwitch(for: mock.id, isOn: sender.isOn)
-        }
+        guard let mock = mock else { return }
+        onSwitch?(mock, sender.isOn)
     }
     
     required init?(coder: NSCoder) {
@@ -135,7 +150,7 @@ class MockDataViewCell: UITableViewCell {
     func config(mock: MockData?) {
         guard let mock = mock else { return }
         self.mock = mock
-        switchBtn.isOn = MockManager.shared.switchFor(mockid: mock.id).isEnabled
+        switchBtn.isOn = mock.enabled
         nameLabel.text = mock.name
         pathLabel.text = "路径：\(mock.path)"
         collectView.reloadData()
@@ -182,12 +197,11 @@ extension MockDataViewCell: UICollectionViewDataSource, UICollectionViewDelegate
         let cell = collectionView.dequeueReusableCell(withClass: ItemCell.self, for: indexPath)
         if let mock = mock {
             if let scene = mock.scenes?[safe: indexPath.row] {
-                let switchMock = MockManager.shared.switchFor(mockid: mock.id)
                 cell.config(scene: scene)
-                if switchMock.sceneId == nil {
+                if mock.sceneid ?? 0 == AutomaticMode {
                     cell.selectedBtn.isSelected = indexPath.row == 0
                 } else {
-                    cell.selectedBtn.isSelected = switchMock.sceneId == scene.id
+                    cell.selectedBtn.isSelected = mock.sceneid == scene.id
                 }
             }
         }
@@ -197,8 +211,12 @@ extension MockDataViewCell: UICollectionViewDataSource, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let mock = mock else { return }
         if let scene = mock.scenes?[safe: indexPath.row] {
-            MockManager.shared.setScene(for: mock.id, sceneid: scene.id)
-            collectView.reloadData()
+            URLRequest.post(with: "/api/mock/active", params: ["sceneid": scene.id == 0 ? nil : scene.id, "enabled": mock.enabled, "id": mock.id]) { [weak self] (result, error) in
+                if result.code == 0 {
+                    mock.sceneid = scene.id == 0 ? nil : scene.id
+                    self?.collectView.reloadData()
+                }
+            }
         }
     }
 }

@@ -40,7 +40,7 @@ extension URLRequest {
         }.resume()
     }
     
-    static func post(with path: String, params: [String : String]?, completion: ((Result, Error?) -> Void)?) -> Void {
+    static func post(with path: String, params: [String : AnyHashable]?, completion: ((Result, Error?) -> Void)?) -> Void {
         let r = NSMutableURLRequest(url: URL(string: "\(CanarySwift.shared.baseURL ?? "")\(path)")!)
         r.httpMethod = "POST"
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")

@@ -14,6 +14,7 @@ public class MCMockInfo {
   String groupname;
   Integer uid;
   Integer sceneid;
+  Boolean enabled;
   List<MCMockScene> scenes;
 
   public Integer getId() {
@@ -94,6 +95,14 @@ public class MCMockInfo {
 
   public void setSceneid(Integer sceneid) {
     this.sceneid = sceneid;
+  }
+
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
   }
 
   public List<MCMockScene> getScenes() {

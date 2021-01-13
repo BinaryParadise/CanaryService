@@ -2,6 +2,7 @@ package com.frontend.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.frontend.Global;
 import com.frontend.domain.MCAppInfo;
 import com.frontend.mappers.ProjectMapper;
 import com.frontend.models.LogMessage;
@@ -33,12 +34,12 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
   /**
    * 客户端会话合集
    */
-  static HashMap<String, WebSocketSession> clientSessions = new HashMap<>();
+  public static HashMap<String, WebSocketSession> clientSessions = new HashMap<>();
 
   /**
    * 设备列表
    */
-  private static HashMap<String, MCDeviceInfo> devices = new HashMap<>();
+  public static HashMap<String, MCDeviceInfo> devices = new HashMap<>();
 
   @Autowired
   private ProjectMapper appsMapper;
@@ -57,7 +58,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
     if ("web".equalsIgnoreCase((String) session.getAttributes().get("source"))) {
       webSessions.put(session.getId(), session);
     } else {
-      clientSessions.put(session.getId(), session);
+      clientSessions.put(session.getAttributes().get("deviceid").toString(), session);
 
       // 通知前端页面设备已连接
       for (WebSocketSession destSession : webSessions.values()) {
@@ -125,12 +126,6 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
         logger.error(e.getLocalizedMessage(), e.getCause());
       }
     }
-  }
-
-  @Override
-  protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
-    logger.info("【"+(String) session.getAttributes().get("deviceid")+"】发来一个Pong");
-    super.handlePongMessage(session, message);
   }
 
   @Override

@@ -1,6 +1,6 @@
 //
-//  MockGroupViewController.swift
-//  Pods
+//  MajorViewController.swift
+//  Canary
 //
 //  Created by Rake Yang on 2020/12/10.
 //
@@ -16,15 +16,9 @@ func safeBottom() -> CGFloat {
     }
 }
 
-class CanaryViewController: UIViewController {
-    var tableView: UITableView = {
-        if #available(iOS 13.0, *) {
-            return UITableView(frame: .zero, style: .insetGrouped)
-        } else {
-            return UITableView(frame: .zero, style: .grouped)
-        }
-    }()
-    let datas = ["环境配置", "Mock数据", "WKWebView"]
+class MajorViewController: UIViewController {
+    var tableView: UITableView = UITableView(frame: .zero, style: .grouped)
+    var datas: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +27,7 @@ class CanaryViewController: UIViewController {
         view.backgroundColor = UIColor(hex: 0xF4F5F6)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .done, target: self, action: #selector(onBackButton))
+        
         tableView.backgroundColor = view.backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
@@ -47,14 +42,40 @@ class CanaryViewController: UIViewController {
         }
         
         tableView.register(cellWithClass: UITableViewCell.self)
+        
+        MockManager.shared.fetchGroups {
+            
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        reloadData()
+    }
+    
+    func reloadData() -> Void {
+        datas =  ["环境配置", "Mock数据", "WKWebView"]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: CanarySwift.shared.user() == nil ? "未登录" : "设置", style: .done, target: self, action: #selector(onProfileButton))
+        tableView.reloadData()
     }
     
     @objc func onBackButton() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true) {
+            CanarySwift.shared.lock.unlock()
+        }
+    }
+    
+    @objc func onProfileButton() {
+        navigationController?.pushViewController(ProfileViewController(), animated: true)
+    }
+    
+    deinit {
+        CanarySwift.shared.lock.unlock()
     }
 }
 
-extension CanaryViewController: UITableViewDataSource, UITableViewDelegate {
+extension MajorViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return datas.count
     }
@@ -72,7 +93,7 @@ extension CanaryViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row == 0 {
             navigationController?.pushViewController(ConfigurationViewController(), animated: true)
         } else if indexPath.row == 1 {
-            navigationController?.pushViewController(MockGroupViewController(), animated: true)
+            navigationController?.pushViewController(MockDataViewController(), animated: true)
         } else if indexPath.row == 2 {
             navigationController?.pushViewController(CanaryWebViewController(), animated: true)
         }

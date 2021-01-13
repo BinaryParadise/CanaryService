@@ -10,7 +10,7 @@
  Target Server Version : 3030001
  File Encoding         : 65001
 
- Date: 28/12/2020 15:10:13
+ Date: 12/01/2021 17:58:46
 */
 
 PRAGMA foreign_keys = false;
@@ -24,9 +24,11 @@ CREATE TABLE "MockData" (
   "name" TEXT NOT NULL,
   "method" TEXT NOT NULL,
   "path" text NOT NULL,
-  "updatetime" integer,
+  "updatetime" integer NOT NULL ON CONFLICT REPLACE DEFAULT (STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)),
   "groupid" INTEGER NOT NULL,
-  "template" blob
+  "template" blob,
+  "sceneid" integer,
+  "enabled" integer NOT NULL ON CONFLICT REPLACE DEFAULT 0
 );
 
 -- ----------------------------
@@ -37,7 +39,8 @@ CREATE TABLE "MockGroup" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" TEXT NOT NULL,
   "appid" INTEGER NOT NULL,
-  CONSTRAINT "name_pid" UNIQUE ("name", "appid")
+  "uid" INTEGER NOT NULL,
+  CONSTRAINT "name_pid" UNIQUE ("name" ASC, "appid" ASC)
 );
 
 -- ----------------------------
@@ -78,7 +81,7 @@ CREATE TABLE "Project" (
   "orderno" integer NOT NULL DEFAULT 1,
   "uid" INTEGER NOT NULL DEFAULT 1,
   "shared" bit NOT NULL DEFAULT 1,
-  "updateTime" integer,
+  "updateTime" integer NOT NULL ON CONFLICT REPLACE DEFAULT (STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)),
   CONSTRAINT "UK_Identify" UNIQUE ("identify" ASC) ON CONFLICT FAIL,
   CONSTRAINT "UK_Name" UNIQUE ("name" ASC) ON CONFLICT FAIL
 );
@@ -91,7 +94,7 @@ CREATE TABLE "RemoteConfig" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" varchar(50) NOT NULL,
   "comment" varchar(50) DEFAULT NULL,
-  "updateTime" integer DEFAULT NULL,
+  "updateTime" integer NOT NULL ON CONFLICT REPLACE DEFAULT (STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)),
   "appId" int(11) NOT NULL,
   "uid" int NOT NULL,
   "defaultTag" bit(1) DEFAULT 0,
@@ -108,7 +111,7 @@ CREATE TABLE "RemoteConfigParam" (
   "name" varchar(50) NOT NULL,
   "value" varchar(200) DEFAULT NULL,
   "envid" int(11) NOT NULL,
-  "updateTime" integer NOT NULL,
+  "updateTime" integer NOT NULL ON CONFLICT REPLACE DEFAULT (STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)),
   "comment" varchar(50) DEFAULT NULL,
   "uid" int NOT NULL DEFAULT NULL,
   "type" int(11) NOT NULL DEFAULT 0,
@@ -125,8 +128,6 @@ CREATE TABLE "User" (
   "password" TEXT NOT NULL,
   "name" TEXT NOT NULL,
   "roleid" INTEGER NOT NULL DEFAULT 2,
-  "token" TEXT,
-  "expire" INTEGER DEFAULT 0,
   "deleteTag" bit NOT NULL DEFAULT 0,
   "appid" INTEGER,
   PRIMARY KEY ("id"),
@@ -143,6 +144,19 @@ CREATE TABLE "UserRole" (
   "name" TEXT NOT NULL,
   "level" int NOT NULL DEFAULT 0,
   PRIMARY KEY ("id")
+);
+
+-- ----------------------------
+-- Table structure for UserSession
+-- ----------------------------
+DROP TABLE IF EXISTS "UserSession";
+CREATE TABLE "UserSession" (
+  "id" INTEGER NOT NULL ON CONFLICT REPLACE PRIMARY KEY AUTOINCREMENT,
+  "token" TEXT NOT NULL,
+  "expire" integer NOT NULL,
+  "uid" INTEGER NOT NULL,
+  "platform" TEXT NOT NULL,
+  CONSTRAINT "uk_platform_uid" UNIQUE ("uid" ASC, "platform" ASC) ON CONFLICT REPLACE
 );
 
 -- ----------------------------
@@ -185,5 +199,10 @@ UPDATE "main"."sqlite_sequence" SET seq = 17 WHERE name = 'RemoteConfig';
 -- Auto increment value for RemoteConfigParam
 -- ----------------------------
 UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 'RemoteConfigParam';
+
+-- ----------------------------
+-- Auto increment value for UserSession
+-- ----------------------------
+UPDATE "main"."sqlite_sequence" SET seq = 40 WHERE name = 'UserSession';
 
 PRAGMA foreign_keys = true;

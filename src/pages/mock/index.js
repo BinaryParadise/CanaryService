@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Popconfirm, Layout, Button, message, Modal, Dropdown, Breadcrumb, Icon, Menu } from "antd";
+import { Table, Popconfirm, Layout, Button, message, Modal, Dropdown, Breadcrumb, Icon, Menu, Tag, Divider } from "antd";
 import axios from '../../component/axios'
 import MockEditForm from './edit'
 import moment from 'moment'
@@ -7,58 +7,14 @@ import { routerURL } from '../../common/util'
 import { Link } from 'react-router-dom'
 
 export default class MockIndexPage extends React.Component {
-    columns = [
-        {
-            title: '接口名称',
-            dataIndex: 'name',
-            width: 180
-        },
-        {
-            title: '方法',
-            width: 80,
-            dataIndex: 'method'
-        },
-        {
-            title: '路径',
-            width: 666,
-            dataIndex: 'path'
-        },
-        {
-            title: '分类',
-            width: 100,
-            dataIndex: 'groupname'
-        },
-        {
-            dataIndex: 'updatetime',
-            title: '更新时间',
-            width: 200,
-            render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
-        },
-        {
-            title: '操作',
-            dataIndex: 'orderno',
-            render: (text, record) => {
-                return (<span>
-                    < Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record)
-                    }>
-                        <a>删除</a>
-                    </Popconfirm >
-                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
-                    <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>编辑模板</Link>
-                </span>
-                )
-            }
-        }
-    ];
-
     state = {
         loading: false,
         listData: [],
         queryParam: {
             appid: (window.__config__.projectInfo || {}).id,
             groupid: null,
-            pageSize: 20,
-            pageIndex: 1
+            pageSize: 200,
+            current: 1
         },
         editItem: {
             visible: false,
@@ -69,6 +25,71 @@ export default class MockIndexPage extends React.Component {
             name: "全部分类",
             id: null
         }
+    }
+
+    groups = []
+
+    filtersColumns = () => {
+        var filters = []
+        if (this.groups) {
+            this.groups.map((group) => filters.push({ text: group.name, value: group.id }))
+        }
+        return [
+            {
+                title: '接口名称',
+                dataIndex: 'name',
+                width: 180
+            },
+            {
+                title: '方法',
+                width: 80,
+                dataIndex: 'method'
+            },
+            {
+                title: '路径',
+                width: 666,
+                dataIndex: 'path'
+            },
+            {
+                title: '分类',
+                width: 100,
+                dataIndex: 'groupname',
+                filters: filters,
+                filterMultiple: false
+            },
+            {
+                title: '状态',
+                width: 80,
+                render: (text, record) => {
+                    return record.enabled ? <Tag color="#87d068">激活</Tag> : <Tag color="gray">闲置</Tag>
+                }
+            },
+            {
+                dataIndex: 'updatetime',
+                title: '更新时间',
+                width: 200,
+                render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+            },
+            {
+                title: '操作',
+                dataIndex: 'orderno',
+                render: (text, record) => {
+                    return (<span>
+                        < Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record)
+                        }>
+                            <a>删除</a>
+                        </Popconfirm >
+                        <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
+                        <Divider type="vertical"></Divider>
+                        <Popconfirm title={record.enabled ? "确认关闭?" : "确认激活?"} onConfirm={() => this.onActive(record)}>
+                            {record.enabled ? <a style={{ color: "gray" }}>关闭</a> : <a style={{ color: "#87d068" }}>激活</a>}
+                        </Popconfirm>
+                        <Link style={{ marginLeft: 8, color: "#e02a31" }} to={routerURL("/mock/scene", record)}>场景</Link>
+                    </span >
+                    )
+                }
+            }
+        ];
     }
 
     saveFormRef = (formRef) => {
@@ -90,19 +111,29 @@ export default class MockIndexPage extends React.Component {
             if (result.code != 0) {
                 return
             }
-            this.setState({ groups: result.data })
+            this.groups = result.data
+            this.queryAll()
         })
     }
 
-    onGroupChange = (obj) => {
-        const { groups } = this.state
-        var group = groups.filter(item => item.id == parseInt(obj.key))[0]
-        if (group == undefined) {
-            group = { name: "全部分类", id: null }
-        }
-        this.state.queryParam.groupid = group.id
-        this.setState({ group })
+    handleChange = (pagination, filters, sorter, extra) => {
+        console.log(pagination, filters, sorter, extra);
+        this.state.queryParam.current = pagination.current
+        this.state.queryParam.pageSize = pagination.pageSize
+        this.state.queryParam.groupid = (filters.groupname || [null])[0]
         this.queryAll()
+    }
+
+    onActive = (record) => {
+        var newR = { ...record }
+        newR.enabled = !record.enabled
+        return axios.post('/mock/active', newR).then(result => {
+            if (result.code != 0) {
+                message.error(result.error)
+                return
+            }
+            this.queryAll()
+        })
     }
 
     onEdit = (record) => {
@@ -140,12 +171,12 @@ export default class MockIndexPage extends React.Component {
     }
 
     componentDidMount() {
-        this.queryAll()
         this.queryGroup()
     }
 
     render() {
         const { loading, listData, editItem, group, groups } = this.state
+        var columns = this.filtersColumns()
         return (
             <Layout>
                 <Breadcrumb style={{ marginBottom: 12 }}>
@@ -157,22 +188,7 @@ export default class MockIndexPage extends React.Component {
 
                 <Button type="primary" style={{ width: 100, marginBottom: 12 }} onClick={() => this.onEdit({})}>+添加接口</Button>
 
-                <Dropdown overlay={() => <Menu style={{ width: 180 }} onClick={this.onGroupChange}>
-                    <Menu.Item key="0">全部分类</Menu.Item>
-                    {
-                        groups.map((item) =>
-                            <Menu.Item key={item.id}>
-                                {item.name}
-                            </Menu.Item>
-                        )
-                    }
-                </Menu>}>
-                    <a className="ant-dropdown-link" style={{ marginBottom: 8 }} onClick={e => e.preventDefault()}>
-                        {group.name} <Icon type="down" />
-                    </a>
-                </Dropdown>
-
-                <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns}></Table>
+                <Table rowKey="id" loading={loading} pagination={{ pageSize: 200, showTotal: (total, range) => `${range[0]}-${range[1]} 共 ${total} 条` }} dataSource={listData} onChange={this.handleChange} columns={columns}></Table>
                 <Modal
                     visible={editItem.visible}
                     title={editItem.data == null ? "新增" : "修改"}
@@ -185,7 +201,7 @@ export default class MockIndexPage extends React.Component {
                 >
                     <MockEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data || {}}></MockEditForm>
                 </Modal>
-            </Layout>
+            </Layout >
         )
     }
 }

@@ -7,6 +7,7 @@ import { Auth, MD5 } from '../../common/util'
 import { message } from 'antd/lib'
 import { Link } from 'react-router-dom'
 import UserEditorForm from './editor'
+import Countdown from 'antd/lib/statistic/Countdown'
 
 export class UserList extends React.Component {
     state = {
@@ -31,9 +32,12 @@ export class UserList extends React.Component {
                 dataIndex: 'rolename', title: '角色', editable: true
             },
             {
-                dataIndex: 'expire', title: '登录有效期',
-                render: (text) => {
-                    return new Date(text).Format("yyyy-MM-dd HH:mm:ss")
+                dataIndex: 'app', title: '当前应用',
+                render: (text, record) => {
+                    if (text == null) {
+                        return "未选择"
+                    }
+                    return <span style={{ color: "#56D0B3" }}>{text.name}</span>
                 }
             },
             {
@@ -60,9 +64,9 @@ export class UserList extends React.Component {
     }
 
     query = () => {
-        this.setState({ loading: false, visible: false, resetPwd: false, confirmLoading: false })
+        this.setState({ loading: true, visible: false, resetPwd: false, confirmLoading: false })
         axios.get("/user/list", {}).then(result => {
-            this.setState({ data: result.data })
+            this.setState({ data: result.data, loading: false })
         }).finally(() => this.setState({ loading: false }))
     }
 

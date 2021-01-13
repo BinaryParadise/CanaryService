@@ -13,6 +13,7 @@ import SwiftyJSON
 class LoggerManager: NSObject {
     var customProfile: (() -> [String: Any])?
     static let shared = LoggerManager()
+    var updateTime = Date().timeIntervalSince1970
     
     func start(with domain: URL) -> Void {
         CanaryWebSocket.shared.webSocketURL = domain.absoluteString
@@ -58,15 +59,14 @@ extension LoggerManager: WebSocketMessageProtocol {
     }
     
     func webSocket(webSocket: CanaryWebSocket, didReceive message: WebSocketMessage) {
-        
+        if message.type == .update {
+            //更新Mock配置
+            MockManager.shared.fetchGroups(completion: nil)
+        }
     }
     
     func webSocket(webSocket: CanaryWebSocket, didReceive pongPayload: Data?) {
         //更新设备信息
         register(webSocket: webSocket)
-        //更细Mock配置
-        MockManager.shared.fetchGroups {
-            
-        }
     }
 }

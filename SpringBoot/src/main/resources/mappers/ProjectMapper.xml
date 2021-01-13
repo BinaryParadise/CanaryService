@@ -4,14 +4,14 @@
 <mapper namespace="com.frontend.mappers.ProjectMapper">
 
   <insert id="insertNew" parameterType="com.frontend.domain.MCAppInfo" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO Project(name,identify,orderno, uid, shared, updateTime) values(#{name},#{identify},#{orderno}, #{uid},
-    #{shared}, STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
+    INSERT INTO Project(name,identify,orderno, uid, shared) values(#{name},#{identify},#{orderno}, #{uid},
+    #{shared})
   </insert>
   <update id="update" parameterType="com.frontend.domain.MCAppInfo">
-    UPDATE Project set name=#{name},identify=#{identify}, uid=#{uid}, shared=#{shared}, updateTime=(STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)) where id=#{id}
+    UPDATE Project set name=#{name}, uid=#{uid}, shared=#{shared}, updateTime=null where id=#{id}
   </update>
   <update id="reset" parameterType="com.frontend.domain.MCAppInfo">
-    UPDATE Project set identify=#{identify}, updateTime=(STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)) where id=#{id}
+    UPDATE Project set identify=#{identify}, updateTime=null where id=#{id}
   </update>
   <select id="findByAppKey" resultType="com.frontend.domain.MCAppInfo">
     select * from Project where identify=#{appKey}

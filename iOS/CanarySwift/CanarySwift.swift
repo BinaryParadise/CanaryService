@@ -19,18 +19,47 @@ import SwiftyJSON
     /// 应用标识
     @objc public var appSecret: String = ""
     
+    let lock = NSLock()
+    
+    private var _user: UserAuth?
+    private var nav: UINavigationController?
+        
     @objc public static let shared = CanarySwift()
     @objc public func show() {
         assert(baseURL != nil, "请初始化baseURL")
         assert(deviceId != nil, "请初始化deviceId")
         assert(appSecret.count > 0, "请初始化AppSecret")
-        let nav = UINavigationController(rootViewController: CanaryViewController())
-        nav.modalPresentationStyle = .overFullScreen
-        UIApplication.shared.keyWindow?.rootViewController?.present(nav, animated: true, completion: nil)
+        if lock.try() {
+            nav = UINavigationController(rootViewController: MajorViewController())
+            nav?.modalPresentationStyle = .fullScreen
+            UIApplication.shared.keyWindow?.rootViewController?.present(nav!, animated: true, completion: nil)
+        }
     }
     
     public func requestURL(with path:String) -> URL {
         return URL(string: "\(baseURL ?? "")\(path)\(path.contains("?") ? "&":"?")appsecret=\(appSecret)")!
+    }
+    
+    func user() -> UserAuth? {
+        let kc = Keychain(server: ServerHostKey, protocolType: .http)
+        do {
+            let r = try JSONDecoder().decode(UserAuth.self, from: kc.getData(UserAuthKey) ?? Data())
+            _user = r
+            return r
+        } catch {
+            
+        }
+        return _user
+    }
+    
+    func logout() -> Void {
+        _user = nil
+        let kc = Keychain(server: ServerHostKey, protocolType: .http)
+        do {
+            try kc.remove(UserAuthKey)
+        } catch {
+            
+        }
     }
 }
 

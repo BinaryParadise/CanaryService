@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon } from 'antd'
+import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon, Tag, Divider } from 'antd'
 import { routerURL } from '../../../common/util'
 import axios from '../../../component/axios'
 import Layout from 'antd/lib/layout/layout'
@@ -33,6 +33,20 @@ class MockScenePage extends React.Component {
             ellipsis: true
         },
         {
+            title: '状态',
+            width: 80,
+            render: (text, record) => {
+                var sceneid = this.state.mock.sceneid
+                if (sceneid == null) {
+                    return <Tag color="orange">自动</Tag>
+                } else if (sceneid == record.id) {
+                    return <Tag color="#87d068">激活</Tag>
+                } else {
+                    return <Tag color="gray">闲置</Tag>
+                }
+            }
+        },
+        {
             dataIndex: 'updatetime',
             title: '更新时间',
             width: 200,
@@ -45,17 +59,36 @@ class MockScenePage extends React.Component {
             dataIndex: 'id',
             render: (text, record) => {
                 return (<span>
-                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
-                    <a style={{ marginLeft: 8, color: "#0b8235" }} href={"/api/mock/app/scene/" + record.id} target="_blank">查看</a>
                     < Popconfirm title="确认删除?" onConfirm={() => this.onDeleteScene(record)
                     }>
                         <a style={{ marginLeft: 8, color: "red" }}>删除</a>
                     </Popconfirm >
+                    <a style={{ marginLeft: 8 }} onClick={() => this.onEdit(record)}>编辑</a>
+                    <Divider type="vertical"></Divider>
+                    {this.renderSceneAction(record)}
+                    <a style={{ marginLeft: 8, color: "#0b8235" }} href={"/api/mock/app/scene/" + record.id} target="_blank">查看</a>
                 </span>
                 )
             }
         }
     ];
+
+    renderSceneAction = (record) => {
+        var sceneid = this.state.mock.sceneid
+        var p = { title: '确认激活?', color: '#35B0D8', btn: '激活', active: true }
+        if (sceneid == null) {
+
+        } else {
+            if (sceneid == record.id) {
+                p.title = "确认切换为自动模式？"
+                p.btn = "关闭"
+                p.active = false
+            }
+        }
+        return <Popconfirm title={p.title} onConfirm={() => this.onActive(record, p.active)}>
+            <a style={{ color: p.color }}>{p.btn}</a>
+        </Popconfirm>
+    }
 
     componentDidMount() {
         this.queryAll()
@@ -72,6 +105,24 @@ class MockScenePage extends React.Component {
 
     onEdit = (record) => {
         this.setState({ editItem: { visible: true, data: record } })
+    }
+
+    onActive = (record, active) => {
+        var newR = { ...this.state.mock }
+        if (active) {
+            newR.sceneid = record.id
+        } else {
+            newR.sceneid = null
+        }
+
+        return axios.post('/mock/active', newR).then(result => {
+            if (result.code != 0) {
+                message.error(result.error)
+                return
+            }
+            this.state.mock.sceneid = newR.sceneid
+            this.queryAll()
+        })
     }
 
     onSave = () => {
@@ -201,11 +252,11 @@ class MockScenePage extends React.Component {
                         <a href="/">首页</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item><a href="/mock/data">Mock数据</a></Breadcrumb.Item>
-                    <Breadcrumb.Item>模板配置（{mock.name}）</Breadcrumb.Item>
+                    <Breadcrumb.Item>场景配置</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div style={{ verticalAlign: 'middle' }}>
-                    <span style={{ fontWeight: 'bold' }}>多场景配置</span>
+                    <span style={{ fontWeight: 'bold', fontSize: 18, color: 'orange' }}>{mock.name} {mock.path}</span>
                     <Button type="primary" style={{ width: 100, marginBottom: 12, float: "right" }} onClick={() => this.onEdit({ mockid: mock.id })}>+添加场景</Button>
 
 

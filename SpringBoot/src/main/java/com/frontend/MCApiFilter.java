@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.frontend.domain.MCUserInfo;
 import com.frontend.mappers.UserRoleMapper;
 import com.frontend.models.MCResult;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Component
 @ServletComponentScan
@@ -35,7 +35,7 @@ public class MCApiFilter extends OncePerRequestFilter {
   @Override
   protected void initFilterBean() throws ServletException {
     super.initFilterBean();
-    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error", "/mock/app/whole");
+    publicUrls = Arrays.asList("/", "/conf/full", "/info", "/v2/api-docs", "/health", "/metrics", "/user/login", "/api-docs", "/env", "/mappings", "/error");
     publicUrls.replaceAll(item -> getServletContext().getContextPath() + item);
 
     adminUrls = Arrays.asList("/user/add", "/user/update", "/user/role/list");
@@ -67,14 +67,30 @@ public class MCApiFilter extends OncePerRequestFilter {
 
     if (shouldAuthentication(request)) {
       response.setContentType("application/json; charset=utf-8");
-      String token = request.getHeader("Access-Token");
+      String token = request.getHeader("Canary-Access-Token");
       MCUserInfo user = (MCUserInfo) request.getSession().getAttribute("user");
-      if (user == null) {
-        user = userMapper.findByToken(token, System.currentTimeMillis());
+
+      Map<String, Object> data = new HashMap();
+      data.put("token", token);
+      data.put("stamp", System.currentTimeMillis());
+      data.put("platform", UserAgent.parseUserAgentString(request.getHeader("User-Agent")).getOperatingSystem().getDeviceType().getName());
+
+      if (user == null) {//会话失效
+        user = userMapper.findByToken(data);
+        if (user != null) {
+          request.getSession().setAttribute("user", user);
+        }
       }
       if (token == null || token.length() == 0 || user == null) {
-        response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "用户鉴权失败")));
+        response.getWriter().write(JSON.toJSONString(MCResult.Failed(401, "登录状态失效")));
         return;
+      }
+
+      //更新有效期
+      if (user.getExpire().getTime() - System.currentTimeMillis() < 86400 * 7 * 1000L) {
+        user.setExpire(new Timestamp(user.getExpire().getTime() + 86400 * 7 * 1000L));
+        data.put("stamp", user.getExpire());
+        userMapper.updateByToken(data);
       }
       request.setAttribute("uid", user.getId());
       if (adminUrls.contains(request.getRequestURI()) && user.getRolelevel() > 0) {

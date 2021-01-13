@@ -9,11 +9,10 @@
   <insert id="insert" parameterType="com.frontend.domain.MCEnvConfig" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO RemoteConfig(name, comment, type, appId, uid, defaultTag, updateTime) VALUES(#{name}, #{comment},
     #{type}, #{appId},
-    #{uid}, #{defaultTag},STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4))
+    #{uid}, #{defaultTag} )
   </insert>
   <update id="update" parameterType="com.frontend.domain.MCEnvConfig">
-    UPDATE RemoteConfig SET `name`=#{name},type=#{type},`comment`=#{comment},uid=#{uid}, updateTime=STRFTIME('%s',
-    'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4) WHERE id=#{id}
+    UPDATE RemoteConfig SET `name`=#{name},type=#{type},`comment`=#{comment},uid=#{uid}, updateTime=null WHERE id=#{id}
   </update>
 
   <select id="findById" parameterType="com.frontend.domain.MCEnvConfig" resultMap="onlyone">

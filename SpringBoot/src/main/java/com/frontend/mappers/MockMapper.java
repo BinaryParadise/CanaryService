@@ -1,5 +1,6 @@
 package com.frontend.mappers;
 
+import com.frontend.domain.MCUserInfo;
 import com.frontend.mockable.MCMockGroup;
 import com.frontend.mockable.MCMockInfo;
 import com.frontend.mockable.MCMockParam;
@@ -15,14 +16,15 @@ import java.util.List;
 @Repository
 public interface MockMapper {
 
-  List<MCMockGroup> findFullGroup(String appsecret);
   Boolean insertNew(MCMockInfo mock);
 
   Boolean update(MCMockInfo mock);
 
-  List<MCMockInfo> findAllMock(@Param("appid") Integer appid, @Param("groupid") Integer groupid, @Param("page") MCPagination page);
+  Boolean active(MCMockInfo mock);
 
-  List<MCMockGroup> findAllGroup(Integer pid);
+  List<MCMockInfo> findAllMock(@Param("user") MCUserInfo user, @Param("groupid") Integer groupid, @Param("page") MCPagination page);
+
+  List<MCMockGroup> findAllGroup(Integer pid, Integer uid);
 
   Boolean updateGroup(MCMockGroup group);
 

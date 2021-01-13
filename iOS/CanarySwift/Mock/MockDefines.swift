@@ -7,7 +7,7 @@
 
 import Foundation
 
-let AutomaticMode = -1
+let AutomaticMode = 0
 
 class MockParam: Codable {
     var name: String
@@ -25,11 +25,15 @@ class MockData: Codable {
     var id: Int
     var name: String
     var path: String
+    
+    /// 激活状态
+    var enabled: Bool
+    var sceneid: Int?
     var scenes: [MockScene]?
     
     /// 匹配场景，未指定时，默认第一个场景生效
     func matchScene(sceneid: Int?, request: URLRequest) -> Int? {
-        if sceneid == AutomaticMode {
+        if sceneid ?? 0 == AutomaticMode {
             //匹配参数
             if let queryParameters = request.url?.queryParameters {
                 var lowerQuery: [String : String] = [:]
@@ -37,7 +41,7 @@ class MockData: Codable {
                     lowerQuery[key.lowercased()] = value
                 }
                 for scene in scenes ?? [] {
-                    if scene.params?.count == 0 || scene.id == -1 {
+                    if scene.params?.count == 0 || scene.id == 0 {
                         continue
                     }
                     if scene.params?.all(matching: { (param) -> Bool in

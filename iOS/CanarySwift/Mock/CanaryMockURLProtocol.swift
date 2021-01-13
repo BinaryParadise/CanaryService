@@ -50,7 +50,7 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
         return false;
     }
     if ["http", "https"].contains(request.url?.scheme ?? "") {
-        return MockManager.shared.shouldIntercept(for: request).should
+        return MockManager.shared.checkIntercept(for: request).should
     }
     return false
   }
@@ -65,7 +65,7 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
       return
     }
     URLProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: newRequest)
-    newRequest.url = MockManager.shared.shouldIntercept(for: newRequest as URLRequest).url
+    newRequest.url = MockManager.shared.checkIntercept(for: newRequest as URLRequest).url
     NotificationCenter.default.post(name: NSNotification.Name(rawValue: CanaryMockedNotification), object: nil, userInfo: [CanaryOriginURLKey: request.url, CanaryMockedURLKey: newRequest.url])
     receiveData = Data()
     sessionTask = session?.dataTask(with: newRequest as URLRequest)

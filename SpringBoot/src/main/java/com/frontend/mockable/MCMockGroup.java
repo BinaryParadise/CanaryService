@@ -6,7 +6,7 @@ public class MCMockGroup {
   Integer id;
   String name;
   Integer appid;
-
+  Integer uid;
   List<MCMockInfo> mocks;
 
   public Integer getId() {
@@ -31,6 +31,14 @@ public class MCMockGroup {
 
   public void setAppid(Integer appid) {
     this.appid = appid;
+  }
+
+  public Integer getUid() {
+    return uid;
+  }
+
+  public void setUid(Integer uid) {
+    this.uid = uid;
   }
 
   public List<MCMockInfo> getMocks() {

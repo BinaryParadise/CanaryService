@@ -1,7 +1,7 @@
 import styles from './index.css';
 import React from 'react'
 
-import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider } from 'antd';
+import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
 import router from 'umi/router';
 import axios from '../component/axios'
 import { AuthUser, Auth } from '../common/util'
@@ -52,7 +52,7 @@ class BasicLayout extends React.Component {
       window.__config__.user = result.data
       this.setState({ project: false })
       message.success("应用切换成功!")
-      router.push('/')
+      window.location.href = window.location.href
     })
   }
 
@@ -142,23 +142,14 @@ class BasicLayout extends React.Component {
                 <Icon type="link" />
                 <span>路由配置</span>
               </Menu.Item>
+              <Menu.Item key="/mock/data">
+                <Icon type="container" />
+                <span>Mock数据</span>
+              </Menu.Item>
               <Menu.Item key="/tool">
                 <Icon type="tool"></Icon>
                 <span>工具箱</span>
               </Menu.Item>
-              <Menu.SubMenu key="mockgroup" title={
-                <span>
-                  <Icon type="container" />
-                  <span>Mock数据</span>
-                </span>
-              }>
-                <Menu.Item key="/mock/data">
-                  <span>接口配置</span>
-                </Menu.Item>
-                <Menu.Item key="/mock/param">
-                  <span>参数配置</span>
-                </Menu.Item>
-              </Menu.SubMenu>
               <Menu.Item key="/project" hidden={!Auth('project')}>
                 <Icon type="project" />
                 <span>应用管理</span>
@@ -180,8 +171,7 @@ class BasicLayout extends React.Component {
                   <Menu.Item key="1">
                     退出
               </Menu.Item>
-                </Menu>
-              )}>
+                </Menu>)}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                   {AuthUser().name}
                   <Avatar style={{ marginRight: 16, marginLeft: 8 }} src={default_handsome}></Avatar>
@@ -190,7 +180,12 @@ class BasicLayout extends React.Component {
             </span>
           </Header>
           <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
-            {this.props.children}
+            {
+              user && user.app ? this.props.children :
+                <Empty style={{ marginTop: 60 }}>
+                  <Button type="primary" onClick={this.switchProject}>选择应用</Button>
+                </Empty>
+            }
           </Content>
         </Layout >
       </ConfigProvider>

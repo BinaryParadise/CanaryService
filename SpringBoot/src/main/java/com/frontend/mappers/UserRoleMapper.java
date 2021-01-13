@@ -23,7 +23,8 @@ public interface UserRoleMapper {
 
   MCUserInfo findByLogin(Map<String, Object> data);
 
-  MCUserInfo findByToken(String token, long stamp);
+  MCUserInfo findByToken(Map<String, Object> data);
+  boolean updateByToken(Map<String, Object> data);
 
   List<MCUserInfo> findUserList();
   List<MCUserRole> findRoleList();

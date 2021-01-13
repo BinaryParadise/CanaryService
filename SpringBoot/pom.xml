@@ -107,6 +107,13 @@
       <version>3.21.0.1</version>
     </dependency>
 
+    <!-- 设备类型获取 -->
+    <dependency>
+      <groupId>eu.bitwalker</groupId>
+      <artifactId>UserAgentUtils</artifactId>
+      <version>1.21</version>
+    </dependency>
+
   </dependencies>
 
   <build>

@@ -12,6 +12,9 @@ public class MCMockInfo {
   Integer groupid;
   String template;
   String groupname;
+  Integer uid;
+  Integer sceneid;
+  Boolean enabled;
   List<MCMockScene> scenes;
 
   public Integer getId() {
@@ -76,6 +79,30 @@ public class MCMockInfo {
 
   public void setGroupname(String groupname) {
     this.groupname = groupname;
+  }
+
+  public Integer getUid() {
+    return uid;
+  }
+
+  public void setUid(Integer uid) {
+    this.uid = uid;
+  }
+
+  public Integer getSceneid() {
+    return sceneid;
+  }
+
+  public void setSceneid(Integer sceneid) {
+    this.sceneid = sceneid;
+  }
+
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
   }
 
   public List<MCMockScene> getScenes() {

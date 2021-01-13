@@ -9,6 +9,7 @@ import com.frontend.models.LogMessage;
 import com.frontend.models.MCDeviceInfo;
 import com.frontend.models.MCMessage;
 import com.frontend.models.NetLogMessage;
+import com.frontend.utils.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
           && destSession.isOpen()) {
           try {
             MCMessage msg = new MCMessage();
-            msg.setType(11);
+            msg.setType(MessageType.DeviceUpdate);
             msg.setMsg("设备已连接...");
             msg.setData(JSONObject.parse("{\"avaiable\":true}"));
             destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
@@ -95,7 +96,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
           && destSession.isOpen()) {
           try {
             MCMessage msg = new MCMessage();
-            msg.setType(11);
+            msg.setType(MessageType.DeviceUpdate);
             msg.setMsg("设备已离线...");
             msg.setData(JSONObject.parse("{\"avaiable\":false}"));
             destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
@@ -111,9 +112,9 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
   protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
     MCMessage msg = JSON.parseObject(message.getPayload().array(), MCMessage.class);
     if (msg != null) {
-      int type = msg.getType();
+      MessageType type = msg.getType();
       try {
-        Method method = this.getClass().getDeclaredMethod("messageHandlerForType" + type, MCMessage.class, WebSocketSession.class);
+        Method method = this.getClass().getDeclaredMethod("messageHandlerForType" + type.getCode(), MCMessage.class, WebSocketSession.class);
         String result = (String) method.invoke(this, msg, session);
         if (result != null) {
           session.sendMessage(new BinaryMessage(ByteBuffer.wrap(result.getBytes())));

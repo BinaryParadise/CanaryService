@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.frontend.domain.MCUserInfo;
 import com.frontend.models.MCDeviceInfo;
 import com.frontend.models.MCMessage;
+import com.frontend.utils.MessageType;
 import com.frontend.websocket.MCWebSocketHandler;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -76,7 +77,7 @@ public class Global {
         if (session != null && session.isOpen()) {
           try {
             MCMessage message = new MCMessage();
-            message.setType(2);
+            message.setType(MessageType.Update);
             message.setMsg("配置需要更新...");
             message.setData(JSONObject.parse("{\"updatetime\":"+System.currentTimeMillis()+"}"));
             session.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(message))));

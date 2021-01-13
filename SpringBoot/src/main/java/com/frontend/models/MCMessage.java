@@ -1,22 +1,19 @@
 package com.frontend.models;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.frontend.utils.MessageType;
+import com.frontend.utils.MessageTypeCodec;
+
 public class MCMessage {
 	/**
 	 * 0、成功 其它、失败
 	 */
 	int code;
 	/**
-	 * 1、连接控制
-   * 2、配置数据更新
-	 * 10、注册设备
-	 * 11、设备状态更新
-	 * 12、获得注册的设备列表
-	 * 20、发起数据库查询请求
-	 * 21、数据查询结果
-	 * 30、客户端日志
-	 * 31、客户端网络日志
+	 * 消息类型
 	 */
-	int type;
+	@JSONField(serializeUsing = MessageTypeCodec.class, deserializeUsing = MessageTypeCodec.class)
+	MessageType type;
 
 	/**
 	 * 提示信息
@@ -49,11 +46,11 @@ public class MCMessage {
 		this.code = code;
 	}
 
-	public int getType() {
+	public MessageType getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(MessageType type) {
 		this.type = type;
 	}
 

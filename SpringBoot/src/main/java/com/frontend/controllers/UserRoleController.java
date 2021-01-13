@@ -111,7 +111,7 @@ public class UserRoleController {
     Map<String, Object> data = new HashMap();
     data.put("token", user.getToken());
     data.put("stamp", System.currentTimeMillis());
-    data.put("platform", UserAgent.parseUserAgentString(request.getHeader("User-Agent")));
+    data.put("platform", UserAgent.parseUserAgentString(request.getHeader("User-Agent")).getOperatingSystem().getDeviceType().getName());
     return MCResult.Success(userMapper.findByToken(data));
   }
 }

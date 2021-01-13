@@ -10,6 +10,7 @@ import SwiftyJSON
 
 let suiteName       = "com.binaryparadise.canary"
 let MockGroupURL    = "/api/mock/app/whole"
+let GroupsStore     = "GroupsStore"
 
 struct Result: Codable {
     var code: Int
@@ -34,6 +35,11 @@ struct Result: Codable {
     @objc public static let shared = MockManager()
     override init() {
         super.init()
+        do {
+            self.groups = try JSONDecoder().decode([MockGroup].self, from: userDefaults.data(forKey: GroupsStore) ?? Data())
+        } catch {
+            
+        }
         fetchGroups {
             
         }
@@ -95,7 +101,10 @@ struct Result: Codable {
     func fetchGroups(completion: (() -> Void)?) -> Void {
         URLRequest.get(with: MockGroupURL) { [weak self] (result, error) in
             do {
-                self?.groups = try JSONDecoder().decode([MockGroup].self, from: result.data?.rawData() ?? Data())
+                if result.code == 0 {
+                    self?.groups = try JSONDecoder().decode([MockGroup].self, from: result.data?.rawData() ?? Data())
+                    try self?.userDefaults.set(object: result.data?.rawData(), forKey: GroupsStore)
+                }
             } catch {
                 print("\(#file).\(#function) +\(#line) \(error)")
             }

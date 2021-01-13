@@ -10,6 +10,7 @@ let kMessageHandlerKey  = "cn_objc"
 let kNativeCallBack = "nativeCallBack"
 
 import WebKit
+import SwiftyJSON
 
 class CanaryWebViewController: UIViewController {
     var originURL: URL?
@@ -19,7 +20,7 @@ class CanaryWebViewController: UIViewController {
         super.viewDidLoad()
         
         let bundle = Bundle(for: classForCoder)
-        originURL = URL(string: bundle.path(forResource: "Canary.bundle/enter.html", ofType: nil) ?? "")
+        originURL = URL(fileURLWithPath: bundle.path(forResource: "Canary.bundle/enter.html", ofType: nil) ?? "")
         
         //配置
         let config = WKWebViewConfiguration()
@@ -52,12 +53,11 @@ extension CanaryWebViewController: WKNavigationDelegate, WKUIDelegate {
             return
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
-            if UIApplication.shared.openURL(navigationAction.request.url!) {
-                decisionHandler(.cancel)
-            } else {
-                decisionHandler(.allow)
-            }
+        if navigationAction.request.url?.scheme == "canary" {
+            //TODO：route
+            decisionHandler(.allow)
+        } else {
+            decisionHandler(.allow)
         }
     }
     
@@ -83,15 +83,27 @@ extension CanaryWebViewController: WKScriptMessageHandler {
         if message.name == kMessageHandlerKey {
             let routeURL = URL(string: message.body as! String)
             if routeURL?.host == "testenter" {
-                
+                callbackFromNative(object: [["title": "获取时间", "url": "canary://timestamp"]])
+            }
+            if routeURL?.host == "timestamp" {
+                callbackFromNative(object: Date().timeIntervalSince1970 * 1000)
             }
         }
     }
     
     
-    func callbackFromNative(object: Any) {
-        wkWebView?.evaluateJavaScript("\(kNativeCallBack)(\(object)", completionHandler: { (data, error) in
-            print("\(#file)\(#function)+ \(#line)\(error)")
+    func callbackFromNative(object: Any?) {
+        var funccall = "\(kNativeCallBack)()"
+        if let object = object {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: object, options: .fragmentsAllowed)
+                funccall = "\(kNativeCallBack)(\(jsonData.string(encoding: .utf8) ?? ""))"
+            } catch {
+                print("\(#function) +\(#line) \(error)")
+            }
+        }
+        wkWebView?.evaluateJavaScript(funccall, completionHandler: { (data, error) in
+            print("\(#file)\(#function) +\(#line) \(error)")
         })
     }
 }

@@ -8,18 +8,20 @@
 import Foundation
 
 class MockDataViewController: UIViewController {
-    var group: MockGroup?
+    var groups: [MockGroup] {
+        return MockManager.shared.groups
+    }
     var tableView = UITableView(frame: .zero, style: .grouped)
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = group?.name
+        title = "Mock数据"
         view.backgroundColor = UIColor(hex: 0xF4F5F6)
         
         tableView.backgroundColor = view.backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLineEtched
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         if #available(iOS 13.0, *) {
@@ -29,6 +31,8 @@ class MockDataViewController: UIViewController {
         }
         view.addSubview(tableView)
         tableView.register(cellWithClass: MockDataViewCell.self)
+        tableView.register(headerFooterViewClassWith: MockDataSectionView.self)
+        
         tableView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
@@ -44,10 +48,11 @@ class MockDataViewController: UIViewController {
 extension MockDataViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return group?.mocks?.count ?? 1
+        return groups.count
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return groups[section].mocks?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -62,7 +67,8 @@ extension MockDataViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
         }
-        cell.config(mock:group?.mocks?[safe: indexPath.section])
+        let mock = groups[indexPath.section].mocks?[indexPath.row]
+        cell.config(mock: mock)
         return cell
     }
     
@@ -71,11 +77,36 @@ extension MockDataViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 8
+        return 50
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionView = tableView.dequeueReusableHeaderFooterView(withClass: MockDataSectionView.self)
+        sectionView.titleLabel.text = groups[section].name
+        return sectionView
+    }
+}
+
+class MockDataSectionView: UITableViewHeaderFooterView {
+    let titleLabel = UILabel()
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        
+        backgroundView = UIView()
+        backgroundView?.backgroundColor = UIColor(hex: 0xF4F5F6)
+        
+        titleLabel.textColor = UIColor(hex: 0x333333)
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        contentView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { (make) in
+            make.left.equalToSuperview().offset(16)
+            make.centerY.equalToSuperview()
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -96,6 +127,9 @@ class MockDataViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        selectionStyle = .none
+        
         //名称
         nameLabel.font = UIFont.systemFont(ofSize: 15)
         nameLabel.setContentCompressionResistancePriority(.defaultLow+1, for: .horizontal)

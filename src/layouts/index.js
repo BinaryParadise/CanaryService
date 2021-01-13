@@ -1,7 +1,7 @@
 import styles from './index.css';
 import React from 'react'
 
-import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider } from 'antd';
+import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
 import router from 'umi/router';
 import axios from '../component/axios'
 import { AuthUser, Auth } from '../common/util'
@@ -52,7 +52,7 @@ class BasicLayout extends React.Component {
       window.__config__.user = result.data
       this.setState({ project: false })
       message.success("应用切换成功!")
-      router.push('/')
+      window.location.href = window.location.href
     })
   }
 
@@ -171,8 +171,7 @@ class BasicLayout extends React.Component {
                   <Menu.Item key="1">
                     退出
               </Menu.Item>
-                </Menu>
-              )}>
+                </Menu>)}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                   {AuthUser().name}
                   <Avatar style={{ marginRight: 16, marginLeft: 8 }} src={default_handsome}></Avatar>
@@ -181,7 +180,12 @@ class BasicLayout extends React.Component {
             </span>
           </Header>
           <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
-            {this.props.children}
+            {
+              user && user.app ? this.props.children :
+                <Empty style={{ marginTop: 60 }}>
+                  <Button type="primary" onClick={this.switchProject}>选择应用</Button>
+                </Empty>
+            }
           </Content>
         </Layout >
       </ConfigProvider>

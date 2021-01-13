@@ -28,7 +28,7 @@ class NormalLoginForm extends React.Component {
             if (result.code == 0) {
                 localStorage.setItem("user", JSON.stringify(result.data))
                 message.success("登录成功,即将跳转", 0.5)
-                    .then(() => router.push('/'))
+                    .then(() => window.location.href = "/")
             } else {
                 message.error(result.error);
                 this.setState({ loading: false })

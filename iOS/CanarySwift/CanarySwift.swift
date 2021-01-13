@@ -30,7 +30,7 @@ import SwiftyJSON
         assert(deviceId != nil, "请初始化deviceId")
         assert(appSecret.count > 0, "请初始化AppSecret")
         if lock.try() {
-            nav = UINavigationController(rootViewController: CanaryViewController())
+            nav = UINavigationController(rootViewController: MajorViewController())
             nav?.modalPresentationStyle = .fullScreen
             UIApplication.shared.keyWindow?.rootViewController?.present(nav!, animated: true, completion: nil)
         }

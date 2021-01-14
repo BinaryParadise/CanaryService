@@ -55,6 +55,10 @@ export default {
         {
           path: '/tool',
           component: '../pages/toolbox'
+        },
+        {
+          path: '/request',
+          component: '../pages/device/request'
         }
       ],
     },

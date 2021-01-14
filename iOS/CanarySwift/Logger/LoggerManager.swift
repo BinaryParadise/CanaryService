@@ -23,7 +23,7 @@ class LoggerManager: NSObject {
     
     func addTTYLogger(dict:[String : Any], timestamp: TimeInterval) -> Void {
         if CanaryWebSocket.shared.isReady() {
-            let message = WebSocketMessage(type: .ttyLogger)
+            let message = WebSocketMessage(type: .logger)
             var mdict = dict
             mdict["appVersion"] = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
             mdict["timestamp"] = timestamp*1000

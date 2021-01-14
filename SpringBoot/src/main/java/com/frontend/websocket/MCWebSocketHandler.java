@@ -68,7 +68,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
           && destSession.isOpen()) {
           try {
             MCMessage msg = new MCMessage();
-            msg.setType(MessageType.DeviceUpdate);
+            msg.setType(MessageType.Connected);
             msg.setMsg("设备已连接...");
             msg.setData(JSONObject.parse("{\"avaiable\":true}"));
             destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
@@ -96,7 +96,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
           && destSession.isOpen()) {
           try {
             MCMessage msg = new MCMessage();
-            msg.setType(MessageType.DeviceUpdate);
+            msg.setType(MessageType.Connected);
             msg.setMsg("设备已离线...");
             msg.setData(JSONObject.parse("{\"avaiable\":false}"));
             destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
@@ -159,10 +159,11 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
         }
       }
 
-      logger.info("【" + info.getDeviceId() + "】设备已更新，观察者:[" + count+"]");
+      logger.info("【" + info.getDeviceId() + "】设备已更新，观察者:[" + count + "]");
     }
   }
 
+  /* 设备列表 */
   void messageHandlerForType11(MCMessage msg, WebSocketSession session) {
     List<MCDeviceInfo> list = new ArrayList<>();
     for (MCDeviceInfo device : devices.values()) {
@@ -179,44 +180,19 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
   }
 
   /**
-   * 客户端日志（终端）
+   * 移动设备日志
    *
    * @param msg
    */
   public void messageHandlerForType30(MCMessage msg, WebSocketSession session) {
-    LogMessage logMessage = JSONObject.parseObject(msg.getData().toString(), LogMessage.class);
-    if (logMessage != null) {
-      for (WebSocketSession destSession : webSessions.values()) {
-        String deviceId = (String) session.getAttributes().get("deviceid");
-        if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
-          && destSession.isOpen()) {
-          try {
-            destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * 客户端日志（网络接口)
-   *
-   * @param msg
-   */
-  public void messageHandlerForType31(MCMessage msg, WebSocketSession session) {
-    NetLogMessage logMessage = JSONObject.parseObject(msg.getData().toString(), NetLogMessage.class);
-    if (logMessage != null) {
-      for (WebSocketSession destSession : webSessions.values()) {
-        String deviceId = (String) session.getAttributes().get("deviceid");
-        if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
-          && destSession.isOpen()) {
-          try {
-            destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+    for (WebSocketSession destSession : webSessions.values()) {
+      String deviceId = (String) session.getAttributes().get("deviceid");
+      if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
+        && destSession.isOpen()) {
+        try {
+          destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
+        } catch (IOException e) {
+          e.printStackTrace();
         }
       }
     }

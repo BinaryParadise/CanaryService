@@ -2,9 +2,10 @@ import React from 'react'
 import styles from './logger.css';
 import PropTypes from 'prop-types'
 import { Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
-import WebSocket from '../../../component/websocket'
+import WebSocket from '@/component/websocket'
 import router from 'umi/router';
 import NetLog from '../component/netlog'
+import {MessageType} from '@/common/util'
 
 // 日志标记
 const Error = (1 << 0)
@@ -193,18 +194,17 @@ export default class LoggerMonitor extends React.Component {
         }
         const { logs } = this.state
         switch (obj.type) {
-            case 1: notification['success']({
+            case MessageType.Connected: notification['success']({
                 message: '信息',
                 description:
                     obj.msg,
             });
                 return true;
-            case 11:
+            case MessageType.DeviceList:
                 this.setState({ avaiable: obj.data.avaiable })
                 this.setState({ logs: [...logs, { flag: 8, message: obj.msg, key: 'key-' + logs.length, type: 1 }] })
                 return true;
-            case 30://本地日志
-            case 31://网络日志
+            case MessageType.Logger:
                 obj.data.key = 'key-' + logs.length
                 this.setState({ logs: [...logs, obj.data] })
                 return true;

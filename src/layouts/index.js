@@ -97,6 +97,9 @@ class BasicLayout extends React.Component {
         </Layout>
       )
     }
+    if (pathname === "/request") {
+      return this.props.children
+    }
     return (
       <ConfigProvider locale={zhCN}>
         <Layout className={styles.normal}>

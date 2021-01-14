@@ -50,3 +50,13 @@ export function Auth(item) {
     }
     return false;
 }
+
+export const MessageType = {
+    Connected: 1,
+    Update: 2,
+    Register: 10,
+    DeviceList: 11,
+    DBQuery: 20,  //unsupport
+    DBResult: 21, //unsupport
+    Logger: 30
+  }

@@ -20,6 +20,10 @@ class MockScenePage extends React.Component {
         showParam: false
     }
 
+    mock = () => {
+        return this.props.location.state
+    }
+
     columns = [
         {
             title: '场景名称',
@@ -36,7 +40,7 @@ class MockScenePage extends React.Component {
             title: '状态',
             width: 80,
             render: (text, record) => {
-                var sceneid = this.state.mock.sceneid
+                var sceneid = this.mock().sceneid
                 if (sceneid == null) {
                     return <Tag color="orange">自动</Tag>
                 } else if (sceneid == record.id) {
@@ -74,7 +78,7 @@ class MockScenePage extends React.Component {
     ];
 
     renderSceneAction = (record) => {
-        var sceneid = this.state.mock.sceneid
+        var sceneid = this.mock()
         var p = { title: '确认激活?', color: '#35B0D8', btn: '激活', active: true }
         if (sceneid == null) {
 
@@ -120,7 +124,7 @@ class MockScenePage extends React.Component {
                 message.error(result.error)
                 return
             }
-            this.state.mock.sceneid = newR.sceneid
+            this.props.location.state = newR
             this.queryAll()
         })
     }
@@ -165,6 +169,7 @@ class MockScenePage extends React.Component {
     onDeleteParam = (record) => {
         return axios.post('/mock/param/delete', { id: record.id }).then(result => {
             if (result.code == 0) {
+                this.props.location.state = { ...this.mock(), sceneid: null }
                 this.queryAll()
             } else {
                 message.error(result.error)

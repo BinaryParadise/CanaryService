@@ -19,9 +19,7 @@ enum MessageType: Int, Codable {
     /// 数据库查询结果
     case dbResult   = 21
     /// 本地日志
-    case ttyLogger  = 30
-    /// 网络日志
-    case netLogger  = 31
+    case logger  = 30
 };
 
 class WebSocketMessage: Codable {

@@ -66,8 +66,8 @@
     </if>
   </update>
 
-  <delete id="deleteScene" parameterType="com.frontend.mockable.MCMockGroup">
-    DELETE FROM MockScene where id=#{id}
+  <delete id="deleteScene">
+    DELETE FROM MockScene where id=#{0}
   </delete>
 
   <select id="findAllScene" resultType="com.frontend.mockable.MCMockScene">

@@ -11,14 +11,13 @@ import java.lang.reflect.Type;
 
 /* 消息类型 */
 public enum MessageType {
+  Connected(1),
   Update(2),
   Register(10),
-  DeviceUpdate(11),
-  DeviceList(12),
+  DeviceList(11),
   DBQuery(20),
   DBResult(21),
-  Log(30),
-  NetLog(31);
+  Logger(30);
 
   private int code;
 

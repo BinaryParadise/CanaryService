@@ -1,13 +1,13 @@
 import styles from './index.less'
 import React from 'react'
-import axios from '../../component/axios'
-import { routerURL } from '../../common/util'
+import axios from '@/component/axios'
+import { routerURL, MessageType } from '@/common/util'
 
 import { Table, Button, Badge, Tag, Breadcrumb, Layout, message } from 'antd';
 import { Resizable } from 'react-resizable';
 import { Link } from 'react-router-dom'
 import ExtraPage from './component/extra'
-import WebSocket from '../../component/websocket'
+import WebSocket from '@/component/websocket'
 
 const wsInstance = WebSocket.create("9BB08FF2-06BE-456F-A6CD-583260A244F5")
 
@@ -83,7 +83,7 @@ export default class IndexPage extends React.Component {
 
   transformIp = (data) => {
     const ipv4 = (data.ipAddrs || {}).ipv4
-    let key = Object.keys(ipv4).filter(item=> !ipv4[item].startsWith('169') && item.startsWith('en'))[0]
+    let key = Object.keys(ipv4).filter(item => !ipv4[item].startsWith('169') && item.startsWith('en'))[0]
     return ipv4[key]
   }
 
@@ -123,7 +123,7 @@ export default class IndexPage extends React.Component {
   // 获取设备列表
   getDeviceList = () => {
     this.setState({ loading: true });
-    wsInstance.sendMessage({ type: 11, appKey: (window.__config__.user.app || {}).identify })
+    wsInstance.sendMessage({ type: MessageType.DeviceList, appKey: (window.__config__.user.app || {}).identify })
   }
 
   render() {

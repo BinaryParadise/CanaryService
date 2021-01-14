@@ -10,7 +10,7 @@
  Target Server Version : 3030001
  File Encoding         : 65001
 
- Date: 12/01/2021 17:58:46
+ Date: 14/01/2021 16:18:10
 */
 
 PRAGMA foreign_keys = false;
@@ -183,7 +183,17 @@ UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockParam';
 -- ----------------------------
 -- Auto increment value for MockScene
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockScene';
+UPDATE "main"."sqlite_sequence" SET seq = 9 WHERE name = 'MockScene';
+
+-- ----------------------------
+-- Triggers structure for table MockScene
+-- ----------------------------
+CREATE TRIGGER "main"."reset_on_delete"
+AFTER DELETE
+ON "MockScene"
+BEGIN
+UPDATE MockData SET sceneid=null WHERE sceneid=old.id;
+END;
 
 -- ----------------------------
 -- Auto increment value for Project
@@ -203,6 +213,6 @@ UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 'RemoteConfigParam';
 -- ----------------------------
 -- Auto increment value for UserSession
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 40 WHERE name = 'UserSession';
+UPDATE "main"."sqlite_sequence" SET seq = 56 WHERE name = 'UserSession';
 
 PRAGMA foreign_keys = true;

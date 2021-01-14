@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout, Tabs, Descriptions } from 'antd';
 import ReactJson from 'react-json-view'
 
-const CollapseLength = 350
+const CollapseLength = 128
 
 export default class RequestBrowserPage extends React.Component {
     state = {
@@ -19,7 +19,7 @@ export default class RequestBrowserPage extends React.Component {
         return (
             <Layout style={{ padding: 8 }}>
                 <span style={{ color: 'orchid', fontWeight: 'bold', fontSize: 18 }}>{data.url}</span>
-                <Tabs size="large">
+                <Tabs>
                     <Tabs.TabPane tab="请求" key="req">
                         <Descriptions size="small" column={1} layout="vertical" bordered>
                             <Descriptions.Item label={<span style={{ fontWeight: 'bold' }}>Headers</span>}><ReactJson src={data.requestfields} name={false} collapseStringsAfterLength={CollapseLength}></ReactJson></Descriptions.Item>

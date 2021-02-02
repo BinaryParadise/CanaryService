@@ -77,6 +77,7 @@ extension CanarySwift {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(af_didRquestDidFinish(notification:)), name: NSNotification.Name(rawValue: "com.alamofire.networking.task.complete"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(af_didRquestDidFinish(notification:)), name: Notification.Name(rawValue: "org.alamofire.notification.name.task.didComplete"), object: nil)
     }
     
     @objc public func storeLogMessage(dict: [String : Any], timestamp: TimeInterval) {
@@ -84,11 +85,18 @@ extension CanarySwift {
     }
 
     @objc func af_didRquestDidFinish(notification: NSNotification) {
-        guard let task = notification.object as? URLSessionTask else { return }
+        var curTask = notification.object as? URLSessionTask //AFNetworking
+        if curTask == nil {
+            curTask = notification.userInfo?["org.alamofire.notification.key.task"] as? URLSessionTask
+        }
+        guard let task = curTask else { return }
         guard let request = task.originalRequest as NSURLRequest? else { return }
         guard let response = task.response as? HTTPURLResponse else { return }
-                        
-        guard let responseData = notification.userInfo?["com.alamofire.networking.complete.finish.responsedata"] as? Data else { return }
+                    
+        let responseData = notification.userInfo?["com.alamofire.networking.complete.finish.responsedata"] as? Data
+        if responseData == nil {
+            notification.userInfo?["org.alamofire.notification.key.responseData"]
+        }
         storeNetworkLogger(netLog: NetLogMessage(request: request, response: response, data: responseData))
     }
 

@@ -14,6 +14,7 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
+  - Alamofire (4.9.1)
   - Canary (0.6.2):
     - SnapKit
     - Starscream (~> 4.0)
@@ -53,6 +54,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking
+  - Alamofire
   - Canary (from `../..`)
   - CocoaLumberjack/Swift
   - Masonry
@@ -63,6 +65,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AFNetworking
+    - Alamofire
     - CocoaLumberjack
     - Masonry
     - Nimble
@@ -79,6 +82,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   Canary: 89dbadd2eda1d49110ead76527df823dd447a2ca
   CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
@@ -90,6 +94,6 @@ SPEC CHECKSUMS:
   SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 7b3e476f870033d8d831238806358b051ffc5a49
+PODFILE CHECKSUM: a7e071cec434c9272105b726b350ff065cb81771
 
 COCOAPODS: 1.10.1

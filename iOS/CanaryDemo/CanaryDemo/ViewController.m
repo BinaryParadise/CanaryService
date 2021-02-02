@@ -59,6 +59,8 @@
         NSLog(@"%@", error);
     }];
     [task resume];
+    
+    [[AlamofireDemo new] test];
 }
 
 - (void)showJSONObject:(id)jsonObject {

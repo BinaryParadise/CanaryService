@@ -8,6 +8,7 @@ target 'CanaryDemo' do
   
   pod 'Canary', :path => '../..'
   pod 'AFNetworking'
+  pod 'Alamofire'
   pod 'CocoaLumberjack/Swift'
   pod 'Masonry'
   pod 'SocketRocket', :modular_headers => true

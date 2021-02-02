@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Canary'
-  s.version          = '0.6.1'
+  s.version          = '0.6.2'
   s.summary          = 'Canary is SDK For CanaryService.'
 
 # This description is used to generate tags and improve search results.
@@ -40,6 +40,6 @@ TODO: Add long description of the pod here.
   s.dependency 'SwifterSwift'
   s.dependency 'SnapKit'
   s.dependency 'SwiftyJSON'
-  s.dependency 'SocketRocket', '~> 0.5'
+  s.dependency 'Starscream', '~> 4.0'
 
 end

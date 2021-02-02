@@ -14,9 +14,9 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - Canary (0.6.1):
+  - Canary (0.6.2):
     - SnapKit
-    - SocketRocket (~> 0.5)
+    - Starscream (~> 4.0)
     - SwifterSwift
     - SwiftyJSON
   - CocoaLumberjack/Core (3.7.0)
@@ -27,6 +27,7 @@ PODS:
   - Quick (1.2.0)
   - SnapKit (4.2.0)
   - SocketRocket (0.5.1)
+  - Starscream (4.0.4)
   - SwifterSwift (5.1.0):
     - SwifterSwift/AppKit (= 5.1.0)
     - SwifterSwift/CoreGraphics (= 5.1.0)
@@ -68,6 +69,7 @@ SPEC REPOS:
     - Quick
     - SnapKit
     - SocketRocket
+    - Starscream
     - SwifterSwift
     - SwiftyJSON
 
@@ -77,13 +79,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
-  Canary: 6a3f8c3600fdb31fea0d6eb289e01c94f355955e
+  Canary: 89dbadd2eda1d49110ead76527df823dd447a2ca
   CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 

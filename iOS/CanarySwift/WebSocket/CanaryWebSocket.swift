@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SocketRocket
+import Starscream
 import SwiftyJSON
 
 protocol WebSocketMessageProtocol: NSObjectProtocol {
@@ -18,7 +18,7 @@ protocol WebSocketMessageProtocol: NSObjectProtocol {
 }
 
 class CanaryWebSocket: NSObject {
-    var mySocket = SRWebSocket()
+    var mySocket: WebSocket?
     var webSocketURL: String = ""
     static var shared = CanaryWebSocket()
     
@@ -27,29 +27,28 @@ class CanaryWebSocket: NSObject {
     private var recivers: [WebSocketMessageProtocol] = []
     private var pingTimer: Timer?
     
+    private var open = false
     func isReady() -> Bool {
-        return mySocket.readyState == .OPEN
+        return open
     }
     
     func start() {
-        if isReady() {
-            mySocket.close()
-        }
+        mySocket?.disconnect()
         let fullURL = URL(string: "\(webSocketURL)/\(UIDevice.current.systemName)/\(CanarySwift.shared.deviceId!)")
-        mySocket = SRWebSocket(url: fullURL!)
-        mySocket.delegate = self
+        mySocket = WebSocket(request: URLRequest(url: fullURL!))
+        mySocket?.delegate = self
         
         if pingTimer == nil {
             pingTimer = Timer.scheduledTimer(timeInterval: retryInterval, target: self, selector: #selector(pingAction), userInfo: nil, repeats: true)
             RunLoop.main.add(pingTimer!, forMode: .default)
         }
         pingTimer?.fire()
-        mySocket.open()
+        mySocket?.connect()
     }
     
     func stop() {
         pingTimer?.invalidate()
-        mySocket.close()
+        mySocket?.disconnect()
     }
 
     func addMessageReciver(reciver: WebSocketMessageProtocol) {
@@ -65,7 +64,7 @@ class CanaryWebSocket: NSObject {
         if isReady() {
             do {
                 let data = try JSONEncoder().encode(message)
-                mySocket.send(data)
+                mySocket?.write(data: data)
             } catch {
                 print("\(#filePath).\(#function)+\(#line) \(error)")
             }
@@ -73,12 +72,11 @@ class CanaryWebSocket: NSObject {
     }
     
     @objc private func pingAction() {
-        let state = mySocket.readyState
-        if(state == .OPEN) {
+        if(isReady()) {
             let t = Date().timeIntervalSince1970 * 1000
-            mySocket.sendPing(t.string.data(using: .utf8))
+            mySocket?.write(ping: t.string.data(using: .utf8)!)
         }else {
-            if (retry && (state == .CLOSED || state == .CLOSING)) {
+            if (retry) {
                 print("🍺 \(retryInterval)秒后重试连接");
                 retry = false
                 DispatchQueue.global().asyncAfter(deadline: .now()+retryInterval) { [weak self] in
@@ -90,18 +88,51 @@ class CanaryWebSocket: NSObject {
     }
 }
 
-extension CanaryWebSocket: SRWebSocketDelegate {
+extension CanaryWebSocket: WebSocketDelegate {
     
-    func webSocketDidOpen(_ webSocket: SRWebSocket!) {
-        recivers.forEach { (receiver) in
-            receiver.webSocketDidOpen(webSocket: self)
+    func didReceive(event: WebSocketEvent, client: WebSocket) {
+        switch event {
+        
+        case .connected(_):
+            open = true
+            recivers.forEach { (receiver) in
+                receiver.webSocketDidOpen(webSocket: self)
+            }
+            print("🍺 WebSocket连接成功：\(client.request.url?.absoluteString ?? "")")
+        case .disconnected(let reason, let code):
+            open = false
+            print("🍺 连接关闭：\(code)-\(reason)")
+        case .text(_):
+            break
+        case .binary(let data):
+            webSocket(client, didReceiveBinary: data)
+        case .pong(let pongPayload):
+            recivers.forEach { (receiver) in
+                receiver.webSocket(webSocket: self, didReceive: pongPayload)
+            }
+        case .ping(_):
+            break
+        case .error(let error):
+            print("❌ \(client.request.url?.absoluteString ?? "") \(error!)")
+            if let error = error as NSError? {
+                if error.code == 2133 || error.code == -72000 {
+                    var components = URLComponents(string: webSocketURL)!
+                    components.scheme = "wss"
+                    webSocketURL = components.url?.absoluteString ?? ""
+                }
+            }
+        case .viabilityChanged(_):
+            break
+        case .reconnectSuggested(_):
+            break
+        case .cancelled:
+            break
         }
-        print("🍺 WebSocket连接成功：\(webSocket.url.absoluteString)")
     }
     
-    func webSocket(_ webSocket: SRWebSocket!, didReceiveMessage message: Any!) {
+    func webSocket(_ webSocket: WebSocket, didReceiveBinary data: Data) {
         do {
-            let result = try JSONDecoder().decode(WebSocketMessage.self, from: message as? Data ?? Data())
+            let result = try JSONDecoder().decode(WebSocketMessage.self, from: data)
             if result.code == 0 {
                 recivers.forEach { (receiver) in
                     receiver.webSocket(webSocket: self, didReceive: result)
@@ -112,26 +143,5 @@ extension CanaryWebSocket: SRWebSocketDelegate {
         } catch {
             print("\(#filePath).\(#function)+\(#line)\(error)")
         }
-    }
-
-    func webSocket(_ webSocket: SRWebSocket!, didReceivePong pongPayload: Data!) {
-        recivers.forEach { (receiver) in
-            receiver.webSocket(webSocket: self, didReceive: pongPayload)
-        }
-    }
-    
-    func webSocket(_ webSocket: SRWebSocket!, didFailWithError error: Error!) {
-        print("❌ \(webSocket.url!) \(error!)")
-        if let error = error as NSError? {
-            if error.code == 2133 || error.code == -72000 {
-                var components = URLComponents(string: webSocketURL)!
-                components.scheme = "wss"
-                webSocketURL = components.url?.absoluteString ?? ""
-            }
-        }
-    }
-    
-    func webSocket(_ webSocket: SRWebSocket!, didCloseWithCode code: Int, reason: String!, wasClean: Bool) {
-        print("🍺 连接关闭：\(code)-\(reason ?? "")")
     }
 }

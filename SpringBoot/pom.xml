@@ -4,7 +4,7 @@
   <groupId>com.binaryparadise.neverland</groupId>
   <artifactId>com.binaryparadise.canary</artifactId>
   <packaging>jar</packaging>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
   <name>canary api service</name>
 
   <!-- inherit parent package -->

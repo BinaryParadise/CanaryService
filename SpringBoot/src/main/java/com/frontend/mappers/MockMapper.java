@@ -29,6 +29,7 @@ public interface MockMapper {
   Boolean updateGroup(MCMockGroup group);
 
   Boolean deleteGroup(MCMockGroup group);
+  Boolean deleteMock(@Param("mockid") Integer mockid);
 
   List<MCMockScene> findAllScene(Integer mockid);
   MCMockScene findScene(Integer sceneid);

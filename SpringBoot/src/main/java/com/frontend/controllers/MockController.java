@@ -117,6 +117,12 @@ public class MockController {
     }
   }
 
+  @PostMapping("/delete/{id}")
+  public MCResult deleteMock(@PathVariable("id") Integer id) {
+    mockMapper.deleteMock(id);
+    return MCResult.Success();
+  }
+
   @RequestMapping(value = "/app/scene/{id}", produces = "application/json; charset=utf-8", method = {RequestMethod.GET, RequestMethod.POST})
   public String appScene(@PathVariable("id") Integer id, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
     MCMockScene scene = mockMapper.findScene(id);

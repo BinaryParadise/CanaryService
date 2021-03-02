@@ -56,6 +56,11 @@
     DELETE FROM MockGroup where id=#{id}
   </delete>
 
+  <delete id="deleteMock">
+    DELETE FROM MockData where id=#{mockid};
+<!--    DELETE FROM MockScene where mockid=#{mockid};-->
+  </delete>
+
   <!-- 场景 -->
   <update id="updateScene" parameterType="com.frontend.mockable.MCMockScene" useGeneratedKeys="true" keyProperty="id">
     <if test="id != null">

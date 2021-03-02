@@ -159,6 +159,17 @@ export default class MockIndexPage extends React.Component {
         this.setState({ editItem: { ...editItem, visible: false } })
     }
 
+    handleDelete = (record) => {
+        return axios.post('/mock/delete/'+record.id, {}).then(result => {
+            if (result.code == 0) {
+                message.success("保存成功")
+                this.queryAll()
+            } else {
+                message.error(result.error)
+            }
+        })
+    }
+
     submit = (values, callback) => {
         return axios.post('/mock/update', values).then(result => {
             if (result.code == 0) {

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.frontend.mappers.HomeMapper;
 import com.frontend.models.MCResult;
+import com.frontend.utils.MybatisError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,9 @@ public class HomeController {
   @GetMapping("/net/snapshot")
   public MCResult findByIdentity(String identify) {
     JSONObject jsonObject = homeMapper.findByIdentify(identify);
+    if (jsonObject == null) {
+      return MCResult.Failed(MybatisError.NotFoundEntry);
+    }
     return MCResult.Success(JSON.parseObject(jsonObject.getString("data")));
   }
 }

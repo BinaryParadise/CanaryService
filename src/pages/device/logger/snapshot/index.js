@@ -1,7 +1,8 @@
 import React from 'react';
-import { Layout, Tabs, Descriptions, Spin } from 'antd';
+import { Layout, Tabs, Descriptions, Spin, message } from 'antd';
 import ReactJson from 'react-json-view'
 import axios from '@/component/axios'
+import MetaTags from 'react-meta-tags';
 
 const CollapseLength = 128
 
@@ -13,7 +14,11 @@ export default class LogSnapshotPage extends React.Component {
 
     componentDidMount() {
         axios.get('/net/snapshot?identify=' + this.state.identify).then(result => {
-            this.setState({ data: result.data, loading: false })
+            if (result.code == 0) {
+                this.setState({ data: result.data, loading: false })
+            } else {
+                message.error(result.error)
+            }
         })
     }
 
@@ -22,11 +27,12 @@ export default class LogSnapshotPage extends React.Component {
         if (loading) {
             return <Spin size="large" style={{ marginLeft: 30, marginTop: 20 }}></Spin>
         }
-        if (data == null || data == undefined) {
-            return <div>找不到指定的快照{this.state.identify}</div>
-        }
         return (
             <Layout style={{ padding: 8 }}>
+                <MetaTags>
+                    <title>接口请求快照 - 金丝雀</title>
+                    <meta name="description" content={data.url} />
+                </MetaTags>
                 <span style={{ color: 'orchid', fontWeight: 'bold', fontSize: 18 }}>{data.url}</span>
                 <Tabs>
                     <Tabs.TabPane tab="请求" key="req">

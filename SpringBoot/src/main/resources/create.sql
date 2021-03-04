@@ -10,10 +10,21 @@
  Target Server Version : 3030001
  File Encoding         : 65001
 
- Date: 14/01/2021 16:18:10
+ Date: 04/03/2021 11:11:34
 */
 
 PRAGMA foreign_keys = false;
+
+-- ----------------------------
+-- Table structure for APISnapshot
+-- ----------------------------
+DROP TABLE IF EXISTS "APISnapshot";
+CREATE TABLE "APISnapshot" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "identify" TEXT NOT NULL,
+  "data" blob,
+  CONSTRAINT "uk_Identify" UNIQUE ("identify") ON CONFLICT IGNORE
+);
 
 -- ----------------------------
 -- Table structure for MockData
@@ -166,9 +177,14 @@ DROP TABLE IF EXISTS "sqlite_sequence";
 CREATE TABLE sqlite_sequence(name,seq);
 
 -- ----------------------------
+-- Auto increment value for APISnapshot
+-- ----------------------------
+UPDATE "main"."sqlite_sequence" SET seq = 12 WHERE name = 'APISnapshot';
+
+-- ----------------------------
 -- Auto increment value for MockData
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 3 WHERE name = 'MockData';
+UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockData';
 
 -- ----------------------------
 -- Auto increment value for MockGroup
@@ -183,7 +199,7 @@ UPDATE "main"."sqlite_sequence" SET seq = 6 WHERE name = 'MockParam';
 -- ----------------------------
 -- Auto increment value for MockScene
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 9 WHERE name = 'MockScene';
+UPDATE "main"."sqlite_sequence" SET seq = 16 WHERE name = 'MockScene';
 
 -- ----------------------------
 -- Triggers structure for table MockScene
@@ -213,6 +229,6 @@ UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 'RemoteConfigParam';
 -- ----------------------------
 -- Auto increment value for UserSession
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 56 WHERE name = 'UserSession';
+UPDATE "main"."sqlite_sequence" SET seq = 59 WHERE name = 'UserSession';
 
 PRAGMA foreign_keys = true;

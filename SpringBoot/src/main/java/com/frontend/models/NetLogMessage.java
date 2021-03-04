@@ -1,10 +1,9 @@
 package com.frontend.models;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Map;
 
 public class NetLogMessage {
+  private String identify;
   private String uid;
   private Integer type;
   private String method;
@@ -16,6 +15,14 @@ public class NetLogMessage {
   private Timestamp timestamp;
   private Integer flag;
   private Integer statusCode;
+
+  public String getIdentify() {
+    return identify;
+  }
+
+  public void setIdentify(String identify) {
+    this.identify = identify;
+  }
 
   public String getUid() {
     return uid;

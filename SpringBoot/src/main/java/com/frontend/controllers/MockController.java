@@ -165,8 +165,15 @@ public class MockController {
   }
 
   @PostMapping("/active")
-  public MCResult activeScene(@RequestBody MCMockInfo mock) {
+  public MCResult activeMock(@RequestBody MCMockInfo mock) {
     mockMapper.active(mock);
+    Global.update();
+    return MCResult.Success();
+  }
+
+  @PostMapping("/scene/active")
+  public MCResult activeScene(@RequestBody MCMockInfo mock) {
+    mockMapper.activeScene(mock);
     Global.update();
     return MCResult.Success();
   }

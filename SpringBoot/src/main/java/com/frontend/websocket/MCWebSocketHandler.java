@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class MCWebSocketHandler extends BinaryWebSocketHandler {
   Logger logger = LoggerFactory.getLogger(MCWebSocketHandler.class);
@@ -190,6 +191,9 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
       if (deviceId.equalsIgnoreCase((String) destSession.getAttributes().get("deviceid"))
         && destSession.isOpen()) {
         try {
+          JSONObject jsonObject = (JSONObject) msg.getData();
+          //唯一标识，用于定位和持久化
+          jsonObject.put("identify", UUID.randomUUID().toString().replace("-", "").toLowerCase());
           destSession.sendMessage(new BinaryMessage(ByteBuffer.wrap(JSON.toJSONBytes(msg))));
         } catch (IOException e) {
           e.printStackTrace();

@@ -9,6 +9,7 @@ public class MCMockScene {
   String response;
   Timestamp updatetime;
   Integer mockid;
+  Integer activeid;
 
   List<MCMockParam> params;
 
@@ -50,6 +51,14 @@ public class MCMockScene {
 
   public void setMockid(Integer mockid) {
     this.mockid = mockid;
+  }
+
+  public Integer getActiveid() {
+    return activeid;
+  }
+
+  public void setActiveid(Integer activeid) {
+    this.activeid = activeid;
   }
 
   public List<MCMockParam> getParams() {

@@ -17,25 +17,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0dj-hy-f29">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0dj-hy-f29">
                                 <rect key="frame" x="53" y="200" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="金丝雀"/>
                                 <connections>
                                     <action selector="showCanary:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bB2-wH-fUW"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Akv-lE-cYJ">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Akv-lE-cYJ">
                                 <rect key="frame" x="53" y="281" width="62" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="苏宁时间"/>
                                 <connections>
                                     <action selector="showNetworking:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qIk-Fj-nvn"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cQ0-Su-5lj">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cQ0-Su-5lj">
                                 <rect key="frame" x="53" y="333" width="107" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="淘宝时间 - 参数"/>
                                 <connections>
                                     <action selector="showNetworkingParam:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wke-aR-WQh"/>
@@ -44,6 +41,14 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="0dj-hy-f29" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="156" id="MpQ-ZD-flB"/>
+                            <constraint firstItem="cQ0-Su-5lj" firstAttribute="top" secondItem="Akv-lE-cYJ" secondAttribute="bottom" constant="22" id="Pu7-0b-TaS"/>
+                            <constraint firstItem="Akv-lE-cYJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="53" id="UIN-ii-z0w"/>
+                            <constraint firstItem="0dj-hy-f29" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="53" id="dEJ-ON-n5J"/>
+                            <constraint firstItem="Akv-lE-cYJ" firstAttribute="top" secondItem="0dj-hy-f29" secondAttribute="bottom" constant="51" id="nwh-9N-ygJ"/>
+                            <constraint firstItem="cQ0-Su-5lj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="53" id="qVN-bp-dWT"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

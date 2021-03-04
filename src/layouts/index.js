@@ -97,7 +97,7 @@ class BasicLayout extends React.Component {
         </Layout>
       )
     }
-    if (pathname === "/request") {
+    if (pathname === "/request" || pathname.startsWith("/log/snapshot/")) {
       return this.props.children
     }
     return (

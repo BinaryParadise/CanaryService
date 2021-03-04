@@ -40,10 +40,9 @@ class MockScenePage extends React.Component {
             title: '状态',
             width: 80,
             render: (text, record) => {
-                var sceneid = this.mock().sceneid
-                if (sceneid == null) {
+                if (record.activeid == null) {
                     return <Tag color="orange">自动</Tag>
-                } else if (sceneid == record.id) {
+                } else if (record.activeid == record.id) {
                     return <Tag color="#87d068">激活</Tag>
                 } else {
                     return <Tag color="gray">闲置</Tag>
@@ -78,7 +77,7 @@ class MockScenePage extends React.Component {
     ];
 
     renderSceneAction = (record) => {
-        var sceneid = this.mock()
+        var sceneid = record.activeid
         var p = { title: '确认激活?', color: '#35B0D8', btn: '激活', active: true }
         if (sceneid == null) {
 
@@ -96,6 +95,10 @@ class MockScenePage extends React.Component {
 
     componentDidMount() {
         this.queryAll()
+    }
+
+    queryMock() {
+        return axios.get('/mock')
     }
 
     queryAll() {
@@ -119,7 +122,7 @@ class MockScenePage extends React.Component {
             newR.sceneid = null
         }
 
-        return axios.post('/mock/active', newR).then(result => {
+        return axios.post('/mock/scene/active', newR).then(result => {
             if (result.code != 0) {
                 message.error(result.error)
                 return

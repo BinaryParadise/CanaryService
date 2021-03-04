@@ -59,6 +59,10 @@ export default {
         {
           path: '/request',
           component: '../pages/device/request'
+        },
+        {
+          path: '/log/snapshot/:identify',
+          component: '../pages/device/logger/snapshot'
         }
       ],
     },

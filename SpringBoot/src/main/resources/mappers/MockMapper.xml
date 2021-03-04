@@ -21,6 +21,10 @@
     UPDATE MockData set sceneid=#{sceneid}, enabled=#{enabled}, updatetime=null where id=#{id}
   </update>
 
+  <update id="activeScene" parameterType="com.frontend.mockable.MCMockInfo">
+    UPDATE MockData set sceneid=#{sceneid}, updatetime=null where id=#{id}
+  </update>
+
   <select id="findAllMock" resultType="com.frontend.mockable.MCMockInfo">
 
     SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE
@@ -76,7 +80,7 @@
   </delete>
 
   <select id="findAllScene" resultType="com.frontend.mockable.MCMockScene">
-    SELECT * FROM MockScene WHERE mockid=#{0} order by updatetime desc
+    SELECT *, b.sceneid as activeid FROM MockScene a LEFT JOIN MockData b ON a.mockid=b.id WHERE mockid=#{0} order by updatetime desc
   </select>
 
   <select id="findScene" resultType="com.frontend.mockable.MCMockScene">

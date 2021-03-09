@@ -5,7 +5,9 @@
 主要功能：
 - 远程配置
 - 日志监控
-- 网络日志抓取
+- 设备信息
+- 日志监控
+- Mock数据
 
 ## 如何使用
 
@@ -14,7 +16,14 @@
  > 密码: admin
 
 - [接口文档](SpringBoot)
-- [iOS SDK](https://github.com/BinaryParadise/Canary)
+
+## iOS SDK
+
+> 金丝雀只需要登录一次，登录信息存储在keychain中
+
+```bash
+pod 'Canary', :configurations => ['Debug']
+```
 
 ## 开发环境搭建
 

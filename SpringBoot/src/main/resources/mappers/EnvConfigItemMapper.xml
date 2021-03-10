@@ -12,11 +12,11 @@
   </select>
 
   <insert id="insertNew" parameterType="com.frontend.domain.MCEnvConfigItem">
-    INSERT INTO RemoteConfigParam(`name`, `value`, envid, `comment`, uid,`type`,`platform`, `updateTime`)
+    INSERT INTO RemoteConfigParam(`name`, `value`, envid, `comment`, uid,`type`,`platform`)
     VALUES(#{name},#{value},#{envid},#{comment},#{uid},#{type},#{platform})
   </insert>
   <insert id="copyFromEnvId">
-    INSERT INTO RemoteConfigParam(`name`,`value`,envid,`comment`,`uid`, `type`,`platform`, updateTime)
+    INSERT INTO RemoteConfigParam(`name`,`value`,envid,`comment`,`uid`, `type`,`platform`)
     SELECT `name`,`value`,#{0},`comment`,#{1},`type`,`platform` FROM RemoteConfigParam a WHERE a.envid = #{2};
   </insert>
 

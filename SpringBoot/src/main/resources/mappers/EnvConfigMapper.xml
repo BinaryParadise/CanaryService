@@ -7,7 +7,7 @@
   <resultMap id="list" type="com.frontend.domain.MCEnvConfigDetail"></resultMap>
 
   <insert id="insert" parameterType="com.frontend.domain.MCEnvConfig" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO RemoteConfig(name, comment, type, appId, uid, defaultTag, updateTime) VALUES(#{name}, #{comment},
+    INSERT INTO RemoteConfig(name, comment, type, appId, uid, defaultTag) VALUES(#{name}, #{comment},
     #{type}, #{appId},
     #{uid}, #{defaultTag} )
   </insert>

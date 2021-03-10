@@ -97,7 +97,9 @@ extension CanarySwift {
         if responseData == nil {
             notification.userInfo?["org.alamofire.notification.key.responseData"]
         }
-        storeNetworkLogger(netLog: NetLogMessage(request: request, response: response, data: responseData))
+        DispatchQueue.global().async { [weak self] in
+            self?.storeNetworkLogger(netLog: NetLogMessage(request: request, response: response, data: responseData))
+        }
     }
 
     func storeNetworkLogger(netLog: NetLogMessage) {

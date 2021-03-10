@@ -99,16 +99,18 @@ struct Result: Codable {
     }
     
     func fetchGroups(completion: (() -> Void)?) -> Void {
-        URLRequest.get(with: MockGroupURL) { [weak self] (result, error) in
-            do {
-                if result.code == 0 {
-                    self?.groups = try JSONDecoder().decode([MockGroup].self, from: result.data?.rawData() ?? Data())
-                    try self?.userDefaults.set(object: result.data?.rawData(), forKey: GroupsStore)
+        if CanaryMockURLProtocol.isEnabled {//启用Mock才需要获取配置
+            URLRequest.get(with: MockGroupURL) { [weak self] (result, error) in
+                do {
+                    if result.code == 0 {
+                        self?.groups = try JSONDecoder().decode([MockGroup].self, from: result.data?.rawData() ?? Data())
+                        try self?.userDefaults.set(object: result.data?.rawData(), forKey: GroupsStore)
+                    }
+                } catch {
+                    print("\(#file).\(#function) +\(#line) \(error)")
                 }
-            } catch {
-                print("\(#file).\(#function) +\(#line) \(error)")
+                completion?()
             }
-            completion?()
         }
     }
 }

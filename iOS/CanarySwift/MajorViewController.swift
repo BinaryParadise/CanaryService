@@ -16,9 +16,15 @@ func safeBottom() -> CGFloat {
     }
 }
 
+private enum PluginType: Int {
+    case env
+    case mock
+    case webview
+}
+
 class MajorViewController: UIViewController {
     var tableView: UITableView = UITableView(frame: .zero, style: .grouped)
-    var datas: [String] = []
+    private var datas: [[String: PluginType]] = [["环境配置": .env]]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +48,13 @@ class MajorViewController: UIViewController {
         }
         
         tableView.register(cellWithClass: UITableViewCell.self)
+                
+        if CanaryMockURLProtocol.isEnabled {
+            datas.append(["Mock数据": .mock])
+        }
+        #if DEBUG
+        datas.append(["WKWebView": .webview])
+        #endif
         
         MockManager.shared.fetchGroups {
             
@@ -55,7 +68,7 @@ class MajorViewController: UIViewController {
     }
     
     func reloadData() -> Void {
-        datas =  ["环境配置", "Mock数据", "WKWebView"]
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: CanarySwift.shared.user() == nil ? "未登录" : "设置", style: .done, target: self, action: #selector(onProfileButton))
         tableView.reloadData()
     }
@@ -82,7 +95,7 @@ extension MajorViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withClass: UITableViewCell.self)
-        cell.textLabel?.text = datas[indexPath.row]
+        cell.textLabel?.text = datas[indexPath.row].keys.first ?? ""
         cell.textLabel?.font = UIFont.systemFont(ofSize: 15)
         cell.accessoryType = .disclosureIndicator
         return cell;
@@ -90,11 +103,12 @@ extension MajorViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
-        if indexPath.row == 0 {
+        guard let type = datas[safe: indexPath.row]?.values.first else { return }
+        if type == .env {
             navigationController?.pushViewController(ConfigurationViewController(), animated: true)
-        } else if indexPath.row == 1 {
+        } else if type == .mock {
             navigationController?.pushViewController(MockDataViewController(), animated: true)
-        } else if indexPath.row == 2 {
+        } else if type == .webview {
             navigationController?.pushViewController(CanaryWebViewController(), animated: true)
         }
     }

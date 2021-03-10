@@ -78,8 +78,8 @@ extension ConfigurationItemViewController: UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withClass: ConfigurationItemViewCell.self)
         let subItem = item.subItems![indexPath.row]
-        cell.textLabel?.text = subItem.name
-        cell.detailTextLabel?.text = subItem.value
+        cell.titleLabel.text = subItem.name
+        cell.valueLabel.text = subItem.value
         cell.extraLabel.text = subItem.comment
         return cell
     }

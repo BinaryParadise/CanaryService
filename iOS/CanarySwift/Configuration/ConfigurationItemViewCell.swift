@@ -9,36 +9,37 @@ import Foundation
 import SnapKit
 
 class ConfigurationItemViewCell: UITableViewCell {
+    let titleLabel = UILabel()
+    let valueLabel = UILabel()
     let extraLabel = UILabel()
     let selectedBtn = UIButton(type: .custom)
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        textLabel?.font = UIFont(name: "DINAlternate-Bold", size: 18)
-        textLabel?.snp.makeConstraints({ (make) in
+        titleLabel.font = UIFont(name: "DINAlternate-Bold", size: 18)
+        contentView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints({ (make) in
             make.top.equalToSuperview().offset(10)
             make.left.equalToSuperview().offset(12)
         })
         
-        detailTextLabel?.font = UIFont(name: "DINCondensed", size: 16)
-        detailTextLabel?.textColor = UIColor.orange;
-        detailTextLabel?.snp.makeConstraints({ (make) in
-            make.top.equalTo(textLabel!.snp_bottom).offset(6)
+        valueLabel.font = UIFont(name: "DINCondensed", size: 16)
+        valueLabel.textColor = .orange
+        contentView.addSubview(valueLabel)
+        valueLabel.snp.makeConstraints({ (make) in
+            make.left.equalTo(titleLabel)
+            make.top.equalTo(titleLabel.snp_bottom).offset(4)
         })
         
         extraLabel.lineBreakMode = .byCharWrapping;
         extraLabel.numberOfLines = 0;
         extraLabel.font = UIFont(name: "Baskerville-Italic", size: 14)
-        extraLabel.textColor = UIColor.lightGray
+        extraLabel.textColor = .lightGray
         contentView.addSubview(extraLabel)
         extraLabel.snp.makeConstraints { (make) in
-            if let detailTextLabel = detailTextLabel {
-                make.left.equalTo(detailTextLabel)
-                make.top.equalTo(detailTextLabel.snp_bottom).offset(6)
-                make.right.lessThanOrEqualToSuperview().offset(-10)
-                make.bottom.equalToSuperview().offset(-5)
-            }
+            make.left.equalTo(valueLabel)
+            make.bottom.equalToSuperview().offset(-8)
         }
         
         // 选中状态
@@ -50,6 +51,7 @@ class ConfigurationItemViewCell: UITableViewCell {
         selectedBtn.snp.makeConstraints { (make) in
             make.centerY.equalToSuperview()
             make.right.equalToSuperview()
+            make.left.greaterThanOrEqualTo(valueLabel).offset(10)
             make.left.greaterThanOrEqualTo(extraLabel).offset(10)
         }
     }

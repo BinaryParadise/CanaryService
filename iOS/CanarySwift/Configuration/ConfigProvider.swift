@@ -50,23 +50,20 @@ public class ConfigProvider {
         var confURL = "/api/conf/full?appkey=\(CanarySwift.shared.appSecret)"
         URLRequest.get(with: confURL) { [weak self] (result, error) in
             if result.code == 0 {
-                self?.processRemoteConfig(dict: result.data)
+                self?.processRemoteConfig(data: result.data)
             }
             completion()
         }
     }
 
-    func processRemoteConfig(dict: JSON?) {
-        guard let dict = dict else { return }
-        if dict["code"].int ?? 0 == 0 {
-            do {
-                var data = dict["data"]
-                remoteConfig = try JSONDecoder().decode([ConfigGroup].self, from: data.rawData())
-                try userDefaults.set(object: data.rawData(), forKey: kMCRemoteConfig)
-                switchToCurrentConfig()
-            } catch {
-                print("\(#file).\(#function)+\(#line)\(error)")
-            }
+    func processRemoteConfig(data: JSON?) {
+        guard let data = data else { return }
+        do {
+            remoteConfig = try JSONDecoder().decode([ConfigGroup].self, from: data.rawData())
+            try userDefaults.set(object: data.rawData(), forKey: kMCRemoteConfig)
+            switchToCurrentConfig()
+        } catch {
+            print("\(#file).\(#function)+\(#line) \(error)")
         }
     }
 

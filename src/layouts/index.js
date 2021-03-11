@@ -169,6 +169,8 @@ class BasicLayout extends React.Component {
               {(user || {}).app == undefined ? "未选择应用" : user.app.name}
             </Button>
             <span style={{ float: "right" }}>
+              <a style={{ marginRight: 8, color: "orange" }} href="https://github.com/BinaryParadise/CanaryService" target="_blank">帮助</a>
+
               <Dropdown overlay={(
                 <Menu onClick={this.logout}>
                   <Menu.Item key="1">

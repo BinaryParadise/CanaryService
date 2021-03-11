@@ -9,7 +9,7 @@ export default class ProjectPage extends React.Component {
         {
             title: '应用名称',
             dataIndex: 'name',
-            width: 300,
+            width: 180,
             editable: true,
         },
         {
@@ -19,7 +19,7 @@ export default class ProjectPage extends React.Component {
         },
         {
             title: '公开',
-            width: 100,
+            width: 80,
             dataIndex: 'shared',
             render: (text) => {
                 return <Badge status={text ? 'success' : 'default'} text={text ? '公开' : '私有'} />;
@@ -28,7 +28,7 @@ export default class ProjectPage extends React.Component {
         {
             dataIndex: 'updateTime',
             title: '更新时间',
-            width: 200,
+            width: 160,
             render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
         },
         {

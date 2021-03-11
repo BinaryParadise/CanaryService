@@ -35,7 +35,7 @@ export default class IndexPage extends React.Component {
         }
       },
       {
-        title: '唯一标识',
+        title: '设备标识',
         dataIndex: 'deviceId',
         width: 380,
         render: (text, record) => {
@@ -43,17 +43,12 @@ export default class IndexPage extends React.Component {
         }
       },
       {
-        title: '操作系统/版本',
-        dataIndex: 'osVersion',
-        width: 150,
-        render: (text, record) => {
-          return record.osName + '/' + record.osVersion;
-        }
-      },
-      {
-        title: 'App版本',
+        title: 'App版本/系统版本',
         dataIndex: 'appVersion',
-        width: 100,
+        width: 180,
+        render: (text, record) => {
+          return text + "/" + record.osName + ' ' + record.osVersion;
+        }
       },
       {
         title: 'IP地址',

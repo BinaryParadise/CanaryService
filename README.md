@@ -45,9 +45,18 @@ pod 'Canary', :configurations => ['Debug']
 
 ### 日志监控（含接口调用）
 
-> 支持生成分享链接
+- 点击接口请求的日志可以查看接口**全部数据**
+- 支持生成分享链接，例如：http://127.0.0.1:8081/log/snapshot/42c5b9b93a98477ebd7c67c8fd6b7d25
 
 ![image](https://user-images.githubusercontent.com/8289395/83214834-2240e280-a198-11ea-94fc-0f0762224dff.png)
+
+![image](https://user-images.githubusercontent.com/8289395/110731294-02793780-825d-11eb-8d7e-0830680816ca.png)
+
+### Mock数据
+
+![image](https://user-images.githubusercontent.com/8289395/110731405-39e7e400-825d-11eb-8c86-3edef36f1ce6.png)
+
+![image](https://user-images.githubusercontent.com/8289395/110731469-5421c200-825d-11eb-8a61-4ea715946d80.png)
 
 
 ### 应用管理

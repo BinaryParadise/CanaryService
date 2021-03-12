@@ -13,6 +13,7 @@ class ProfileViewController: UIViewController {
 
     var loginView: LoginView?
     var infoView: InfoView?
+    var switchOn = UISwitch()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,35 @@ class ProfileViewController: UIViewController {
     
     func configView() -> Void {
         
+        let tipLabel = UILabel()
+        tipLabel.text = "Mock开关"
+        tipLabel.font = UIFont.systemFont(ofSize: 15)
+        tipLabel.textColor = UIColor(hex: 0x333333)
+        view.addSubview(tipLabel)
+        tipLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(view.readableContentGuide).offset(20)
+            make.left.equalToSuperview().offset(20)
+        }
+        
+        switchOn.isEnabled = CanarySwift.shared.user() != nil
+        switchOn.isOn = CanaryMockURLProtocol.isEnabled
+        view.addSubview(switchOn)
+        switchOn.snp.makeConstraints { (make) in
+            make.left.equalTo(tipLabel.snp.right).offset(6)
+            make.centerY.equalTo(tipLabel)
+        }
+        switchOn.addTarget(self, action: #selector(onSwitchChanged(sender:)), for: .touchUpInside)
+        
+        let warnLabel = UILabel()
+        warnLabel.textColor = .gray
+        warnLabel.text = "登录后可启用Mock"
+        warnLabel.font = UIFont.systemFont(ofSize: 12)
+        view.addSubview(warnLabel)
+        warnLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(switchOn.snp.right).offset(8)
+            make.centerY.equalTo(switchOn)
+        }
+        
         infoView?.removeFromSuperview()
         infoView = nil
         loginView?.removeFromSuperview()
@@ -35,7 +65,7 @@ class ProfileViewController: UIViewController {
             infoView?.snp.makeConstraints({ (make) in
                 make.left.equalToSuperview().offset(30)
                 make.right.equalToSuperview().offset(-30)
-                make.top.equalTo(view.readableContentGuide).offset(30)
+                make.top.equalTo(switchOn.snp.bottom).offset(16)
             })
             infoView?.logouButton.addTarget(self, action: #selector(onLogout), for: .touchUpInside)
         } else {
@@ -44,10 +74,14 @@ class ProfileViewController: UIViewController {
             loginView?.snp.makeConstraints({ (make) in
                 make.left.equalToSuperview().offset(30)
                 make.right.equalToSuperview().offset(-30)
-                make.top.equalTo(view.readableContentGuide).offset(30)
+                make.top.equalTo(switchOn.snp.bottom).offset(16)
             })
             loginView?.confirmButton.addTarget(self, action: #selector(onConfrim(sender:)), for: .touchUpInside)
         }
+    }
+    
+    @objc func onSwitchChanged(sender: UISwitch) {
+        CanaryMockURLProtocol.isEnabled = sender.isOn
     }
     
     @objc func onLogout() {

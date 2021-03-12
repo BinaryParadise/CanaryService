@@ -29,7 +29,6 @@ extension URLRequest {
                     let result = try JSONDecoder().decode(Result.self, from: data ?? Data())
                     if result.code == 401 {
                         CanarySwift.shared.logout()
-                        CanarySwift.shared.show()
                         return
                     }
                     completion?(result, error)

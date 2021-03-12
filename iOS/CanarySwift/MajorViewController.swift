@@ -24,7 +24,7 @@ private enum PluginType: Int {
 
 class MajorViewController: UIViewController {
     var tableView: UITableView = UITableView(frame: .zero, style: .grouped)
-    private var datas: [[String: PluginType]] = [["环境配置": .env]]
+    private var datas: [[String: PluginType]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,17 +48,6 @@ class MajorViewController: UIViewController {
         }
         
         tableView.register(cellWithClass: UITableViewCell.self)
-                
-        if CanaryMockURLProtocol.isEnabled {
-            datas.append(["Mock数据": .mock])
-        }
-        #if DEBUG
-        datas.append(["WKWebView": .webview])
-        #endif
-        
-        MockManager.shared.fetchGroups {
-            
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -68,8 +57,21 @@ class MajorViewController: UIViewController {
     }
     
     func reloadData() -> Void {
+        datas.removeAll()
+        datas.append(["环境配置": .env])
+        if CanaryMockURLProtocol.isEnabled {
+            datas.append(["Mock数据": .mock])
+            
+            MockManager.shared.fetchGroups {
+                
+            }
+        }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: CanarySwift.shared.user() == nil ? "未登录" : "设置", style: .done, target: self, action: #selector(onProfileButton))
+        #if DEBUG
+        datas.append(["WKWebView": .webview])
+        #endif
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "设置", style: .done, target: self, action: #selector(onProfileButton))
         tableView.reloadData()
     }
     

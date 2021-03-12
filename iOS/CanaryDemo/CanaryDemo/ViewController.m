@@ -48,7 +48,7 @@
 - (IBAction)showNetworking:(id)sender {
     
 //    NSLog(@"%@", NSURLSessionConfiguration.defaultSessionConfiguration.protocolClasses);
-    
+    self.textView.text = @"请求中...";
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration];
     manager.requestSerializer = AFHTTPRequestSerializer.serializer;
     manager.responseSerializer = AFJSONResponseSerializer.serializer;
@@ -70,7 +70,7 @@
 
 - (IBAction)showNetworkingParam:(id)sender {
 //    NSLog(@"%@", NSURLSessionConfiguration.defaultSessionConfiguration.protocolClasses);
-        
+    self.textView.text = @"请求中...";
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration];
     manager.requestSerializer = AFHTTPRequestSerializer.serializer;
     manager.responseSerializer = AFJSONResponseSerializer.serializer;

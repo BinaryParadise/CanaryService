@@ -21,9 +21,13 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
     var sessionTask: URLSessionDataTask?
     var receiveData: Data?
     var mockedURL: URL?
-    @objc public static var isEnabled: Bool = false {
-        didSet {
-            if isEnabled {
+    @objc public static var isEnabled: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "Canary.MockEnabled")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "Canary.MockEnabled")
+            if newValue {
                 URLProtocol.registerClass(self)
                 URLSessionConfiguration.setupSwizzledSessionConfiguration()
             } else {
@@ -49,7 +53,7 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
     if URLProtocol.property(forKey: Constants.RequestHandledKey, in: request) as? Bool ?? false {
         return false;
     }
-    if ["http", "https"].contains(request.url?.scheme ?? "") {
+    if isEnabled && ["http", "https"].contains(request.url?.scheme ?? "") {
         return MockManager.shared.checkIntercept(for: request).should
     }
     return false
@@ -177,15 +181,23 @@ extension URLSessionConfiguration {
   
   @objc class func swizzledDefaultSessionConfiguration() -> URLSessionConfiguration {
     let configuration = swizzledDefaultSessionConfiguration()
-    configuration.protocolClasses?.insert(CanaryMockURLProtocol.self, at: 0)
-//    URLProtocol.registerClass(CanaryMockURLProtocol.self)
+    if CanaryMockURLProtocol.isEnabled {
+        configuration.protocolClasses?.removeFirst(where: { (cls) -> Bool in
+            return cls == CanaryMockURLProtocol.self
+        })
+        configuration.protocolClasses?.insert(CanaryMockURLProtocol.self, at: 0)
+    }
     return configuration
   }
   
   @objc class func swizzledEphemeralSessionConfiguration() -> URLSessionConfiguration {
     let configuration = swizzledEphemeralSessionConfiguration()
-    configuration.protocolClasses?.insert(CanaryMockURLProtocol.self, at: 0)
-//    URLProtocol.registerClass(CanaryMockURLProtocol.self)
+    if CanaryMockURLProtocol.isEnabled {
+        configuration.protocolClasses?.removeFirst(where: { (cls) -> Bool in
+            return cls == CanaryMockURLProtocol.self
+        })
+        configuration.protocolClasses?.insert(CanaryMockURLProtocol.self, at: 0)
+    }
     return configuration
   }
 }

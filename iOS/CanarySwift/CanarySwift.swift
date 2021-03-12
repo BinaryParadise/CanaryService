@@ -25,6 +25,13 @@ import SwiftyJSON
     private var nav: UINavigationController?
         
     @objc public static let shared = CanarySwift()
+    
+    public override init() {
+        if UserDefaults.standard.bool(forKey: "Canary.MockEnabled") {
+            CanaryMockURLProtocol.isEnabled = true
+        }
+    }
+    
     @objc public func show() {
         assert(baseURL != nil, "请初始化baseURL")
         assert(deviceId != nil, "请初始化deviceId")
@@ -53,6 +60,7 @@ import SwiftyJSON
     }
     
     func logout() -> Void {
+        CanaryMockURLProtocol.isEnabled = false
         _user = nil
         let kc = Keychain(server: ServerHostKey, protocolType: .http)
         do {

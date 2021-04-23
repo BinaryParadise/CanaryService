@@ -1,6 +1,6 @@
 # 金丝雀
 
-一个简单的工具平台，只在提示开发测试工作效率。
+研发工具平台，旨在提示开发测试效率。
 
 > [反馈和建议](https://github.com/BinaryParadise/CanaryService/issues)
 
@@ -12,11 +12,17 @@
 
 ## Web
 
+> umijs、nodejs
+
 ```bash
 
 管理员账号: admin（默认）
 密码: admin（默认）
 ```
+
+## API
+
+> SpringBoot
 
 ## iOS SDK
 
@@ -25,7 +31,8 @@
 ```bash
 pod 'Canary', :configurations => ['Debug']
 ```
-待补充...
+
+[接入指南](iOS/README.md)
 
 ## 功能点预览
 

@@ -21,6 +21,9 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
     var sessionTask: URLSessionDataTask?
     var receiveData: Data?
     var mockedURL: URL?
+    fileprivate static let swizzledSession: Void = {
+        URLSessionConfiguration.setupSwizzledSessionConfiguration()
+    }()
     @objc public static var isEnabled: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "Canary.MockEnabled")
@@ -29,7 +32,7 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
             UserDefaults.standard.set(newValue, forKey: "Canary.MockEnabled")
             if newValue {
                 URLProtocol.registerClass(self)
-                URLSessionConfiguration.setupSwizzledSessionConfiguration()
+                swizzledSession
             } else {
                 URLProtocol.unregisterClass(self)
             }
@@ -161,10 +164,9 @@ extension InputStream {
     return result
   }
 }
-
 /// swift swizzle：https://gist.github.com/kashiftriffort/b5f6d2db595ff16dfc00f20cc9305736
 extension URLSessionConfiguration {
-  
+
   @objc static func setupSwizzledSessionConfiguration() {    
     guard self == URLSessionConfiguration.self else {
       return

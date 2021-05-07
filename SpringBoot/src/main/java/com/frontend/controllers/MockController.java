@@ -84,6 +84,7 @@ public class MockController {
   @PostMapping("/group/update")
   public MCResult updateGroup(@RequestBody MCMockGroup group) {
     try {
+      group.setAppid(Global.getUser().getApp().getId());
       group.setUid(Global.getUser().getId());
       mockMapper.updateGroup(group);
       Global.update();

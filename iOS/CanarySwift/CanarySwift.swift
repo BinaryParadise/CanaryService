@@ -32,6 +32,12 @@ import SwiftyJSON
         }
     }
     
+    func setup() {
+        if CanaryMockURLProtocol.isEnabled {
+            MockManager.shared.fetchGroups(completion: nil)
+        }
+    }
+    
     @objc public func show() {
         assert(baseURL != nil, "请初始化baseURL")
         assert(deviceId != nil, "请初始化deviceId")
@@ -73,6 +79,7 @@ import SwiftyJSON
 
 extension CanarySwift {
     @objc public func startLogger(domain: String? = nil, customProfile: (() -> [String: Any])? = nil) {
+        setup()
         LoggerManager.shared.customProfile = customProfile
         if let domain = domain {
             let url = URL(string: domain)!

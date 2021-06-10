@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>WebSocketTest</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        var websocket;
+        var count = 100;
+        function WebSocketTest() {
+            if ("WebSocket" in window) {
+                console.log("您的浏览器支持 WebSocket!");
+
+                // 打开一个 web socket
+                var ws = new WebSocket("ws://127.0.0.1:8081/v3/channel/web/7d1e1d7e-c9b7-11eb-b8bc-0242ac130003", ["dts"]);
+
+                ws.onopen = function () {
+                    // Web Socket 已连接上，使用 send() 方法发送数据
+                    ws.send(new ArrayBuffer(JSON.stringify({type: 1})));
+                };
+
+                ws.onmessage = function (evt) {
+                    var received_msg = evt.data;
+                    console.log("接收：" + received_msg);
+                };
+
+                ws.onclose = function (e) {
+                    // 关闭 websocket
+                    console.info("连接已关闭...", e);
+                };
+                websocket = ws
+            }
+
+            else {
+                // 浏览器不支持 WebSocket
+                console.warn("您的浏览器不支持 WebSocket!");
+            }
+        }
+
+        WebSocketTest()
+
+        function sendMsg() {
+            if (count++ > 0) {                
+                websocket.send("发送: " + new Date())
+            }
+        }
+    </script>
+
+    <button style="width:100px;height:60px" onclick="sendMsg()">发送消息</button>
+</body>
+
+</html>

@@ -27,18 +27,17 @@ ServerArgument.main()
 // This 'handler' function can be referenced directly in the configuration below.
 func handler(request: HTTPRequest, response: HTTPResponse) {
     // Respond with a simple message.
-    response.setHeader(.contentType, value: "text/html")
-    response.appendBody(string: "<html><title>Hello, world!</title><body>Hello, world!</body></html>")
-    // Ensure that response.completed() is called when your processing is done.
-    response.completed()
+    
 }
 
+print(CommandLine.arguments)
+
+let _ = HomeController()
 // Configure one server which:
 //    * Serves the hello world message at <host>:<port>/
 //    * Serves static files out of the "./webroot"
 //        directory (which must be located in the current working directory).
 //    * Performs content compression on outgoing data when appropriate.
-routes.add(method: .get, uri: "/", handler: handler)
 routes.add(method: .get, uri: "/**",
            handler: StaticFileHandler(documentRoot: "./Resources.bundle", allowResponseFilters: true).handleRequest)
 

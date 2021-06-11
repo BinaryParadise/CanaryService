@@ -30,8 +30,10 @@ struct ServerArgument: ParsableCommand {
         if let addr = addr {
             listenAddr = addr
         }
-        if let ctx = contextPath {
-            routes = Routes(baseUri: ctx)
-        }
+
+        routes = Routes(baseUri: contextPath ?? "", handler: { request, response in
+            response.setHeader(.server, value: "Canary/Perfect1.0")
+            response.next()
+        })
     }
 }

@@ -11,11 +11,28 @@ import PerfectHTTP
 import PerfectLib
 import PerfectWebSockets
 import Rainbow
+import SwiftyJSON
+
+struct DTSDevice: Codable {
+    var ipAddrs: JSON?
+    var simulator: Bool
+    var appVersion: String
+    var osName: String
+    var osVersion: String
+    var modelName: String
+    var name: String
+    var profile: JSON?
+}
 
 struct DTSMessage: Codable {
     var code: Int
-    var data: Dictionary<String, AnyObject>
+    var data: JSON?
     var message: String?
+    var type: Action
+    
+    enum Action: Int, Codable {
+        case device = 10
+    }
 }
 
 class WebSocketController {
@@ -34,11 +51,13 @@ class WebSocketController {
     class DTSHandler: WebSocketSessionHandler {
         var socketProtocol: String?
         var _socket: WebSocket?
+        var appSecret: String?
         
         func handleSession(request req: HTTPRequest, socket: WebSocket) {
             print("handshake: \(socket)")
             _socket = socket
             if socket.isConnected {
+                appSecret = req.header(.custom(name: "app-secret"))
                 handleMessage()
             }
         }

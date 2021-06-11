@@ -35,7 +35,9 @@ class CanaryWebSocket: NSObject {
     func start() {
         mySocket?.disconnect()
         let fullURL = URL(string: "\(webSocketURL)/\(UIDevice.current.systemName)/\(CanarySwift.shared.deviceId!)")
-        mySocket = WebSocket(request: URLRequest(url: fullURL!))
+        var mreq = URLRequest(url: fullURL!)
+        mreq.setValue(CanarySwift.shared.appSecret, forHTTPHeaderField: "app-secret")
+        mySocket = WebSocket(request: mreq)
         mySocket?.delegate = self
         
         if pingTimer == nil {

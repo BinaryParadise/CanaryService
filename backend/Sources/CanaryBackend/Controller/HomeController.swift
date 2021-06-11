@@ -20,7 +20,9 @@ class HomeController {
     @Mapping(path: "/info", method: .get)
     var info: RequestHandler = { request, response in
         response.setHeader(.contentType, value: "application/json")
-        let _ = try? response.setBody(json: ["version": "1.0", "timestamp": UInt64(Date().timeIntervalSince1970*1000)])
+        let _ = try? response.setBody(json: ["version": "1.0",
+                                             "server": "Canary/Perfect1.0",
+                                             "timestamp": UInt64(Date().timeIntervalSince1970*1000)])
         response.completed()
     }
 }

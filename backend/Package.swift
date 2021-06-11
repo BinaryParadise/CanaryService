@@ -22,6 +22,7 @@ let package = Package(
 				"PerfectWebSockets",
                 "Networking",
                 "Rainbow",
+                "SwiftyJSON",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
 			],
             resources: [.process("Resources.bundle")]

@@ -102,11 +102,11 @@
       },
       {
         "package": "SwiftyJSON",
-        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+        "repositoryURL": "https://github.com/BinaryParadise/SwiftyJSON.git",
         "state": {
-          "branch": null,
-          "revision": "b3dcd7dbd0d488e1a7077cb33b00f2083e382f07",
-          "version": "5.0.1"
+          "branch": "master",
+          "revision": "20f450f29e3db88fce3685b2a29e2c6e5fa29c6c",
+          "version": null
         }
       }
     ]

@@ -23,7 +23,7 @@ class LoggerManager: NSObject {
     
     func addTTYLogger(dict:[String : Any], timestamp: TimeInterval) -> Void {
         if CanaryWebSocket.shared.isReady() {
-            let message = WebSocketMessage(type: .logger)
+            var message = ProtoMessage(type: .log)
             var mdict = dict
             mdict["appVersion"] = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
             mdict["timestamp"] = timestamp*1000
@@ -35,10 +35,8 @@ class LoggerManager: NSObject {
     }
     
     func register(webSocket: CanaryWebSocket) {
-        let msg = WebSocketMessage(type: .registerDevice)
-        let device = DeviceMessage()
-        device.deviceId = CanarySwift.shared.deviceId
-        device.appKey = CanarySwift.shared.appSecret;
+        var msg = ProtoMessage(type: .register)
+        var device = ProtoDevice(deviceId: CanarySwift.shared.deviceId ?? "")
         var dict: [String : JSON] = [:]
         customProfile?().forEach({ (key, value) in
             dict[key] = JSON(value)
@@ -58,7 +56,7 @@ extension LoggerManager: WebSocketMessageProtocol {
         register(webSocket: webSocket)
     }
     
-    func webSocket(webSocket: CanaryWebSocket, didReceive message: WebSocketMessage) {
+    func webSocket(webSocket: CanaryWebSocket, didReceive message: ProtoMessage) {
         if message.type == .update {
             //更新Mock配置
             MockManager.shared.fetchGroups(completion: nil)

@@ -13,6 +13,8 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.4.0"),
         .package(url: "https://github.com/onevcat/Rainbow", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/BinaryParadise/SwiftyJSON.git", .branch("master")),
+        .package(name: "PerfectSQLite", url: "https://github.com/PerfectlySoft/Perfect-SQLite.git", from: "4.0.0"),
+        .package(name: "CanaryProto", path: "../common/CanaryProto"),
 	],
 	targets: [
         .target(
@@ -23,9 +25,10 @@ let package = Package(
                 "Networking",
                 "Rainbow",
                 "SwiftyJSON",
+                "CanaryProto",
+                "PerfectSQLite",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
-			],
-            resources: [.process("Resources.bundle")]
+			]
         ),
         .target(
 			name: "Networking",

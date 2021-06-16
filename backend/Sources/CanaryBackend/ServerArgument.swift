@@ -8,32 +8,31 @@
 import ArgumentParser
 import Networking
 import PerfectHTTP
+import Foundation
 
-var listenPort: Int = 8081
-var listenAddr: String = "127.0.0.1"
+var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "", sqlite: "./canary.db")
 
 struct ServerArgument: ParsableCommand {
     
-    @Option(name: .shortAndLong, help: "本地监听端口")
-    var port: Int?
-    
-    @Option(name: .shortAndLong, help: "本地监听地址")
-    var addr: String?
-    
-    @Option(name: .shortAndLong, help: "上下文路径")
-    var contextPath: String?
+    @Option(name: .shortAndLong, help: "配置文件路径")
+    var config: String
     
     func run() throws {
-        if let port = port {
-            listenPort = port
+        
+        if FileManager.default.fileExists(atPath: config) {
+            do {
+                conf = try JSONDecoder().decode(ServerConfig.self, from: Data(contentsOf: URL(fileURLWithPath: config)))
+            } catch {
+                print("\(error)".red)
+            }
+            
+            routes = Routes(baseUri: conf.path ?? "", handler: { request, response in
+                response.setHeader(.server, value: "Canary/Perfect1.0")
+                response.next()
+            })
+        } else {
+            print("config file `\(config)` not found".red)
+            Thread.exit()
         }
-        if let addr = addr {
-            listenAddr = addr
-        }
-
-        routes = Routes(baseUri: contextPath ?? "", handler: { request, response in
-            response.setHeader(.server, value: "Canary/Perfect1.0")
-            response.next()
-        })
     }
 }

@@ -11,36 +11,18 @@ import PerfectHTTP
 import PerfectLib
 import PerfectWebSockets
 import Rainbow
-import SwiftyJSON
-
-struct DTSDevice: Codable {
-    var ipAddrs: JSON?
-    var simulator: Bool
-    var appVersion: String
-    var osName: String
-    var osVersion: String
-    var modelName: String
-    var name: String
-    var profile: JSON?
-}
-
-struct DTSMessage: Codable {
-    var code: Int
-    var data: JSON?
-    var message: String?
-    var type: Action
-    
-    enum Action: Int, Codable {
-        case device = 10
-    }
-}
+import CanaryProto
 
 class WebSocketController {
+    static var clients: [String : DTSHandler] = [:]
+
     @Mapping(path: "/channel/{platform}/{deviceid}")
     var handshake: RequestHandler = { request, response in
-        if let deviceid = request.urlVariables["deviceid"] {
+        if let secret = request.header(.custom(name: "app-secret")) {
             WebSocketHandler { req, protocols in
-                return DTSHandler()
+                var handler = DTSHandler()
+                clients[req.urlVariables["deviceid"] ?? ""] = handler
+                return handler
             }.handleRequest(request: request, response: response)
         } else {
             // 路径错误
@@ -50,30 +32,54 @@ class WebSocketController {
         
     class DTSHandler: WebSocketSessionHandler {
         var socketProtocol: String?
-        var _socket: WebSocket?
+        var socket: WebSocket?
         var appSecret: String?
+        var device: ProtoDevice?
         
         func handleSession(request req: HTTPRequest, socket: WebSocket) {
-            print("handshake: \(socket)")
-            _socket = socket
+            self.socket = socket
             if socket.isConnected {
                 appSecret = req.header(.custom(name: "app-secret"))
+                print("handshake: \(appSecret ?? "")")
                 handleMessage()
             }
         }
         
         func handleMessage() {
-            _socket?.readBytesMessage(continuation: { [weak self] data, optype, ret in
-                do {
-                    let msg = try JSONDecoder().decode(DTSMessage.self, from: Data(data ?? []))
-                } catch {
-                    print("\(error)".red)
-                }
+            self.socket?.readBytesMessage(continuation: { [weak self] data, optype, ret in
+                guard let self = self else { return }
                 if optype == .close || optype == .invalid {
-                    self?._socket?.close()
-                    self?._socket = nil
+                    if let device = self.device {
+                        WebSocketController.clients.removeValue(forKey: device.deviceId)
+                        print("设备离线: \(device.deviceId), 共计【\(WebSocketController.clients.count)】在线".cyan)
+                    }
+                    self.socket?.close()
+                    self.socket = nil
                 } else {
-                    self?.handleMessage()
+                    do {
+                        let msg = try JSONDecoder().decode(ProtoMessage.self, from: Data(data ?? []))
+                        switch msg.type {
+                        case .connected:
+                            break
+                        case .update:
+                            break
+                        case .register:
+                            let isNew = self.device == nil
+                            self.device = try? JSONDecoder().decode(ProtoDevice.self, from: msg.data?.rawData() ?? Data())
+                            if let device = self.device {
+                                WebSocketController.clients[device.deviceId] = self
+                                print("设备\(isNew ? "连接":"更新"): \(device.deviceId), 共计【\(WebSocketController.clients.count)】在线".cyan)
+                            }
+                        case .list:
+                            break
+                        case .log:
+                            break
+                        }
+                    } catch {
+                        print("\(optype) \(error)".red)
+                    }
+                    
+                    self.handleMessage()
                 }
             })
         }

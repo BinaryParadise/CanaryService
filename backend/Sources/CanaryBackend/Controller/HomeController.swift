@@ -8,6 +8,7 @@
 import Foundation
 import Networking
 import PerfectHTTP
+import Rainbow
 
 class HomeController {
     @Mapping(path: "/", method: .get)
@@ -15,6 +16,7 @@ class HomeController {
         response.setHeader(.contentType, value: "text/html")
         response.appendBody(string: "<html><title>Hello, world!</title><body>Hello, world!<br/>\(Date())</body></html>")
         response.completed()
+        print("xxx".red)
     }
     
     @Mapping(path: "/info", method: .get)

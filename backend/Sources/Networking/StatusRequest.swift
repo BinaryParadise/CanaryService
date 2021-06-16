@@ -8,19 +8,13 @@
 import Foundation
 import PerfectHTTP
 
-public struct ContentFilter: HTTPResponseFilter {
+public struct ContentFilter: HTTPRequestFilter {
     public init() {
         
     }
-    public func filterHeaders(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
-        callback(.continue)
-    }
     
-    public func filterBody(response: HTTPResponse, callback: (HTTPResponseFilterResult) -> ()) {
-        if response.header(.contentType) != "application/json" {
-            response.setHeader(.contentType, value: "text/html;charset=utf-8")
-        }
-        callback(.continue)
+    public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
+        callback(.continue(request, response))
     }
     
     

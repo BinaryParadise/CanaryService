@@ -9,61 +9,14 @@
 import Foundation
 import SwiftyJSON
 
-enum MessageType: Int, Codable {
-    /// 数据需要更新
-    case update = 2
-    /// 注册设备信息
-    case registerDevice = 10
-    //数据库查询请求
-    case dbQuery    = 20
-    /// 数据库查询结果
-    case dbResult   = 21
-    /// 本地日志
-    case logger  = 30
-};
-
-class WebSocketMessage: Codable {
-    var type: MessageType
-    /**
-     0: 成功
-     -1: 失败
-     >0: 业务代码
-     */
-    var code: Int
-    var msg: String?
-    var data: JSON?
-    var appKey: String?
-
-    /**
-     是否已处理，默认为NO
-     */
-    var processed: Bool?
-    
-    init(type: MessageType) {
-        code = 0
-        appKey = CanarySwift.shared.appSecret
-        self.type = type
-    }
-}
-
-class DeviceMessage: Codable {
-    var name: String?
-    var deviceId: String?
-    var ipAddrs: [String: [String:String]]?
-    var appKey: String?
-    var appVersion: String?
-    var osName: String?
-    var osVersion: String?
-    var modelName: String?
-    var profile: [String : JSON]?
-    var simulator: Bool
-    
-    init() {
+extension ProtoDevice {
+    init(deviceId: String) {
+        self.deviceId = deviceId
         name = UIDevice.current.name
         osName = UIDevice.current.systemName
         osVersion = UIDevice.current.systemVersion
         modelName = UIDevice.current.localizedModel
-        appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String
+        appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
         simulator = TARGET_OS_SIMULATOR == 1
         ipAddrs = ipAddress()
     }

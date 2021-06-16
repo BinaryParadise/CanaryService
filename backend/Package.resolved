@@ -2,7 +2,7 @@
   "object": {
     "pins": [
       {
-        "package": "COpenSSL",
+        "package": "Perfect-COpenSSL",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-COpenSSL.git",
         "state": {
           "branch": null,
@@ -11,7 +11,16 @@
         }
       },
       {
-        "package": "PerfectCrypto",
+        "package": "Perfect-CRUD",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CRUD.git",
+        "state": {
+          "branch": null,
+          "revision": "5a947634b7ce0b991e8f455a61ce02449f2e6f36",
+          "version": "1.2.3"
+        }
+      },
+      {
+        "package": "Perfect-Crypto",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Crypto.git",
         "state": {
           "branch": null,
@@ -20,7 +29,7 @@
         }
       },
       {
-        "package": "PerfectCZlib",
+        "package": "Perfect-CZlib-src",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CZlib-src.git",
         "state": {
           "branch": null,
@@ -29,7 +38,7 @@
         }
       },
       {
-        "package": "PerfectHTTP",
+        "package": "Perfect-HTTP",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-HTTP.git",
         "state": {
           "branch": null,
@@ -38,7 +47,7 @@
         }
       },
       {
-        "package": "PerfectHTTPServer",
+        "package": "Perfect-HTTPServer",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-HTTPServer.git",
         "state": {
           "branch": null,
@@ -47,7 +56,7 @@
         }
       },
       {
-        "package": "PerfectNet",
+        "package": "Perfect-Net",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Net.git",
         "state": {
           "branch": null,
@@ -56,7 +65,16 @@
         }
       },
       {
-        "package": "PerfectThread",
+        "package": "Perfect-SQLite",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SQLite.git",
+        "state": {
+          "branch": null,
+          "revision": "7cbca35c94c68783d4cfaab15ab39dcab3eb3cba",
+          "version": "4.1.0"
+        }
+      },
+      {
+        "package": "Perfect-Thread",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Thread.git",
         "state": {
           "branch": null,
@@ -65,7 +83,7 @@
         }
       },
       {
-        "package": "PerfectWebSockets",
+        "package": "Perfect-WebSockets",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-WebSockets.git",
         "state": {
           "branch": null,

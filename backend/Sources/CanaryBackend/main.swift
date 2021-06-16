@@ -21,6 +21,7 @@ import PerfectHTTP
 import PerfectHTTPServer
 import Networking
 
+print(CommandLine.arguments)
 ServerArgument.main()
 
 // An example request handler.
@@ -29,8 +30,6 @@ func handler(request: HTTPRequest, response: HTTPResponse) {
     // Respond with a simple message.
     
 }
-
-print(CommandLine.arguments)
 
 let _ = HomeController()
 // Configure one server which:
@@ -44,9 +43,12 @@ routes.add(method: .get, uri: "/**",
 let _ = WebSocketController()
 let _ = ProjectController()
 
-try? HTTPServer.launch(name: listenAddr,
-                       port: listenPort,
+try? HTTPServer.launch(name: conf.name,
+                       port: conf.port,
                       routes: routes,
+                      requestFilters: [
+                        (ContentFilter(), .high)
+                      ],
                       responseFilters: [
-                        (ContentFilter(), .high),
-                        (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)]).wait()
+                        (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)
+                      ]).wait()

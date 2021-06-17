@@ -77,7 +77,9 @@ class BasicLayout extends React.Component {
   }
 
   componentDidMount() {
-
+    if (localStorage.getItem("user") == null) {
+      router.push('/login')
+    }
   }
 
   render() {

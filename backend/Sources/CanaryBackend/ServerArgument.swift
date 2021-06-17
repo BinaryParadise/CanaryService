@@ -10,29 +10,33 @@ import Networking
 import PerfectHTTP
 import Foundation
 
-var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "", sqlite: "./canary.db")
+let folder = "/usr/local/etc/canary"
+var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "db/canary.db")
 
 struct ServerArgument: ParsableCommand {
     
     @Option(name: .shortAndLong, help: "配置文件路径")
-    var config: String
+    var config: String?
     
     func run() throws {
-        
-        if FileManager.default.fileExists(atPath: config) {
+        if let config = config, FileManager.default.fileExists(atPath: "\(folder)/\(config)") {
             do {
                 conf = try JSONDecoder().decode(ServerConfig.self, from: Data(contentsOf: URL(fileURLWithPath: config)))
             } catch {
                 print("\(error)".red)
             }
             
-            routes = Routes(baseUri: conf.path ?? "", handler: { request, response in
-                response.setHeader(.server, value: "Canary/Perfect1.0")
-                response.next()
-            })
+            
         } else {
-            print("config file `\(config)` not found".red)
-            Thread.exit()
+            print("Can't find config file, use default".yellow)
         }
+        
+        baseUri = conf.path ?? ""
+        
+        let _ = try? FileManager.default.createDirectory(at: URL(fileURLWithPath: "\(folder)/\(conf.sqlite)".deletingLastFilePathComponent), withIntermediateDirectories: true, attributes: nil)
+        routes = Routes(baseUri: conf.path ?? "", handler: { request, response in
+            response.setHeader(.server, value: "Canary/Perfect1.0")
+            response.next()
+        })
     }
 }

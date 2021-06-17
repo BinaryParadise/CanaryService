@@ -15,6 +15,7 @@ let package = Package(
         .package(url: "https://github.com/BinaryParadise/SwiftyJSON.git", .branch("master")),
         .package(name: "PerfectSQLite", url: "https://github.com/PerfectlySoft/Perfect-SQLite.git", from: "4.0.0"),
         .package(name: "CanaryProto", path: "../common/CanaryProto"),
+        .package(name: "PerfectSession", url:"https://github.com/PerfectlySoft/Perfect-Session.git", from: "3.0.0"),
 	],
 	targets: [
         .target(
@@ -22,17 +23,13 @@ let package = Package(
             dependencies: [
 				"PerfectHTTPServer",
 				"PerfectWebSockets",
-                "Networking",
                 "Rainbow",
                 "SwiftyJSON",
                 "CanaryProto",
                 "PerfectSQLite",
+                "PerfectSession",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
 			]
         ),
-        .target(
-			name: "Networking",
-			dependencies: ["PerfectHTTPServer"]
-		)
 	]
 )

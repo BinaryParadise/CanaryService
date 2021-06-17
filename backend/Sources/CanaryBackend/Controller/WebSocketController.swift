@@ -17,7 +17,7 @@ class WebSocketController {
     static var clients: [String : DTSHandler] = [:]
 
     @Mapping(path: "/channel/{platform}/{deviceid}")
-    var handshake: RequestHandler = { request, response in
+    var handshake: ResultHandler = { request, response in
         if let secret = request.header(.custom(name: "app-secret")) {
             WebSocketHandler { req, protocols in
                 var handler = DTSHandler()
@@ -28,6 +28,7 @@ class WebSocketController {
             // 路径错误
             response.completed(status: .forbidden)
         }
+        return nil
     }
         
     class DTSHandler: WebSocketSessionHandler {

@@ -36,6 +36,13 @@ class NormalLoginForm extends React.Component {
         })
     }
 
+    componentDidMount() {
+        if (localStorage.getItem("user") != null) {
+            router.push('/')
+            return
+        }
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
         return (

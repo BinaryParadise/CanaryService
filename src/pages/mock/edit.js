@@ -55,7 +55,7 @@ class MockEditForm extends React.Component {
         var group = { appid: this.state.appid, name: value }
         return axios.post('/mock/group/update', group).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
 

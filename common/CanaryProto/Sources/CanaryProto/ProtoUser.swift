@@ -17,6 +17,7 @@ public struct ProtoUser: Codable {
     public var rolelevel: Int
     public var expire: TimeInterval
     public var app: ProtoProject?
+    public var app_id: Int?
     
     public var invalid: Bool {
         return expire <= Date().timeIntervalSince1970 * 1000

@@ -9,6 +9,7 @@ import PerfectHTTP
 import CanaryProto
 import Rainbow
 import PerfectSession
+import SwiftyJSON
 
 let AccessToken = "Canary-Access-Token"
 
@@ -85,10 +86,42 @@ public struct ContentFilter: HTTPRequestFilter {
 public extension HTTPRequest {
     var postDictionary: [String : AnyHashable] {
         do {
-            return try JSONSerialization.jsonObject(with: postBodyString!.data(using: .utf8) ?? Data(), options: .mutableLeaves) as? [String : AnyHashable] ?? [:]
+            return try JSON(postBodyString?.jsonDecode() as Any).dictionaryObject as? [String : AnyHashable] ?? [:]
         } catch {
             print("\(error)".red)
         }
         return [:]
+    }
+    
+    var getDictionary: [String : String] {
+        var params: [String : String] = [:]
+        queryParams.forEach { key, value in
+            params[key] = value
+        }
+        return params
+    }
+    
+    var uid: Int {
+        return Int(session?.userid ?? "0")!
+    }
+    
+    var pid: Int {
+        return (session?.data["user"] as? ProtoUser)?.app_id ?? 0
+    }
+    
+    func intParamValue(_ name: String) -> Int {
+        if method == .get {
+            return getDictionary.intValue(name)
+        } else {
+            return postDictionary.intValue(name)
+        }
+    }
+    
+    func stringParamValue(_ name: String) -> String {
+        if method == .get {
+            return getDictionary.stringValue(name)
+        } else {
+            return postDictionary.stringValue(name)
+        }
     }
 }

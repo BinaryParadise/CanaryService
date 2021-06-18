@@ -28,7 +28,7 @@ struct ServerArgument: ParsableCommand {
             
             
         } else {
-            print("Can't find config file, use default".yellow)
+            print("Have none config file, use default.".yellow)
         }
         
         baseUri = conf.path ?? ""

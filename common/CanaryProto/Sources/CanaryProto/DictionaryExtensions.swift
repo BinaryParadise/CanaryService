@@ -60,4 +60,8 @@ public extension Dictionary {
     var data: Data? {
         return try? JSON(self).rawData()
     }
+    
+    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        return try JSONDecoder().decode(type, from: data ?? Data())
+    }
 }

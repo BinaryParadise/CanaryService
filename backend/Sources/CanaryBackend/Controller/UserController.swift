@@ -23,8 +23,8 @@ class UserController {
             let token = try UserMapper.shared.login(username: username, password: password, agent: agent)
             if var user = UserMapper.shared.findByLogin(args: username, password, agent, token, Date.currentTimeMillis) {
                 request.session?.userid = user.stringValue("uid")
-                user["app"] = ProjectMapper.shared.findBy(appId: user.intValue("app_id"))
-                return ProtoResult(data: JSON(user))
+                user["app"] = try ProjectMapper.shared.findBy(appId: user.intValue("app_id"))
+                return ProtoResult(entry: user)
             } else {
                 return ProtoResult(.custom("用户名或密码错误"))
             }
@@ -37,9 +37,9 @@ class UserController {
     @Mapping(path: "/user/change/app", method: .post)
     var change: ResultHandler = { request, response in
         let args = request.postDictionary
-        UserMapper.shared.changeApp(uid: args.intValue("uid"), pid: args.intValue("id"))
-        var result = UserMapper.shared.findByLogin(args: request.header(.custom(name: AccessToken))!)
-        result?["app"] = ProjectMapper.shared.findBy(appId: args.intValue("id"))
-        return ProtoResult(data: JSON(result))
+        try UserMapper.shared.changeApp(uid: args.intValue("uid"), pid: args.intValue("id"))
+        var user = UserMapper.shared.findByToken(token: request.header(.custom(name: AccessToken))!, agent: request.header(.userAgent) ?? "unknown")
+        user?.app = try? ProjectMapper.shared.findBy(appId: args.intValue("id"))?.decode(ProtoProject.self)
+        return ProtoResult(entry: try JSONEncoder().encode(user))
     }
 }

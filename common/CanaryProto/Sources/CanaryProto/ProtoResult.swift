@@ -40,7 +40,7 @@ public enum ProtoError: Hashable, Codable {
         case .none: return ""
         case .unauthorized: return "登录状态失效"
         case .denied: return "Permission denied"
-        case .system: return "逻辑错误"
+        case .system: return "系统错误"
         case .param: return "参数错误"
         case .db: return "数据库错误"
         case .custom(let str): return str
@@ -64,7 +64,11 @@ public struct ProtoResult: Codable {
         }
     }
     
-    public init(data: JSON?) {
-        self.data = data
+    public init(entry: Any) {
+        if entry is String || entry is Data || entry is Dictionary<String, Any> || entry is Array<Any> {
+            self.data = JSON(entry)
+        } else {
+            self.data = entry as? JSON
+        }
     }
 }

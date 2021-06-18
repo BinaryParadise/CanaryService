@@ -137,7 +137,7 @@ class BasicLayout extends React.Component {
             >
               <Menu.Item key="/env">
                 <Icon type="setting" />
-                <span>环境切换</span>
+                <span>环境配置</span>
               </Menu.Item>
               <Menu.Item key="/device">
                 <Icon type="hdd" />

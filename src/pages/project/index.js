@@ -126,6 +126,10 @@ export default class ProjectPage extends React.Component {
     }
 
     submit = (values, callback) => {
+        if (values.id == undefined) {
+            values.id = 0
+            values.identify = "unknown"
+        }
         return axios.post('/project/update', values).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")

@@ -11,6 +11,7 @@ import PerfectSQLite
 enum ColumnType: Int {
     case int = 1
     case text = 3
+    case boolean = 4
     case null = 5
 }
 
@@ -29,13 +30,7 @@ class DBManager {
     func execute(statement: String ,args: [Any] = []) throws {
         log(statement: statement, args: args)
         try? db?.execute(statement: statement, doBindings: { stmt in
-            for (index, item) in args.enumerated() {
-                if let item = item as? String {
-                    try? stmt.bind(position: index+1, item)
-                } else if let item = item as? Int64 {
-                    try? stmt.bind(position: index+1, item)
-                }
-            }
+            try self.bindArgs(stmt: stmt, args: args)
         })
     }
     
@@ -43,23 +38,23 @@ class DBManager {
         log(statement: statement, args: args)
         var result: [[String : AnyHashable]] = []
         try? db?.forEachRow(statement: statement, doBindings: { stmt in
-            for (index, item) in args.enumerated() {
-                if let item = item as? String {
-                    try? stmt.bind(position: index+1, item)
-                } else if let item = item as? Int64 {
-                    try? stmt.bind(position: index+1, item)
-                }
-            }
+            try self.bindArgs(stmt: stmt, args: args)
         }, handleRow: { stmt, idx in
             var map:[String : AnyHashable] = [:]
             for i in 0..<stmt.columnCount() {
-                let type = ColumnType(rawValue: Int(stmt.columnType(position: i))) ?? .null
+                var type = ColumnType(rawValue: Int(stmt.columnType(position: i))) ?? .null
                 let columnName = stmt.columnName(position: i)
+                if stmt.columnDeclType(position: i).lowercased() == "bit" {
+                    type = .boolean
+                }
+                //print("\(columnName) = \(stmt.columnDeclType(position: i))")
                 switch type {
                 case .int:
                     map[columnName] = stmt.columnInt64(position: i)
                 case .text:
                     map[columnName] = stmt.columnText(position: i)
+                case .boolean:
+                    map[columnName] = stmt.columnInt(position: i) > 0
                 case .null:
                     break
                 }
@@ -80,6 +75,24 @@ class DBManager {
             }
         }
         print("\(#function) `\(sql)`")
+    }
+    
+    func bindArgs(stmt: SQLiteStmt, args: [Any]) throws {
+        for (index, item) in args.enumerated() {
+            if item is String {
+                try stmt.bind(position: index+1, item as! String)
+            } else if item is Int64 {
+                try stmt.bind(position: index+1, item as! Int64)
+            } else if item is Int32 {
+                try stmt.bind(position: index+1, item as! Int32)
+            } else if item is Int {
+                try stmt.bind(position: index+1, item as! Int)
+            } else if item is Bool {
+                try stmt.bind(position: index+1, item as! Bool ? 1:0)
+            } else {
+                assert(false)
+            }
+        }
     }
     
     deinit {

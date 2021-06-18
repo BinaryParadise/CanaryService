@@ -25,6 +25,7 @@ import PerfectSession
 print(CommandLine.arguments)
 ServerArgument.main()
 
+let _ = ConfController()
 let _ = HomeController()
 let _ = WebSocketController()
 let _ = ProjectController()

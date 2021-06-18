@@ -12,7 +12,7 @@ struct UserMapper {
     static var shared = UserMapper()
     
     func login(username: String, password: String, agent: String) -> String {
-        let token = generateToken()
+        let token = CanaryProto.generateIdentify()
         try? DBManager.shared.execute(statement:login, args: [token, username, password, agent])
         return token
     }
@@ -30,12 +30,8 @@ struct UserMapper {
         return try? JSONDecoder().decode(ProtoUser.self, from: item?.data ?? Data())
     }
     
-    func changeApp(uid: Int, pid: Int) {
-        try? DBManager.shared.execute(statement: "UPDATE User set appid=:1 where id=:2", args: [pid, uid])
-    }
-    
-    private func generateToken() -> String {
-        return UUID().uuidString.stringByReplacing(string: "-", withString: "").lowercased()
+    func changeApp(uid: Int, pid: Int) throws {
+        try DBManager.shared.execute(statement: "UPDATE User set appid=:1 where id=:2", args: [pid, uid])
     }
     
     private var login: String {
@@ -49,9 +45,7 @@ struct UserMapper {
     
     private var findByToken: String {
         return """
-        SELECT NULL AS
-            password,
-            a.*,
+        SELECT a.*,
             d.token,
             d.expire,
             d.platform,

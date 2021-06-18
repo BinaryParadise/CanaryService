@@ -1,8 +1,15 @@
-/// WebSocket消息协议支持
+//
+//  CanaryProto.swift
+//
+//
+//  Created by Rake Yang on 2021/6/11.
+//
 
-public struct CanaryProto {
-    public private(set) var text = "Hello, World!"
+import Foundation
 
-    public init() {
+/// 金丝雀公共支持库
+public class CanaryProto {
+    public class func generateIdentify() -> String {
+        return UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
     }
 }

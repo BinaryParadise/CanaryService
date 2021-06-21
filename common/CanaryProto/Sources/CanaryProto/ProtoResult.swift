@@ -8,7 +8,7 @@
 import Foundation
 import SwiftyJSON
 
-public enum ProtoError: Hashable, Codable {
+public enum ProtoError: Hashable {
     case none
     case unauthorized
     case denied

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Networking
 import PerfectHTTP
 import CanaryProto
 import SwiftyJSON

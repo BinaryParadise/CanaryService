@@ -19,7 +19,6 @@
 
 import PerfectHTTP
 import PerfectHTTPServer
-import Networking
 import PerfectSession
 
 print(CommandLine.arguments)

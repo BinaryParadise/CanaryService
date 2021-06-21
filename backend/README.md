@@ -11,7 +11,7 @@ dnf install swift-lang
 dnf install libuuid-devel
 dnf install openssl-devel
 dnf install libcurl-devel
-dnf install libsqlite3-dev
+dnf install libsqlite3x-devel
 ```
 
 ## Further Information

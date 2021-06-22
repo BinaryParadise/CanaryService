@@ -15,7 +15,7 @@ let AccessToken = "Canary-Access-Token"
 
 public struct ContentFilter: HTTPRequestFilter {
     /// 无需鉴权白名单
-    let whiteList = ["/", "/channel", "/conf/full", "/info", "/user/login", "/api-docs", "/env", "/net/snapshot", "/mock/app/scene"]
+    let whiteList = ["/channel", "/conf/full", "/info", "/user/login", "/net/snapshot", "/mock/app/scene"]
     /// 需指定角色权限
     let adminList = ["/user/add", "/user/update", "/user/role/list"]
     public init() {
@@ -24,6 +24,9 @@ public struct ContentFilter: HTTPRequestFilter {
     
     func canRequest(request: HTTPRequest) -> Bool {
         let ctxPath = request.path[baseUri.endIndex...]
+        if ctxPath == "/" {
+            return true
+        }
         let contain = whiteList.contains { str in
             ctxPath.starts(with: str)
         }
@@ -104,7 +107,7 @@ public extension HTTPRequest {
     }
     
     var pid: Int {
-        return (session?.data["user"] as? ProtoUser)?.app_id ?? 0
+        return (session?.data["user"] as? ProtoUser)?.app?.id ?? 0
     }
     
     func intParamValue(_ name: String) -> Int {

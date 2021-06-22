@@ -32,7 +32,7 @@ class WebSocketController {
                 if webSessions.contains(where: { key, value in
                     key == deviceId
                 }) {
-                    var sessions = webSessions[deviceId] as! [DTSWebHandler]
+                    var sessions = webSessions[deviceId]!
                     sessions.append(handler)
                 } else {
                     webSessions[deviceId] = [handler]

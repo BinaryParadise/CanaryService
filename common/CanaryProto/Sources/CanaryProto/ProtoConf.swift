@@ -17,6 +17,6 @@ public struct ProtoConf: Codable {
     public var uid: Int
     public var comment: String?
     public var subItems: [ProtoConfItem]?
-    public var defaultTag: Int
+    public var defaultTag: Bool
     public var copyid: Int?
 }

@@ -23,10 +23,10 @@
     CanarySwift *shared = CanarySwift.shared;
     shared.appSecret = @"82e439d7968b7c366e24a41d7f53f47d";
     shared.deviceId = UIDevice.currentDevice.identifierForVendor.UUIDString;
-    shared.baseURL = @"http://127.0.0.1:8081";
+    shared.baseURL = @"http://127.0.0.1";
     [DDLog addLogger:CanaryTTYLogger.shared];
     [DDLog addLogger:DDTTYLogger.sharedInstance];
-    [shared startLoggerWithDomain:@"ws://127.0.0.1:9001" customProfile:^NSDictionary<NSString *,id> * _Nonnull{
+    [shared startLoggerWithDomain:nil customProfile:^NSDictionary<NSString *,id> * _Nonnull{
         return @{@"test" : @"89897923561987341897", @"number": @10086, @"dict": @{@"extra": @"嵌套对象"}};
     }];
     return YES;

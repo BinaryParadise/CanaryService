@@ -44,10 +44,10 @@ class DBManager {
             for i in 0..<stmt.columnCount() {
                 var type = ColumnType(rawValue: Int(stmt.columnType(position: i))) ?? .null
                 let columnName = stmt.columnName(position: i)
-                if stmt.columnDeclType(position: i).lowercased() == "bit" {
+                if stmt.columnDeclType(position: i).lowercased().hasPrefix("bit") {
                     type = .boolean
                 }
-                //print("\(columnName) = \(stmt.columnDeclType(position: i))")
+                print("\(columnName) = \(stmt.columnDeclType(position: i))")
                 switch type {
                 case .int:
                     map[columnName] = stmt.columnInt64(position: i)

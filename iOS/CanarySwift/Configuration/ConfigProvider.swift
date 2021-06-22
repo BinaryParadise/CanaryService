@@ -38,7 +38,7 @@ public class ConfigProvider {
                 do {
                     remoteConfig = try JSONDecoder().decode([ConfigGroup].self, from: Data(contentsOf: URL(fileURLWithPath: configPath)))
                 } catch {
-                    print("\(#file).\(#function)+\(#line)\(error)")
+                    print("\(#file).\(#function)+\(#line) \n\(error)")
                 }
             }
         }

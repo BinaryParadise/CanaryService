@@ -8,14 +8,14 @@
 import Foundation
 import PerfectHTTP
 import Rainbow
+import CanaryProto
 
 class HomeController {
     @Mapping(path: "/", method: .get)
     var home: ResultHandler = { request, response in
-        response.setHeader(.contentType, value: "text/html")
-        response.appendBody(string: "<html><title>Hello, world!</title><body>Hello, world!<br/>\(Date())</body></html>")
-        response.completed()
-        return nil
+        var rs = ProtoResult(.none)
+        rs.msg = "Hello, world!"
+        return rs
     }
     
     @Mapping(path: "/info", method: .get)

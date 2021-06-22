@@ -26,7 +26,7 @@
     shared.baseURL = @"http://127.0.0.1:8081";
     [DDLog addLogger:CanaryTTYLogger.shared];
     [DDLog addLogger:DDTTYLogger.sharedInstance];
-    [shared startLoggerWithDomain:nil customProfile:^NSDictionary<NSString *,id> * _Nonnull{
+    [shared startLoggerWithDomain:@"ws://127.0.0.1:9001" customProfile:^NSDictionary<NSString *,id> * _Nonnull{
         return @{@"test" : @"89897923561987341897", @"number": @10086, @"dict": @{@"extra": @"嵌套对象"}};
     }];
     return YES;

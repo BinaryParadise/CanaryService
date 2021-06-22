@@ -22,12 +22,12 @@ public enum Action: Int, Codable {
 }
 
 public struct ProtoMessage: Codable {
-    public var code: Int
+    public var code: Int?
     public var data: JSON?
     public var message: String?
     public var type: Action
     
-    init(type: Action) {
+    public init(type: Action) {
         self.code = 0
         self.type = type
     }

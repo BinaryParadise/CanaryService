@@ -151,7 +151,7 @@ class BasicLayout extends React.Component {
                 <Icon type="container" />
                 <span>Mock数据</span>
               </Menu.Item>
-              <Menu.Item key="/tool">
+              <Menu.Item key="/tool" hidden={true}>
                 <Icon type="tool"></Icon>
                 <span>工具箱</span>
               </Menu.Item>
@@ -177,7 +177,7 @@ class BasicLayout extends React.Component {
                 <Menu onClick={this.logout}>
                   <Menu.Item key="1">
                     退出
-              </Menu.Item>
+                  </Menu.Item>
                 </Menu>)}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
                   {AuthUser().name}

@@ -28,7 +28,7 @@ export default class ProjectPage extends React.Component {
         {
             dataIndex: 'updateTime',
             title: '更新时间',
-            width: 160,
+            width: 175,
             render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
         },
         {

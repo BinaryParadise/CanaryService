@@ -11,11 +11,11 @@ import CanaryProto
 struct ProjectMapper {
     static var shared = ProjectMapper()
     
-    func findBy(appId: Int) throws -> [String : AnyHashable]? {
+    func findBy(appId: Int) throws -> ProtoProject? {
         if appId == 0 {
             return nil
         }
-        return try DBManager.shared.query(statement: findById, args: [appId]).first
+        return try DBManager.shared.query(statement: findById, args: [appId]).first?.decode(ProtoProject.self)
     }
     
     func findBy(appKey: String) throws -> ProtoProject? {
@@ -29,6 +29,10 @@ struct ProjectMapper {
     
     func update(_ app: ProtoProject) throws {
         return try DBManager.shared.execute(statement: "UPDATE Project set name=:1, shared=:2, identify=:3, updateTime=null where id=:4", args: [app.name, app.shared, app.identify, app.id])
+    }
+    
+    func delete(appid: Int) throws {
+        try DBManager.shared.execute(statement: "DELETE FROM Project WHERE id=:1", args: [appid])
     }
     
     func insertNew(_ app: ProtoProject) throws {

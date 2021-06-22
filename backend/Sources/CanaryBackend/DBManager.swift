@@ -29,7 +29,7 @@ class DBManager {
     
     func execute(statement: String ,args: [Any] = []) throws {
         log(statement: statement, args: args)
-        try? db?.execute(statement: statement, doBindings: { stmt in
+        try db?.execute(statement: statement, doBindings: { stmt in
             try self.bindArgs(stmt: stmt, args: args)
         })
     }
@@ -37,7 +37,7 @@ class DBManager {
     func query(statement: String, args: [Any] = []) throws -> [[String : AnyHashable]] {
         log(statement: statement, args: args)
         var result: [[String : AnyHashable]] = []
-        try? db?.forEachRow(statement: statement, doBindings: { stmt in
+        try db?.forEachRow(statement: statement, doBindings: { stmt in
             try self.bindArgs(stmt: stmt, args: args)
         }, handleRow: { stmt, idx in
             var map:[String : AnyHashable] = [:]
@@ -65,7 +65,7 @@ class DBManager {
     }
     
     func log(statement: String, args: [Any]) {
-        return
+        #if DEBUG
         var sql = statement
         for (index, item) in args.enumerated() {
             if item is String {
@@ -74,10 +74,11 @@ class DBManager {
                 sql = sql.stringByReplacing(string: ":\(index+1)", withString: "'\(item)'")
             }
         }
-        print("\(#function) `\(sql)`")
+        print("\(#function) `\(sql)`".white)
+        #endif
     }
     
-    func bindArgs(stmt: SQLiteStmt, args: [Any]) throws {
+    func bindArgs(stmt: SQLiteStmt, args: [Any?]) throws {
         for (index, item) in args.enumerated() {
             if item is String {
                 try stmt.bind(position: index+1, item as! String)
@@ -89,6 +90,8 @@ class DBManager {
                 try stmt.bind(position: index+1, item as! Int)
             } else if item is Bool {
                 try stmt.bind(position: index+1, item as! Bool ? 1:0)
+            } else if item == nil {
+                try stmt.bindNull(position: index+1)
             } else {
                 assert(false)
             }

@@ -25,28 +25,31 @@ public struct ContentFilter: HTTPRequestFilter {
     func canRequest(request: HTTPRequest) -> Bool {
         let ctxPath = request.path[baseUri.endIndex...]
         let contain = whiteList.contains { str in
-            str.hasPrefix(ctxPath)
+            ctxPath.starts(with: str)
         }
         if contain {
             return true //无需登录
         } else {
-            var user = request.session?.data["user"] as? ProtoUser
             if let token = request.header(.custom(name: AccessToken)) {
-                if user != nil {
-                    if user?.invalid ?? true {
+                var user = request.session?.data["user"] as? ProtoUser
+                if user == nil {                    
+                    user = UserMapper.shared.findByToken(token: token, agent: request.header(.userAgent) ?? "unknown")
+                    user!.app = try? ProjectMapper.shared.findBy(appId: user?.app_id ?? 0)
+                } else {
+                    if user!.invalid {
                         //会话过期
                         UserMapper.shared.updateByToken(token: token)
                     }
                 }
-                user = UserMapper.shared.findByToken(token: token, agent: request.header(.userAgent) ?? "unknown")
                 if let user = user {
                     request.session?.userid = String(user.id)
                     request.session?.data["user"] = user
                 }
+                return user != nil
             } else {
                 //未登录
+                return false
             }
-            return user != nil
         }
     }
     
@@ -56,7 +59,7 @@ public struct ContentFilter: HTTPRequestFilter {
             str.hasPrefix(ctxPath)
         }
         if let user = request.session?.data["user"] as? ProtoUser {
-            return contain && user.rolelevel > 0
+            return contain && user.rolelevel ?? 2 > 0
         }
         return false
     }
@@ -72,12 +75,7 @@ public struct ContentFilter: HTTPRequestFilter {
             try? response.setBody(json: ProtoResult(.unauthorized))
             return
         }
-        if request.method == .post && (request.postBodyString == nil || request.postDictionary.count == 0) {
-            callback(.halt(request, response))
-            let _ = try? response.setBody(json: ProtoResult(.param))
-        } else {
-            callback(.continue(request, response))
-        }
+        callback(.continue(request, response))
     }
     
     

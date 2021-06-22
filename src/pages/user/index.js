@@ -32,12 +32,12 @@ export class UserList extends React.Component {
                 dataIndex: 'rolename', title: '角色', editable: true
             },
             {
-                dataIndex: 'app', title: '当前应用',
+                dataIndex: 'app_name', title: '当前应用',
                 render: (text, record) => {
                     if (text == null) {
                         return "未选择"
                     }
-                    return <span style={{ color: "#56D0B3" }}>{text.name}</span>
+                    return <span style={{ color: "#56D0B3" }}>{text}</span>
                 }
             },
             {
@@ -86,14 +86,19 @@ export class UserList extends React.Component {
     }
 
     submit = (values, callback) => {
+        const { resetPwd } = this.state
         let newValues = { ...values }
+        if (newValues.id == undefined) {
+            newValues.id = 0
+        }
         if (newValues.password) {
             newValues.password = MD5(newValues.password)
             newValues.confirm = newValues.password
         }
-        return axios.post(newValues.id ? '/user/update' : '/user/add', newValues).then(result => {
+        return axios.post(resetPwd ? '/user/resetpwd' : '/user/update', newValues).then(result => {
             if (result.code == 0) {
-                message.success("保存成功").then(callback)
+                message.success("保存成功")
+                callback()
             } else {
                 message.error(result.error)
                 this.setState({ confirmLoading: false })
@@ -114,7 +119,8 @@ export class UserList extends React.Component {
             if (result.code != 0) {
                 message.error(result.error)
             } else {
-                message.success("删除成功").then(this.query)
+                message.success("删除成功")
+                this.query()
             }
         });
     }

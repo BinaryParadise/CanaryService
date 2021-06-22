@@ -8,6 +8,7 @@
 import Foundation
 import PerfectHTTP
 import CanaryProto
+import PerfectSQLite
 
 public var routes = Routes()
 public var baseUri = ""
@@ -17,13 +18,12 @@ public typealias ResultHandler = (HTTPRequest, HTTPResponse) throws -> ProtoResu
 @propertyWrapper
 public struct Mapping {
     var path: String
-    var description: String?
     public var wrappedValue: ResultHandler
 }
 
 extension Mapping {
-    public init(wrappedValue:@escaping ResultHandler, path: String, method: HTTPMethod = .get, description: String? = nil) {
-        self.init(path: path, description: description, wrappedValue: wrappedValue)
+    public init(wrappedValue: @escaping ResultHandler, path: String, method: HTTPMethod = .get) {
+        self.init(path: path, wrappedValue: wrappedValue)
         routes.add(method: method, uri: path) { request, response in
             do {
                 if let rs = try wrappedValue(request, response) {
@@ -35,7 +35,11 @@ extension Mapping {
             } catch {
                 var result = ProtoResult(.system)
                 result.error = "\(error)"
-                print(result.error)
+                if let sqlErr = error as? SQLiteError {
+                    if sqlErr.code == 19 {
+                        result.error = "违反唯一约束"
+                    }
+                }
                 let _ = try? response.setBody(json: result)
                 response.completed(status: .ok)
             }

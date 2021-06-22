@@ -15,6 +15,7 @@ public enum ProtoError: Hashable {
     case system
     case param
     case db
+    case nodata
     case custom(String)
     
     public var rawValue: Int {
@@ -31,6 +32,8 @@ public enum ProtoError: Hashable {
             return 1002
         case .db:
             return 1003
+        case .nodata:
+            return 1004
         case .custom(_):
             return 9009
         }
@@ -42,6 +45,7 @@ public enum ProtoError: Hashable {
         case .denied: return "Permission denied"
         case .system: return "系统错误"
         case .param: return "参数错误"
+        case .nodata: return "数据不存在"
         case .db: return "数据库错误"
         case .custom(let str): return str
         }
@@ -70,5 +74,13 @@ public struct ProtoResult: Codable {
         } else {
             self.data = entry as? JSON
         }
+    }
+    
+    public static var done: Self {
+        return .init(.none)
+    }
+    
+    public static func entry(_ entry: Any) -> Self {
+        return .init(entry: entry)
     }
 }

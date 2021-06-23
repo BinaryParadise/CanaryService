@@ -59,19 +59,23 @@ const instance = axios.create({
     return isForm ? qs.stringify(data) : JSON.stringify(data)
   },
   transformResponse(data, header) {
-    const result = JSON.parse(data)
-    if (result) {
-      if (result.status == undefined) {
-        return result
+    try {
+      const result = JSON.parse(data)
+      if (result) {
+        if (result.status == undefined) {
+          return result
+        }
+        return JSON.stringify({ code: result.status, error: result.message, timestamp: result.timestamp })
       }
-      return JSON.stringify({ code: result.status, error: result.message, timestamp: result.timestamp })
+      return JSON.stringify({ code: 500, error: data })
+    } catch (error) {
+      return data
     }
-    return JSON.stringify({ code: 500, error: data })
   }
 })
 
 instance.interceptors.response.use(
-  function (response) {
+  response => {
     let result = response.data
 
     if (result.code == 401) {
@@ -82,15 +86,9 @@ instance.interceptors.response.use(
 
     return result
   },
-  function (error) {
+  error => {
     if (error.response) {
-      notification.error({
-        message: error.response.statusText,
-        description:
-          error.message,
-      })
-      return
-      // throwHttpError('请求异常：' + error.response.statusText)
+      throwHttpError('请求异常：' + error.response.data)
     }
 
     if (error.request) {

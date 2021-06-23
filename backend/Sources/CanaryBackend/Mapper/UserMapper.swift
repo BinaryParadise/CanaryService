@@ -18,7 +18,7 @@ struct UserMapper {
     }
     
     func findByLogin(args: [Any]) -> [String : AnyHashable]? {
-        return try? DBManager.shared.query(statement: findByLogin, args: args).first
+        return try? DBManager.shared.query(statement: findByLogin, args: args)?.first
     }
     
     func findAll() throws -> Any {
@@ -72,7 +72,7 @@ struct UserMapper {
     }
     
     func findByToken(token: String, agent: String) -> ProtoUser? {
-        let item = try? DBManager.shared.query(statement: findByToken, args: [agent, token, Date.currentTimeMillis]).first
+        let item = try? DBManager.shared.query(statement: findByToken, args: [agent, token, Date.currentTimeMillis])?.first
         return try? JSONDecoder().decode(ProtoUser.self, from: item?.data ?? Data())
     }
     

@@ -29,6 +29,7 @@ let _ = HomeController()
 let _ = WebSocketController()
 let _ = ProjectController()
 let _ = UserController()
+let _ = MockController()
 
 let driver = SessionMemoryDriver()
 

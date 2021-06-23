@@ -13,8 +13,8 @@ let kMCCurrentName  = "currenName"
 
 public class ConfigProvider {
     private var userDefaults = UserDefaults(suiteName: suiteName)!
-    var remoteConfig: [ConfigGroup] = []
-    var selectedConfig: ConfigItem?
+    var remoteConfig: [ProtoConfGroup] = []
+    var selectedConfig: ProtoConf?
     var currentName: String? {
         didSet {
             userDefaults.set(object: currentName, forKey: kMCCurrentName)
@@ -28,7 +28,7 @@ public class ConfigProvider {
         let jsonData = userDefaults.object(forKey: kMCRemoteConfig)
         if let jsonData = jsonData as? Data {
             do {
-                remoteConfig = try JSONDecoder().decode([ConfigGroup].self, from: jsonData)
+                remoteConfig = try JSONDecoder().decode([ProtoConfGroup].self, from: jsonData)
             } catch {
                 print("\(#file).\(#function)+\(#line)\(error)")
             }
@@ -36,7 +36,7 @@ public class ConfigProvider {
         if remoteConfig.count == 0 {
             if let configPath = Bundle.main.path(forResource: "Peregrine.bundle/RemoteConfig.json", ofType: nil) {
                 do {
-                    remoteConfig = try JSONDecoder().decode([ConfigGroup].self, from: Data(contentsOf: URL(fileURLWithPath: configPath)))
+                    remoteConfig = try JSONDecoder().decode([ProtoConfGroup].self, from: Data(contentsOf: URL(fileURLWithPath: configPath)))
                 } catch {
                     print("\(#file).\(#function)+\(#line) \n\(error)")
                 }
@@ -59,7 +59,7 @@ public class ConfigProvider {
     func processRemoteConfig(data: JSON?) {
         guard let data = data else { return }
         do {
-            remoteConfig = try JSONDecoder().decode([ConfigGroup].self, from: data.rawData())
+            remoteConfig = try JSONDecoder().decode([ProtoConfGroup].self, from: data.rawData())
             try userDefaults.set(object: data.rawData(), forKey: kMCRemoteConfig)
             switchToCurrentConfig()
         } catch {
@@ -68,8 +68,8 @@ public class ConfigProvider {
     }
 
     func switchToCurrentConfig() {
-        var selectedItem: ConfigItem?
-        var defaultItem: ConfigItem?
+        var selectedItem: ProtoConf?
+        var defaultItem: ProtoConf?
         remoteConfig.forEach { (group) in
             group.items.forEach { (item) in
                 if item.defaultTag ?? false {

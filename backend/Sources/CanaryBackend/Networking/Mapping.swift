@@ -46,3 +46,21 @@ extension Mapping {
         }
     }
 }
+
+public struct Paging: Codable {
+    public var pageSize: Int
+    public var pageNum: Int
+    
+    public var begin: Int {
+        return (pageNum-1) * pageSize
+    }
+    
+    public var end: Int {
+        return pageNum * pageSize
+    }
+    
+    init(_ params: [String : String]) {
+        self.pageSize = params.intValue("pageSize")
+        self.pageNum = params.intValue("pageNum")
+    }
+}

@@ -9,12 +9,12 @@ import Foundation
 import SwiftyJSON
 
 class ConfigurationItemViewController: UIViewController {
-    var item: ConfigItem
+    var item: ProtoConf
     let tableView = UITableView(frame: .zero, style: .grouped)
     let tipLabel = UILabel()
     @objc let applyButton = UIButton(type: .custom)
     
-    init(configItem: ConfigItem) {
+    init(configItem: ProtoConf) {
         item = configItem
         super.init(nibName: nil, bundle: nil)
     }

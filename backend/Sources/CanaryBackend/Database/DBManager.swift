@@ -17,24 +17,30 @@ enum ColumnType: Int {
 
 class DBManager {
     static let shared = DBManager()
+    var sema = DispatchSemaphore(value: 1)
     var db: SQLite?
     init() {
         do {
             let dbPath = "\(folder)/\(conf.sqlite)"
-            db = try SQLite(dbPath)
+            let fw = try FileWrapper(url: URL(fileURLWithPath: dbPath), options: .immediate)
+            let realPath = fw.isSymbolicLink ? fw.symbolicLinkDestinationURL?.absoluteString : dbPath
+            db = try SQLite(realPath ?? dbPath)
         } catch {
             print("\(error)".red)
         }
     }
     
-    func execute(statement: String ,args: [Any] = []) throws {
+    func execute(statement: String ,args: [Any?] = []) throws {
+        sema.wait()
         log(statement: statement, args: args)
         try db?.execute(statement: statement, doBindings: { stmt in
             try self.bindArgs(stmt: stmt, args: args)
         })
+        sema.signal()
     }
     
-    func query(statement: String, args: [Any] = []) throws -> [[String : AnyHashable]] {
+    func query(statement: String, args: [Any] = []) throws -> [[String : AnyHashable]]? {
+        sema.wait()
         log(statement: statement, args: args)
         var result: [[String : AnyHashable]] = []
         try db?.forEachRow(statement: statement, doBindings: { stmt in
@@ -47,7 +53,7 @@ class DBManager {
                 if stmt.columnDeclType(position: i).lowercased().hasPrefix("bit") {
                     type = .boolean
                 }
-                print("\(columnName) = \(stmt.columnDeclType(position: i))")
+//                print("\(columnName) = \(stmt.columnDeclType(position: i))")
                 switch type {
                 case .int:
                     map[columnName] = stmt.columnInt64(position: i)
@@ -61,17 +67,20 @@ class DBManager {
             }
             result.append(map)
         })
-        return result
+        sema.signal()
+        return result.count > 0 ? result : nil
     }
     
-    func log(statement: String, args: [Any]) {
+    func log(statement: String, args: [Any?]) {
         #if DEBUG
         var sql = statement
         for (index, item) in args.enumerated() {
             if item is String {
-                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "'\(item)'")
-            } else {                
-                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "'\(item)'")
+                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "'\(item!)'")
+            } else if item is Int || item is Bool {
+                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "\(item!)")
+            } else {
+                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "null")
             }
         }
         print("\(#function) `\(sql)`".white)

@@ -15,12 +15,12 @@ struct ProjectMapper {
         if appId == 0 {
             return nil
         }
-        return try DBManager.shared.query(statement: findById, args: [appId]).first?.decode(ProtoProject.self)
+        return try DBManager.shared.query(statement: findById, args: [appId])?.first?.decode(ProtoProject.self)
     }
     
     func findBy(appKey: String) throws -> ProtoProject? {
         let result = try DBManager.shared.query(statement: "SELECT * FROM Project WHERE identify=:1", args: [appKey])
-        return try result.first?.decode(ProtoProject.self)
+        return try result?.first?.decode(ProtoProject.self)
     }
     
     func findAll(uid: Int) -> Any? {

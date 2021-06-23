@@ -32,12 +32,12 @@ struct ConfMapper {
         return groups
     }
     
-    func findAll(pid: Int, type: Int) throws -> [[String : AnyHashable]] {
-        try DBManager.shared.query(statement: findAll, args: [pid, type])
+    func findAll(pid: Int, type: Int) throws -> [[String : AnyHashable]]? {
+        return try DBManager.shared.query(statement: findAll, args: [pid, type])
     }
     
-    func findItemAll(envid: Int) throws -> [[String : AnyHashable]] {
-        try DBManager.shared.query(statement: itemAll, args: [envid])
+    func findItemAll(envid: Int) throws -> [[String : AnyHashable]]? {
+        return try DBManager.shared.query(statement: itemAll, args: [envid])
     }
     
     private var findAll: String {

@@ -9,6 +9,9 @@ import Foundation
 import SwiftyJSON
 
 public extension Dictionary {
+    func boolValue(_ key: Key) -> Bool {
+        return intValue(key) > 0
+    }
     func intValue(_ key: Key) -> Int {
         return Int(int64Value(key))
     }
@@ -63,5 +66,11 @@ public extension Dictionary {
     
     func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
         return try JSONDecoder().decode(type, from: data ?? Data())
+    }
+}
+
+public extension Array {
+    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        return try JSONDecoder().decode(type, from: JSON(self).rawData() )
     }
 }

@@ -45,10 +45,6 @@ export default {
           component: '../pages/mock/scene'
         },
         {
-          path: '/mock/param',
-          component: '../pages/mock/param'
-        },
-        {
           path: '/',
           component: '../pages/envconfig',
         },

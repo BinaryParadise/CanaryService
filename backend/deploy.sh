@@ -1,4 +1,4 @@
 git reset --hard
 git pull
-swift build -c release
+swift build
 cp -r .build/release/CanaryBackend release/canary

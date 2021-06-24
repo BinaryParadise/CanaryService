@@ -36,8 +36,9 @@ public struct ContentFilter: HTTPRequestFilter {
             let token = request.header(.custom(name: AccessToken)) ?? ""
             var user = request.session?.data["user"] as? ProtoUser
             if user == nil && token.count > 0 {
-                user = UserMapper.shared.findByToken(token: token, agent: request.header(.userAgent) ?? "unknown")
-                user!.app = try? ProjectMapper.shared.findBy(appId: user?.app_id ?? 0)
+                let nuser = UserMapper.shared.findByToken(token: token, agent: request.header(.userAgent) ?? "unknown")
+                user = nuser
+                user?.app = try? ProjectMapper.shared.findBy(appId: nuser?.app_id ?? 0)
             } else {
                 if user?.invalid ?? false {
                     //会话过期

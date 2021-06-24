@@ -9,8 +9,11 @@ import ArgumentParser
 import PerfectHTTP
 import Foundation
 
-let folder = "/usr/local/etc/canary"
-var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "db/canary.db")
+#if os(Linux)
+var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "canary.db")
+#else
+var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "/usr/local/etc/canary/db/canary.db")
+#endif
 
 struct ServerArgument: ParsableCommand {
     
@@ -18,7 +21,7 @@ struct ServerArgument: ParsableCommand {
     var config: String?
     
     func run() throws {
-        if let config = config, FileManager.default.fileExists(atPath: "\(folder)/\(config)") {
+        if let config = config, FileManager.default.fileExists(atPath: config) {
             do {
                 conf = try JSONDecoder().decode(ServerConfig.self, from: Data(contentsOf: URL(fileURLWithPath: config)))
             } catch {
@@ -32,7 +35,7 @@ struct ServerArgument: ParsableCommand {
         
         baseUri = conf.path ?? ""
         
-        let _ = try? FileManager.default.createDirectory(at: URL(fileURLWithPath: "\(folder)/\(conf.sqlite)".deletingLastFilePathComponent), withIntermediateDirectories: true, attributes: nil)
+        let _ = try? FileManager.default.createDirectory(at: URL(fileURLWithPath: "\(conf.sqlite)".deletingLastFilePathComponent), withIntermediateDirectories: true, attributes: nil)
         routes = Routes(baseUri: conf.path ?? "", handler: { request, response in
             response.setHeader(.server, value: "Canary/Perfect1.0")
             response.next()

@@ -21,7 +21,7 @@ class DBManager {
     var db: SQLite?
     init() {
         do {
-            let dbPath = "\(folder)/\(conf.sqlite)"
+            let dbPath = "\(conf.sqlite)"
             let fw = try FileWrapper(url: URL(fileURLWithPath: dbPath), options: .immediate)
             let realPath = fw.isSymbolicLink ? fw.symbolicLinkDestinationURL?.absoluteString ?? dbPath : dbPath
             print("open database \(dbPath)".lightYellow)

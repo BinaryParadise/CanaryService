@@ -62,7 +62,7 @@ class DTSClientHandler: WebSocketSessionHandler {
         self.socket = socket
         if socket.isConnected {
             appSecret = req.header(.custom(name: "app-secret"))
-            print("handshake: \(appSecret ?? "")")
+            LogInfo("handshake: \(appSecret ?? "")")
             handleMessage()
         }
     }
@@ -73,7 +73,7 @@ class DTSClientHandler: WebSocketSessionHandler {
             if optype == .close || optype == .invalid {
                 if let device = self.device {
                     clients.removeValue(forKey: device.deviceId)
-                    print("设备离线: \(device.deviceId), 共计【\(clients.count)】在线".cyan)
+                    LogInfo("设备离线: \(device.deviceId), 共计【\(clients.count)】在线".hex(0x666))
                 }
                 self.socket?.close()
                 self.socket = nil
@@ -91,7 +91,7 @@ class DTSClientHandler: WebSocketSessionHandler {
                             self.device = try? JSONDecoder().decode(ProtoDevice.self, from: msg.data?.rawData() ?? Data())
                             if let device = self.device {
                                 clients[device.deviceId] = self
-                                print("设备\(isNew ? "连接":"更新"): \(device.deviceId), 共计【\(clients.count)】在线".cyan)
+                                LogInfo("设备\(isNew ? "连接":"更新"): \(device.deviceId), 共计【\(clients.count)】在线".green)
                             }
                         case .log:
                             DispatchQueue.global().async {
@@ -102,7 +102,7 @@ class DTSClientHandler: WebSocketSessionHandler {
                             break
                         }
                     } catch {
-                        print("\(optype) \(error)".red)
+                        LogError("\(optype) \(error)".red)
                     }
                 }
                 
@@ -113,7 +113,6 @@ class DTSClientHandler: WebSocketSessionHandler {
     
     func forwardLog(data: [UInt8]) {
         guard let sessions = webSessions[device?.deviceId ?? ""] else { return }
-        print("转发日志".yellow)
         sessions.forEach { web in
             web.socket?.sendBinaryMessage(bytes: data, final: true, completion: {
                 
@@ -122,7 +121,7 @@ class DTSClientHandler: WebSocketSessionHandler {
     }
     
     deinit {
-        print("\(#function)")
+        LogVerbose("")
     }
 }
 
@@ -138,7 +137,7 @@ class DTSWebHandler: WebSocketSessionHandler {
     func handleSession(request req: HTTPRequest, socket: WebSocket) {
         self.socket = socket
         if socket.isConnected {
-            print("Web开始监听设备: \(deviceId)")
+            LogInfo("Web开始监听设备: \(deviceId)")
             handleMessage()
         }
     }
@@ -154,7 +153,7 @@ class DTSWebHandler: WebSocketSessionHandler {
                 webSessions.forEach { key, value in
                     count += value.count
                 }
-                print("Web端离线: \(self.deviceId), 共计【\(count)】在线".cyan)
+                LogWarn("Web端离线: \(self.deviceId), 共计【\(count)】在线".cyan)
             } else {
                 self.handleMessage()
             }

@@ -29,7 +29,7 @@ class UserController {
                 return ProtoResult(.custom("用户名或密码错误"))
             }
         } catch {
-            print("\(error)".red)
+            LogError("\(error)")
         }
         return ProtoResult(.system)
     }

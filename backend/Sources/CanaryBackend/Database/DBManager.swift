@@ -29,10 +29,10 @@ class DBManager {
                 dbPath = realPath
             }
             #endif
-            print("open database \(dbPath)".lightYellow)
+            LogDebug("open database \(dbPath)".lightYellow)
             db = try SQLite(dbPath)
         } catch {
-            print("\(error)".red)
+            LogError("\(error)".red)
         }
     }
     
@@ -59,7 +59,7 @@ class DBManager {
                 if stmt.columnDeclType(position: i).lowercased().hasPrefix("bit") {
                     type = .boolean
                 }
-//                print("\(columnName) = \(stmt.columnDeclType(position: i))")
+                //LogDebug("\(columnName) = \(stmt.columnDeclType(position: i))")
                 switch type {
                 case .int:
                     map[columnName] = stmt.columnInt64(position: i)
@@ -89,7 +89,7 @@ class DBManager {
                 sql = sql.stringByReplacing(string: ":\(index+1)", withString: "null")
             }
         }
-        print("\(#function) `\(sql)`".white)
+        LogDebug("\(#function) `\(sql)`".white)
         #endif
     }
     

@@ -8,6 +8,7 @@
 import ArgumentParser
 import PerfectHTTP
 import Foundation
+import PerfectLogger
 
 #if os(Linux)
 var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "canary.db")
@@ -20,17 +21,20 @@ struct ServerArgument: ParsableCommand {
     @Option(name: .shortAndLong, help: "配置文件路径")
     var config: String?
     
-    func run() throws {
+    func run() throws {        
+        LogFile.location = "/var/log/canary/log.log"
+        LogFile.options = .none
+        
         if let config = config, FileManager.default.fileExists(atPath: config) {
             do {
                 conf = try JSONDecoder().decode(ServerConfig.self, from: Data(contentsOf: URL(fileURLWithPath: config)))
             } catch {
-                print("\(error)".red)
+                LogError("\(error)".red)
             }
             
             
         } else {
-            print("Have none config file, use default.".yellow)
+            LogInfo("Have none config file, use default.".yellow)
         }
         
         baseUri = conf.path ?? ""

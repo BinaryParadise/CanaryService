@@ -25,7 +25,7 @@ struct ConfMapper {
                     group.items[i].subItems = try JSONDecoder().decode([ProtoConfItem].self, from: JSON(subrs).rawData())
                 }
             } catch {
-                print("\(error)")
+                LogError("\(error)")
             }
             groups.append(group)
         }

@@ -21,7 +21,7 @@ import PerfectHTTP
 import PerfectHTTPServer
 import PerfectSession
 
-print(CommandLine.arguments)
+LogDebug("\(CommandLine.arguments)")
 ServerArgument.main()
 
 let _ = ConfController()

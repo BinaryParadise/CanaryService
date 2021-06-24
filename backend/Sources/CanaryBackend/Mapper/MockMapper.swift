@@ -38,6 +38,11 @@ class MockMapper {
         }
     }
     
+    class func activeMock(mockid: Int, enabled: Bool) throws {
+        let sql = "UPDATE MockData set enabled=:1, updatetime=null where id=:2"
+        try DBManager.shared.execute(statement: sql, args: [enabled, mockid])
+    }
+    
     class func deleteMock(mockid: Int) throws {
         try DBManager.shared.execute(statement: "DELETE FROM MockData where id=:1;", args: [mockid])
     }
@@ -85,11 +90,18 @@ class MockMapper {
         try DBManager.shared.execute(statement: "DELETE FROM MockScene where id=:1", args: [sceneid])
     }
     
-    class func activeScene(sceneid: Int, enabled: Bool) throws {
-        let sql = """
-            UPDATE MockData SET sceneid=:1, updatetime=null
-            WHERE id=(SELECT mockid FROM MockScene WHERE id=:2)
-            """
-        try DBManager.shared.execute(statement: sql, args: [enabled ? sceneid: nil, sceneid])
+    class func activeScene(_ sceneid: Int, enabled: Bool, mockid: Int = 0) throws {
+        if sceneid == 0 {
+            let sql = """
+                UPDATE MockData SET sceneid=:1, updatetime=null WHERE id=:2
+                """
+            try DBManager.shared.execute(statement: sql, args: [nil, mockid])
+        } else {
+            let sql = """
+                UPDATE MockData SET sceneid=:1, updatetime=null
+                WHERE id=(SELECT mockid FROM MockScene WHERE id=:2)
+                """
+            try DBManager.shared.execute(statement: sql, args: [enabled ? sceneid: nil, sceneid])
+        }
     }
 }

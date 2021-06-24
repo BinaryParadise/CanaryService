@@ -58,7 +58,7 @@ extension MockDataViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withClass: MockDataViewCell.self)
         cell.onSwitch = { [weak self] (mock, isOn) in
-            URLRequest.post(with: "/api/mock/active", params: ["sceneid": mock.sceneid, "enabled": isOn, "id": mock.id]) { [weak self] (result, error) in
+            URLRequest.post(with: "/api/mock/active", params: ["mockid": mock.id, "enabled": isOn]) { [weak self] (result, error) in
                 if result.code == 0 {
                     mock.enabled = isOn
                     self?.tableView.reloadData()
@@ -245,7 +245,7 @@ extension MockDataViewCell: UICollectionViewDataSource, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let mock = mock else { return }
         if let scene = mock.scenes?[safe: indexPath.row] {
-            URLRequest.post(with: "/api/mock/active", params: ["sceneid": scene.id == 0 ? nil : scene.id, "enabled": mock.enabled, "id": mock.id]) { [weak self] (result, error) in
+            URLRequest.post(with: "/api/mock/scene/active", params: ["sceneid": scene.id, "enabled": mock.enabled, "mockid": mock.id]) { [weak self] (result, error) in
                 if result.code == 0 {
                     mock.sceneid = scene.id == 0 ? nil : scene.id
                     self?.collectView.reloadData()

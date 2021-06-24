@@ -23,6 +23,7 @@ class UserController {
             if var user = try UserMapper.shared.findByLogin(args: [username, password, agent, token, Date.currentTimeMillis])?.decode(ProtoUser.self) {
                 request.session?.userid = String(user.id)
                 user.app = try ProjectMapper.shared.findBy(appId: user.app_id ?? 0)
+                response.addCookie(HTTPCookie.init(name: "token", value: token))
                 return ProtoResult(entry: try JSONEncoder().encode(user))
             } else {
                 return ProtoResult(.custom("用户名或密码错误"))

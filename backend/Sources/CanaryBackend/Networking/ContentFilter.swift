@@ -33,26 +33,22 @@ public struct ContentFilter: HTTPRequestFilter {
         if contain {
             return true //无需登录
         } else {
-            if let token = request.header(.custom(name: AccessToken)) {
-                var user = request.session?.data["user"] as? ProtoUser
-                if user == nil {                    
-                    user = UserMapper.shared.findByToken(token: token, agent: request.header(.userAgent) ?? "unknown")
-                    user!.app = try? ProjectMapper.shared.findBy(appId: user?.app_id ?? 0)
-                } else {
-                    if user!.invalid {
-                        //会话过期
-                        UserMapper.shared.updateByToken(token: token)
-                    }
-                }
-                if let user = user {
-                    request.session?.userid = String(user.id)
-                    request.session?.data["user"] = user
-                }
-                return user != nil
+            let token = request.header(.custom(name: AccessToken)) ?? ""
+            var user = request.session?.data["user"] as? ProtoUser
+            if user == nil && token.count > 0 {
+                user = UserMapper.shared.findByToken(token: token, agent: request.header(.userAgent) ?? "unknown")
+                user!.app = try? ProjectMapper.shared.findBy(appId: user?.app_id ?? 0)
             } else {
-                //未登录
-                return false
+                if user?.invalid ?? false {
+                    //会话过期
+                    UserMapper.shared.updateByToken(token: token)
+                }
             }
+            if let user = user {
+                request.session?.userid = String(user.id)
+                request.session?.data["user"] = user
+            }
+            return user != nil
         }
     }
     
@@ -85,13 +81,9 @@ public struct ContentFilter: HTTPRequestFilter {
 }
 
 public extension HTTPRequest {
-    var postDictionary: [String : AnyHashable] {
-        do {
-            return try JSON(postBodyString?.jsonDecode() as Any).dictionaryObject as? [String : AnyHashable] ?? [:]
-        } catch {
-            print("\(error)".red)
-        }
-        return [:]
+    var postDictionary: [String : Any] {
+        let obj = JSON(parseJSON: postBodyString ?? "")
+        return obj.dictionaryObject ?? [:]
     }
     
     var getDictionary: [String : String] {

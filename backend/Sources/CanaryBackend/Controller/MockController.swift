@@ -16,12 +16,13 @@ class MockController {
             for (index, item) in groups.enumerated() {
                 if var mocks = try MockMapper.findAllMock(pid: req.pid, uid: req.uid, paging: Paging(["pageSize": "1000", "pageNum": "1"]), groupId: item.id)?.decode([ProtoMock].self) {
                     for (i, mock) in mocks.enumerated() {
+                        mocks[i].scenes = try MockMapper.findAllScene(mockid: mock.id)?.decode([ProtoMockScene].self)
                         mocks[i].scenes?.insert(ProtoMockScene(mockid: mock.id, name: "自动"), at: 0)
                     }
                     groups[index].mocks = mocks
                 }
             }
-            return .entry(JSON(groups))
+            return .entry(try JSONEncoder().encode(groups))
         }
         return .done
     }
@@ -36,6 +37,12 @@ class MockController {
     var updateMock: ResultHandler = { request, response in
         let mock = try request.postDictionary.decode(ProtoMock.self)
         try MockMapper.update(mock: mock)
+        return .done
+    }
+    
+    @Mapping(path: "/mock/active", method: .post)
+    var activeMock: ResultHandler = { req, res in
+        try MockMapper.activeMock(mockid: req.postDictionary.intValue("mockid"), enabled: req.postDictionary.boolValue("enabled"))
         return .done
     }
     
@@ -64,8 +71,8 @@ class MockController {
         let scene = try MockMapper.findScene(sceneId: request.urlVariables.intValue("id"))?.decode(ProtoMockScene.self)
         if let scene = scene {
             response.setHeader(.contentType, value: "application/json; charset=utf-8")
-            response.setHeader(.custom(name: "scene_id"), value: String(scene.id))
-            response.setHeader(.custom(name: "scene_name"), value: scene.name.stringByEncodingURL)
+            response.setHeader(.custom(name: "Scene-Id"), value: String(scene.id))
+            response.setHeader(.custom(name: "Scene-Name"), value: scene.name.stringByEncodingURL)
             try response.setBody(json: scene.response.jsonDecode())
             response.completed(status: .ok)
         } else {
@@ -100,7 +107,7 @@ class MockController {
     
     @Mapping(path: "/mock/scene/active", method: .post)
     var activeScene: ResultHandler = { request, response in
-        try MockMapper.activeScene(sceneid: request.postDictionary.intValue("sceneid"), enabled: request.postDictionary.boolValue("enabled"))
+        try MockMapper.activeScene(request.postDictionary.intValue("sceneid"), enabled: request.postDictionary.boolValue("enabled"), mockid: request.postDictionary.intValue("mockid"))
         return .done
     }
 }

@@ -23,8 +23,9 @@ class DBManager {
         do {
             let dbPath = "\(folder)/\(conf.sqlite)"
             let fw = try FileWrapper(url: URL(fileURLWithPath: dbPath), options: .immediate)
-            let realPath = fw.isSymbolicLink ? fw.symbolicLinkDestinationURL?.absoluteString : dbPath
-            db = try SQLite(realPath ?? dbPath)
+            let realPath = fw.isSymbolicLink ? fw.symbolicLinkDestinationURL?.absoluteString ?? dbPath : dbPath
+            print("open database \(dbPath)".lightYellow)
+            db = try SQLite(realPath)
         } catch {
             print("\(error)".red)
         }

@@ -18,7 +18,27 @@ struct UserMapper {
     }
     
     func findByLogin(args: [Any]) -> [String : AnyHashable]? {
-        return try? DBManager.shared.query(statement: findByLogin, args: args)?.first
+        let sql = """
+                SELECT a.*,
+                    d.token,
+                    d.expire,
+                    d.platform,
+                    b.name AS rolename,
+                    b.level AS rolelevel,
+                    c.id AS app_id
+                    FROM
+                    User a
+                    LEFT JOIN UserRole b ON a.roleid = b.id
+                    LEFT JOIN Project c ON a.appid = c.id
+                    LEFT JOIN UserSession d ON a.id = d.uid
+                    WHERE
+                    a.username = :1
+                    AND a.password = :2
+                    AND d.platform = :3
+                    AND d.token= :4
+                    AND d.expire > :5
+                """
+        return try? DBManager.shared.query(statement: sql, args: args)?.first
     }
     
     func findAll() throws -> Any {
@@ -111,28 +131,5 @@ struct UserMapper {
             AND d.token= :2
             AND d.expire > :3
         """
-    }
-    
-    private var findByLogin: String {
-        return """
-SELECT a.*,
-    d.token,
-    d.expire,
-    d.platform,
-    b.name AS rolename,
-    b.level AS rolelevel,
-    c.id AS app_id
-    FROM
-    User a
-    LEFT JOIN UserRole b ON a.roleid = b.id
-    LEFT JOIN Project c ON a.appid = c.id
-    LEFT JOIN UserSession d ON a.id = d.uid
-    WHERE
-    a.username = :1
-    AND a.password = :2
-    AND d.platform = :3
-    AND d.token= :4
-    AND d.expire > :5
-"""
     }
 }

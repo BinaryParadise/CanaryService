@@ -43,6 +43,11 @@
 
     where id = #{id}
   </update>
+
+  <update id="resetPwd">
+    UPDATE User SET password = #{password} WHERE id = #{id}
+  </update>
+
   <delete id="deleteUser">
     UPDATE User set deleteTag=1 where id = #{0}
   </delete>

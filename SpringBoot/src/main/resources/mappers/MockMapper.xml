@@ -14,14 +14,14 @@
   </delete>
 
   <update id="update" parameterType="com.frontend.mockable.MCMockInfo">
-    UPDATE MockData set name=#{name}, method=#{method}, path=#{path}, groupid=#{groupid}, updatetime=null where id=#{id}
+    UPDATE MockData set name=#{name}, method=#{method}, path=#{path}, groupid=#{groupid}, enabled=#{enabled}, updatetime=null where id=#{id}
   </update>
 
   <update id="active" parameterType="com.frontend.mockable.MCMockInfo">
     UPDATE MockData set sceneid=#{sceneid}, enabled=#{enabled}, updatetime=null where id=#{id}
   </update>
 
-  <update id="activeScene" parameterType="com.frontend.mockable.MCMockInfo">
+  <update id="activeScene" parameterType="com.frontend.mockable.MCMockScene">
     UPDATE MockData set sceneid=#{sceneid}, updatetime=null where id=#{id}
   </update>
 

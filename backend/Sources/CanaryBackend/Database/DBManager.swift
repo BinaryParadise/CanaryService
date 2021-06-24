@@ -25,7 +25,7 @@ class DBManager {
             #if os(Linux)
             #else
             let fw = try FileWrapper(url: URL(fileURLWithPath: dbPath), options: .immediate)
-            if let realPath = fw.symbolicLinkDestinationURL?.absoluteString {
+            if fw.isSymbolicLink, let realPath = fw.symbolicLinkDestinationURL?.absoluteString {
                 dbPath = realPath
             }
             #endif
@@ -83,13 +83,13 @@ class DBManager {
         for (index, item) in args.enumerated() {
             if item is String {
                 sql = sql.stringByReplacing(string: ":\(index+1)", withString: "'\(item!)'")
-            } else if item is Int || item is Bool {
+            } else if item is Int || item is Bool || item is Int64 {
                 sql = sql.stringByReplacing(string: ":\(index+1)", withString: "\(item!)")
             } else {
                 sql = sql.stringByReplacing(string: ":\(index+1)", withString: "null")
             }
         }
-        LogDebug("\(#function) `\(sql)`")
+        LogDebug(sql)
         #endif
     }
     

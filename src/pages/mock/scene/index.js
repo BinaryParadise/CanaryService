@@ -115,7 +115,7 @@ class MockScenePage extends React.Component {
     }
 
     onActive = (record, active) => {
-        var newR = { sceneid: record.id, enabled: active }
+        var newR = { sceneid: record.id, enabled: active, id: record.mockid }
         return axios.post('/mock/scene/active', newR).then(result => {
             if (result.code != 0) {
                 message.error(result.error)
@@ -164,7 +164,7 @@ class MockScenePage extends React.Component {
     }
 
     onDeleteParam = (record) => {
-        return axios.post('/mock/param/delete/'+record.id).then(result => {
+        return axios.post('/mock/param/delete/' + record.id).then(result => {
             if (result.code == 0) {
                 this.props.location.state = { ...this.mock(), sceneid: null }
                 this.queryAll()

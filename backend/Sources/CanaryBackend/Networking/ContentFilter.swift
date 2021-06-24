@@ -7,7 +7,6 @@
 import Foundation
 import PerfectHTTP
 import CanaryProto
-import Rainbow
 import PerfectSession
 import SwiftyJSON
 

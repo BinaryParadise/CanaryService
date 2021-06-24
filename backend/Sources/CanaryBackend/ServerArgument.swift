@@ -29,12 +29,12 @@ struct ServerArgument: ParsableCommand {
             do {
                 conf = try JSONDecoder().decode(ServerConfig.self, from: Data(contentsOf: URL(fileURLWithPath: config)))
             } catch {
-                LogError("\(error)".red)
+                LogError("\(error)")
             }
             
             
         } else {
-            LogInfo("Have none config file, use default.".yellow)
+            LogInfo("Have none config file, use default.")
         }
         
         baseUri = conf.path ?? ""

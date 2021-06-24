@@ -7,7 +7,6 @@
 
 import Foundation
 import PerfectHTTP
-import Rainbow
 import CanaryProto
 
 class HomeController {

@@ -7,6 +7,7 @@
 
 import Foundation
 import PerfectLogger
+import Rainbow
 
 public struct LogFlag: OptionSet {
     public let rawValue: Int
@@ -82,7 +83,17 @@ public func LogMessage(_ message: @autoclosure () -> String,
         let fmt = DateFormatter()
         fmt.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let fname = URL(string: String(describing: file))?.lastPathComponent ?? ""
-        print("\(fmt.string(from: Date())) \(fname).\(function) +\(line) \(message())")
-        //LogFile.debug(message())
+        let log = "\(fmt.string(from: Date())) \(fname).\(function) +\(line) \(message())"
+        if level == .error {
+            print(log.red)
+        } else if level == .warning {
+            print(log.yellow)
+        } else if level == .debug {
+            print(log.cyan)
+        } else if level == .info {
+            print(log.white)
+        } else {
+            print(log.hex(0x666))
+        }
     }
 }

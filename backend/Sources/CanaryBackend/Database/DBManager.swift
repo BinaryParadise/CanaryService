@@ -29,10 +29,10 @@ class DBManager {
                 dbPath = realPath
             }
             #endif
-            LogDebug("open database \(dbPath)".lightYellow)
+            LogDebug("open database \(dbPath)")
             db = try SQLite(dbPath)
         } catch {
-            LogError("\(error)".red)
+            LogError("\(error)")
         }
     }
     
@@ -89,7 +89,7 @@ class DBManager {
                 sql = sql.stringByReplacing(string: ":\(index+1)", withString: "null")
             }
         }
-        LogDebug("\(#function) `\(sql)`".white)
+        LogDebug("\(#function) `\(sql)`")
         #endif
     }
     

@@ -9,7 +9,6 @@ import Foundation
 import PerfectHTTP
 import PerfectLib
 import PerfectWebSockets
-import Rainbow
 import CanaryProto
 import SwiftyJSON
 
@@ -73,7 +72,7 @@ class DTSClientHandler: WebSocketSessionHandler {
             if optype == .close || optype == .invalid {
                 if let device = self.device {
                     clients.removeValue(forKey: device.deviceId)
-                    LogInfo("设备离线: \(device.deviceId), 共计【\(clients.count)】在线".hex(0x666))
+                    LogInfo("设备离线: \(device.deviceId), 共计【\(clients.count)】在线")
                 }
                 self.socket?.close()
                 self.socket = nil
@@ -91,7 +90,7 @@ class DTSClientHandler: WebSocketSessionHandler {
                             self.device = try? JSONDecoder().decode(ProtoDevice.self, from: msg.data?.rawData() ?? Data())
                             if let device = self.device {
                                 clients[device.deviceId] = self
-                                LogInfo("设备\(isNew ? "连接":"更新"): \(device.deviceId), 共计【\(clients.count)】在线".green)
+                                LogInfo("设备\(isNew ? "连接":"更新"): \(device.deviceId), 共计【\(clients.count)】在线")
                             }
                         case .log:
                             DispatchQueue.global().async {
@@ -102,7 +101,7 @@ class DTSClientHandler: WebSocketSessionHandler {
                             break
                         }
                     } catch {
-                        LogError("\(optype) \(error)".red)
+                        LogError("\(optype) \(error)")
                     }
                 }
                 
@@ -118,10 +117,6 @@ class DTSClientHandler: WebSocketSessionHandler {
                 
             })
         }
-    }
-    
-    deinit {
-        LogVerbose("")
     }
 }
 
@@ -153,7 +148,7 @@ class DTSWebHandler: WebSocketSessionHandler {
                 webSessions.forEach { key, value in
                     count += value.count
                 }
-                LogWarn("Web端离线: \(self.deviceId), 共计【\(count)】在线".cyan)
+                LogWarn("Web端离线: \(self.deviceId), 共计【\(count)】在线")
             } else {
                 self.handleMessage()
             }

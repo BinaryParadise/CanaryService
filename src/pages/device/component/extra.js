@@ -2,6 +2,7 @@ import styles from '../index.less'
 import PropTypes from 'prop-types'
 import { Drawer, Descriptions } from 'antd'
 import React from 'react'
+import ReactJson from 'react-json-view'
 
 export default class ExtraPage extends React.Component {
     static propTypes = {
@@ -32,14 +33,11 @@ export default class ExtraPage extends React.Component {
         >
             <Descriptions column={1} size='middle' layout="horizontal" bordered>
                 {Object.keys(data).map((key) => {
-                    return <Descriptions.Item label={key}>{typeof data[key] != "object" ?
-                        <span className={styles.extraValue}>{data[key]}</span> :
-                        Object.keys(data[key]).map((subkey) => {
-                            const value = data[key][subkey]
-                            return <span className={styles.extraKey}>{subkey} <span className={styles.eq}>=</span> <span className={styles.extraValue}>{typeof value != "object" ? value : JSON.stringify(value)}</span><br /></span>
-                        })}</Descriptions.Item>
+                    return <Descriptions.Item label={key}>
+                        <ReactJson name={false} src={data[key]} collapseStringsAfterLength={50}></ReactJson>
+                    </Descriptions.Item>
                 })}
             </Descriptions>
-        </Drawer>)
+        </Drawer >)
     }
 }

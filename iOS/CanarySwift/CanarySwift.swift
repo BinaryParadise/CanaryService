@@ -26,6 +26,22 @@ import SwiftyJSON
         
     @objc public static let shared = CanarySwift()
     
+    /// 日志对象Key集合
+    @objc public static let StoreLogKeys = ["message",
+    "level",
+    "flag",
+    "context",
+    "file",
+    "fileName",
+    "function",
+    "line",
+    "tag",
+    "options",
+    "timestamp",
+    "threadID",
+    "threadName",
+    "queueLabel"]
+    
     public override init() {
         if UserDefaults.standard.bool(forKey: "Canary.MockEnabled") {
             CanaryMockURLProtocol.isEnabled = true
@@ -159,19 +175,3 @@ extension CanarySwift {
         return ConfigProvider.shared.stringValue(for: key, def: def)
     }
 }
-
-/// 日志对象Key集合
-public let StoreLogKeys = ["message",
-"level",
-"flag",
-"context",
-"file",
-"fileName",
-"function",
-"line",
-"tag",
-"options",
-"timestamp",
-"threadID",
-"threadName",
-"queueLabel"]

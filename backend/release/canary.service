@@ -1,0 +1,15 @@
+[Unit]
+Description=The canary backend server
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/canary -c /usr/local/etc/canary/canary.json
+StandardOutput=/var/log/canary/access.log
+ExecReload=/bin/kill -s HUP $MAINPID
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+KillMode=mixed
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

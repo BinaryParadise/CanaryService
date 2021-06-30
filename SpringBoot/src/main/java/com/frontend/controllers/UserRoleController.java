@@ -60,21 +60,21 @@ public class UserRoleController {
     }
   }
 
-  @PostMapping(value = "/add")
-  MCResult addUser(@RequestBody MCUserInfo data, HttpServletRequest request) {
-    try {
-      Integer ret = userMapper.inserUser(data);
-      return ret > 0 ? MCResult.Success(data) : MCResult.Failed(MybatisError.InsertFaield);
-    } catch (Throwable e) {
-      e.printStackTrace();
-      return MCResult.Failed(MybatisError.DuplicateEntry);
-    }
-  }
-
   @PostMapping(value = "/update")
   MCResult updateUser(@RequestBody MCUserInfo data, HttpServletResponse response) {
     try {
-      Integer ret = userMapper.updateUser(data);
+      Integer ret = data.getId() == 0 ? userMapper.inserUser(data) : userMapper.updateUser(data);
+      return ret > 0 ? MCResult.Success(data) : MCResult.Failed(MybatisError.DuplicateEntry);
+    } catch (Throwable e) {
+      e.printStackTrace();
+      return MCResult.Failed(MybatisError.NotFoundEntry);
+    }
+  }
+
+  @PostMapping(value = "/resetpwd")
+  MCResult resetPwd(@RequestBody MCUserInfo data, HttpServletResponse response) {
+    try {
+      Integer ret = userMapper.resetPwd(data);
       return ret > 0 ? MCResult.Success(data) : MCResult.Failed(MybatisError.DuplicateEntry);
     } catch (Throwable e) {
       e.printStackTrace();

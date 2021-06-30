@@ -6,32 +6,41 @@
 //
 
 import ArgumentParser
-import Networking
 import PerfectHTTP
+import Foundation
+import PerfectLogger
 
-var listenPort: Int = 8081
-var listenAddr: String = "127.0.0.1"
+#if os(Linux)
+var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "canary.db")
+#else
+var conf = ServerConfig(name: "127.0.0.1", port: 9001, path: "/api", sqlite: "/usr/local/etc/canary/db/canary.db")
+#endif
 
 struct ServerArgument: ParsableCommand {
     
-    @Option(name: .shortAndLong, help: "本地监听端口")
-    var port: Int?
+    @Option(name: .shortAndLong, help: "配置文件路径")
+    var config: String?
     
-    @Option(name: .shortAndLong, help: "本地监听地址")
-    var addr: String?
-    
-    @Option(name: .shortAndLong, help: "上下文路径")
-    var contextPath: String?
-    
-    func run() throws {
-        if let port = port {
-            listenPort = port
+    func run() throws {        
+        LogFile.location = "/var/log/canary/log.log"
+        LogFile.options = .none
+        
+        if let config = config, FileManager.default.fileExists(atPath: config) {
+            do {
+                conf = try JSONDecoder().decode(ServerConfig.self, from: Data(contentsOf: URL(fileURLWithPath: config)))
+            } catch {
+                LogError("\(error)")
+            }
+            
+            
+        } else {
+            LogInfo("Have none config file, use default.")
         }
-        if let addr = addr {
-            listenAddr = addr
-        }
-
-        routes = Routes(baseUri: contextPath ?? "", handler: { request, response in
+        
+        baseUri = conf.path ?? ""
+        
+        let _ = try? FileManager.default.createDirectory(at: URL(fileURLWithPath: "\(conf.sqlite)".deletingLastFilePathComponent), withIntermediateDirectories: true, attributes: nil)
+        routes = Routes(baseUri: conf.path ?? "", handler: { request, response in
             response.setHeader(.server, value: "Canary/Perfect1.0")
             response.next()
         })

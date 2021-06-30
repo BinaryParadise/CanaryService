@@ -12,7 +12,7 @@ import SwiftyJSON
 
 class ConfigurationViewController: UIViewController {
     let tableView = UITableView(frame: .zero, style: .grouped)
-    var remoteConfig: [ConfigGroup] {
+    var remoteConfig: [ProtoConfGroup] {
         return ConfigProvider.shared.remoteConfig
     }
 

@@ -67,7 +67,7 @@ class UserEditorForm extends React.Component {
                 {data.id &&
                     <Form.Item style={{ display: 'none' }}>
                         {getFieldDecorator('id', {
-                            initialValue: data.id
+                            initialValue: data.id || 0
                         })(<Input type="hidden"></Input>)}
                     </Form.Item>
                 }

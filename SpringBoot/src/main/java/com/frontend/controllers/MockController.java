@@ -130,14 +130,14 @@ public class MockController {
     if (scene == null) {
       return "scene id " + id + " not found.";
     } else {
-      response.setHeader("scene_id", scene.getId().toString());
-      response.setHeader("scene_name", URLEncoder.encode(scene.getName(), "utf-8"));
+      response.setHeader("Scene-Id", scene.getId().toString());
+      response.setHeader("Scene-Name", URLEncoder.encode(scene.getName(), "utf-8"));
       return scene.getResponse();
     }
   }
 
-  @GetMapping("/scene/list")
-  public MCResult sceneList(Integer mockid) {
+  @GetMapping("/scene/list/{id}")
+  public MCResult sceneList(@PathVariable("id") Integer mockid) {
     List<MCMockScene> scenes = mockMapper.findAllScene(mockid);
     for (MCMockScene scene : scenes) {
       MCMockParam param = new MCMockParam();
@@ -174,15 +174,18 @@ public class MockController {
 
   @PostMapping("/scene/active")
   public MCResult activeScene(@RequestBody MCMockInfo mock) {
+    if (mock.getSceneid() == 0) {
+      mock.setSceneid(null);
+    }
     mockMapper.activeScene(mock);
     Global.update();
     return MCResult.Success();
   }
 
-  @PostMapping("/scene/delete")
-  public MCResult deleteScene(@RequestBody MCMockScene scene) {
+  @PostMapping("/scene/delete/{id}")
+  public MCResult deleteScene(@PathVariable("id") Integer sceneid) {
     try {
-      mockMapper.deleteScene(scene.getId());
+      mockMapper.deleteScene(sceneid);
       return MCResult.Success();
     } catch (UncategorizedSQLException e) {
       SQLiteException se = (SQLiteException) e.getCause();
@@ -213,10 +216,10 @@ public class MockController {
     }
   }
 
-  @PostMapping("/param/delete")
-  public MCResult paramDelete(@RequestBody MCMockParam param) {
+  @PostMapping("/param/delete/{id}")
+  public MCResult paramDelete(@PathVariable("id") Integer paramid) {
     try {
-      mockMapper.deleteParam(param.getId());
+      mockMapper.deleteParam(paramid);
       return MCResult.Success();
     } catch (UncategorizedSQLException e) {
       SQLiteException se = (SQLiteException) e.getCause();

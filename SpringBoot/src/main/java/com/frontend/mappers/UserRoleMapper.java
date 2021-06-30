@@ -17,6 +17,8 @@ public interface UserRoleMapper {
 
   Integer deleteUser(Integer uid);
 
+  Integer resetPwd(MCUserInfo user);
+
   Integer isLogin(String token, long timestamp);
 
   Integer login(Map<String, Object> data);

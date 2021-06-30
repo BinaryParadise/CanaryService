@@ -19,34 +19,28 @@
 
 import PerfectHTTP
 import PerfectHTTPServer
-import Networking
+import PerfectSession
 
+LogDebug("\(CommandLine.arguments)")
 ServerArgument.main()
 
-// An example request handler.
-// This 'handler' function can be referenced directly in the configuration below.
-func handler(request: HTTPRequest, response: HTTPResponse) {
-    // Respond with a simple message.
-    
-}
-
-print(CommandLine.arguments)
-
+let _ = ConfController()
 let _ = HomeController()
-// Configure one server which:
-//    * Serves the hello world message at <host>:<port>/
-//    * Serves static files out of the "./webroot"
-//        directory (which must be located in the current working directory).
-//    * Performs content compression on outgoing data when appropriate.
-routes.add(method: .get, uri: "/**",
-           handler: StaticFileHandler(documentRoot: "./Resources.bundle", allowResponseFilters: true).handleRequest)
-
 let _ = WebSocketController()
 let _ = ProjectController()
+let _ = UserController()
+let _ = MockController()
 
-try? HTTPServer.launch(name: listenAddr,
-                       port: listenPort,
+let driver = SessionMemoryDriver()
+
+try? HTTPServer.launch(name: conf.name,
+                       port: conf.port,
                       routes: routes,
+                      requestFilters: [
+                        driver.requestFilter,
+                        (ContentFilter(), .high)
+                      ],
                       responseFilters: [
-                        (ContentFilter(), .high),
-                        (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)]).wait()
+                        driver.responseFilter,
+                        (PerfectHTTPServer.HTTPFilter.contentCompression(data: [:]), HTTPFilterPriority.high)
+                      ]).wait()

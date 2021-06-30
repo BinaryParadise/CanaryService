@@ -99,7 +99,7 @@ export default class EnvConfig extends React.Component {
         message.success("保存成功")
         callback()
       } else {
-        message.error(result.error)
+        message.error(result.msg)
       }
     });
   }

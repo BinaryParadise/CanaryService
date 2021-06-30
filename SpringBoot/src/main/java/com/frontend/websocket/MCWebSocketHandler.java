@@ -143,6 +143,7 @@ public class MCWebSocketHandler extends BinaryWebSocketHandler {
     if (info.getDeviceId() == null) {
       logger.error("注册设备必须包含deviceId");
     } else {
+      info.setAppKey(session.getHandshakeHeaders().getFirst("app-secret"));
       devices.put(info.getDeviceId(), info);
       Integer count = 0;
       for (WebSocketSession destSession : webSessions.values()) {

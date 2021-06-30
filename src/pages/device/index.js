@@ -9,8 +9,6 @@ import { Link } from 'react-router-dom'
 import ExtraPage from './component/extra'
 import WebSocket from '@/component/websocket'
 
-const wsInstance = WebSocket.create("9BB08FF2-06BE-456F-A6CD-583260A244F5")
-
 export default class IndexPage extends React.Component {
   state = {
     loading: false,
@@ -91,11 +89,7 @@ export default class IndexPage extends React.Component {
   };
 
   componentDidMount() {
-    wsInstance.connect(this.onMessage)
-  }
-
-  componentWillUnmount() {
-    wsInstance.close()
+    this.getDeviceList()
   }
 
   onMessage = (msg) => {
@@ -118,7 +112,9 @@ export default class IndexPage extends React.Component {
   // 获取设备列表
   getDeviceList = () => {
     this.setState({ loading: true });
-    wsInstance.sendMessage({ type: MessageType.DeviceList, appKey: (window.__config__.user.app || {}).identify })
+    axios.get("/device", {}).then(result => {
+      this.setState({ devices: result.data, loading: false })
+    }).finally(() => this.setState({ loading: false }))
   }
 
   render() {

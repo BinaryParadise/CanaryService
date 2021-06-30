@@ -14,7 +14,7 @@ export default class MockIndexPage extends React.Component {
             appid: (window.__config__.projectInfo || {}).id,
             groupid: null,
             pageSize: 200,
-            current: 1
+            pageNum: 1
         },
         editItem: {
             visible: false,
@@ -118,7 +118,7 @@ export default class MockIndexPage extends React.Component {
 
     handleChange = (pagination, filters, sorter, extra) => {
         console.log(pagination, filters, sorter, extra);
-        this.state.queryParam.current = pagination.current
+        this.state.queryParam.pageNum = pagination.current
         this.state.queryParam.pageSize = pagination.pageSize
         this.state.queryParam.groupid = (filters.groupname || [null])[0]
         this.queryAll()
@@ -127,7 +127,7 @@ export default class MockIndexPage extends React.Component {
     onActive = (record) => {
         var newR = { ...record }
         newR.enabled = !record.enabled
-        return axios.post('/mock/active', newR).then(result => {
+        return axios.post('/mock/update', newR).then(result => {
             if (result.code != 0) {
                 message.error(result.error)
                 return

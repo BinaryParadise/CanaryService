@@ -28,7 +28,7 @@ export default class ProjectPage extends React.Component {
         {
             dataIndex: 'updateTime',
             title: '更新时间',
-            width: 160,
+            width: 175,
             render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss')
         },
         {
@@ -126,6 +126,10 @@ export default class ProjectPage extends React.Component {
     }
 
     submit = (values, callback) => {
+        if (values.id == undefined) {
+            values.id = 0
+            values.identify = "unknown"
+        }
         return axios.post('/project/update', values).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")

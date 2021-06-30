@@ -120,7 +120,7 @@ extension CanarySwift {
     func storeNetworkLogger(netLog: NetLogMessage) {
         let timestamp = Date().timeIntervalSince1970*1000;
         
-        let msg = WebSocketMessage(type: .logger);
+        var msg = ProtoMessage(type: .log);
         var mdict: [String: Any] = [:]
         if let sceneid = netLog.responseHeaderFields?["scene_id"] as? String {
             mdict["flag"] = 2 //DDLogFlag.DDLogFlagWarning

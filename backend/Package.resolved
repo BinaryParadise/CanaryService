@@ -11,12 +11,30 @@
         }
       },
       {
+        "package": "PerfectCRUD",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CRUD.git",
+        "state": {
+          "branch": null,
+          "revision": "5a947634b7ce0b991e8f455a61ce02449f2e6f36",
+          "version": "1.2.3"
+        }
+      },
+      {
         "package": "PerfectCrypto",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Crypto.git",
         "state": {
           "branch": null,
           "revision": "98373fa3a6c3d551e498c1babe4f25f650fa1310",
           "version": "3.3.0"
+        }
+      },
+      {
+        "package": "PerfectCURL",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CURL.git",
+        "state": {
+          "branch": null,
+          "revision": "a9f8950554585bd12b9ec24ad4bfbe0b1519e03f",
+          "version": "3.1.0"
         }
       },
       {
@@ -47,12 +65,39 @@
         }
       },
       {
+        "package": "cURL",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-libcurl.git",
+        "state": {
+          "branch": null,
+          "revision": "b3d7e65ef5c27c0a027cdc621f34835975301bf1",
+          "version": "2.1.0"
+        }
+      },
+      {
+        "package": "PerfectLogger",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Logger.git",
+        "state": {
+          "branch": null,
+          "revision": "78f47107c9f7563cf94e3b5d141ca8bf0cc2f995",
+          "version": "3.3.0"
+        }
+      },
+      {
         "package": "PerfectNet",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Net.git",
         "state": {
           "branch": null,
           "revision": "d00b2b9f4cccb4c398e1bcf18f767d6b8add6af7",
           "version": "3.3.0"
+        }
+      },
+      {
+        "package": "PerfectSession",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-Session.git",
+        "state": {
+          "branch": null,
+          "revision": "5cd6ccd4684a0c31a0fd3a91b7680dc093f33657",
+          "version": "3.1.5"
         }
       },
       {
@@ -98,15 +143,6 @@
           "branch": null,
           "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
           "version": "0.4.3"
-        }
-      },
-      {
-        "package": "SwiftyJSON",
-        "repositoryURL": "https://github.com/BinaryParadise/SwiftyJSON.git",
-        "state": {
-          "branch": "master",
-          "revision": "20f450f29e3db88fce3685b2a29e2c6e5fa29c6c",
-          "version": null
         }
       }
     ]

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Canary'
-  s.version          = '0.6.6'
+  s.version          = '0.7.0'
   s.summary          = 'Canary is SDK For CanaryService.'
 
 # This description is used to generate tags and improve search results.
@@ -35,11 +35,20 @@ TODO: Add long description of the pod here.
   
   s.resource = 'iOS/Assets/Canary.bundle'
   s.user_target_xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'CANARY_ENABLE=1', "OTHER_SWIFT_FLAGS" => "-D CANARY_ENABLE"}
+  s.default_subspec = 'Core'
 
-  s.source_files = 'iOS/CanarySwift/**/*'
-  s.dependency 'SwifterSwift'
-  s.dependency 'SnapKit'
-  s.dependency 'SwiftyJSON'
-  s.dependency 'Starscream', '~> 4.0'
+  s.subspec 'Core' do |ss|
+    ss.source_files = 'iOS/CanarySwift/**/*'
+    ss.dependency 'SwifterSwift'
+    ss.dependency 'SnapKit'
+    ss.dependency 'SwiftyJSON'
+    ss.dependency 'Starscream', '~> 4.0'
+    ss.dependency 'Canary/CanaryProto'
+  end
+  
+  s.subspec 'CanaryProto' do |ss|
+    ss.source_files = 'common/CanaryProto/Sources/**/*.{swift}'
+    ss.dependency 'SwiftyJSON'
+  end
 
 end

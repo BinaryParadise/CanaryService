@@ -102,7 +102,7 @@ class MockScenePage extends React.Component {
     }
 
     queryAll() {
-        return axios.get('/mock/scene/list', { params: { mockid: this.state.mock.id } }).then(result => {
+        return axios.get('/mock/scene/list/' + this.state.mock.id, {}).then(result => {
             if (result.code != 0) {
                 return
             }
@@ -115,13 +115,7 @@ class MockScenePage extends React.Component {
     }
 
     onActive = (record, active) => {
-        var newR = { ...this.state.mock }
-        if (active) {
-            newR.sceneid = record.id
-        } else {
-            newR.sceneid = null
-        }
-
+        var newR = { sceneid: record.id, enabled: active, id: record.mockid }
         return axios.post('/mock/scene/active', newR).then(result => {
             if (result.code != 0) {
                 message.error(result.error)
@@ -170,7 +164,7 @@ class MockScenePage extends React.Component {
     }
 
     onDeleteParam = (record) => {
-        return axios.post('/mock/param/delete', { id: record.id }).then(result => {
+        return axios.post('/mock/param/delete/' + record.id).then(result => {
             if (result.code == 0) {
                 this.props.location.state = { ...this.mock(), sceneid: null }
                 this.queryAll()
@@ -196,7 +190,7 @@ class MockScenePage extends React.Component {
     }
 
     onDeleteScene(item) {
-        return axios.post('/mock/scene/delete', item).then(result => {
+        return axios.post('/mock/scene/delete/' + item.id).then(result => {
             if (result.code != 0) {
                 message.error(result.error)
                 return
@@ -248,7 +242,7 @@ class MockScenePage extends React.Component {
             }
         ]
 
-        return (<Table size="small" dataSource={item.params} columns={excolumns} rowKey="id"></Table>)
+        return (<Table size="small" dataSource={item.params || [{ sceneid: item.id }]} columns={excolumns} rowKey="id"></Table>)
     }
 
     render() {

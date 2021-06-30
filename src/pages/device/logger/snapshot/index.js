@@ -17,7 +17,7 @@ export default class LogSnapshotPage extends React.Component {
             if (result.code == 0) {
                 this.setState({ data: result.data, loading: false })
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         })
     }

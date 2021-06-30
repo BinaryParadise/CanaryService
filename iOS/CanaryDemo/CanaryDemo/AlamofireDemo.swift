@@ -10,7 +10,7 @@ import Alamofire
 
 @objc class AlamofireDemo: NSObject {
     @objc func test() -> Void {
-        Alamofire.request("https://quan.suning.com/getSysTime.do").response { response in
+        Alamofire.request("https://quan.suning.com/getSysTime.do#test").response { response in
             DDLogDebug("\(String(data: response.data ?? Data(), encoding: .utf8) ?? "")")
         }        
     }

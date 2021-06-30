@@ -80,7 +80,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-c /api"
+            argument = "-c canary.json"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

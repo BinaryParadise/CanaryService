@@ -5,7 +5,7 @@ import { Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'an
 import WebSocket from '@/component/websocket'
 import router from 'umi/router';
 import NetLog from '../component/netlog'
-import {MessageType} from '@/common/util'
+import { MessageType } from '@/common/util'
 
 // 日志标记
 const Error = (1 << 0)
@@ -75,7 +75,11 @@ export default class LoggerMonitor extends React.Component {
 
     formatMessage = obj => {
         if (obj.type !== 1) {
-            return '🌐' + obj.method + ' ' + obj.url
+            if (obj.responsefields['Scene-Name'] == undefined) {
+                return '🌐 ' + obj.method + ' ' + obj.url
+            } else {
+                return '🌐【MOCK场景:' + decodeURI(obj.responsefields['Scene-Name']) + "】" + obj.method + ' ' + obj.url
+            }
         }
         return obj.message;
     }
@@ -120,6 +124,9 @@ export default class LoggerMonitor extends React.Component {
 
     logClass = obj => {
         if (obj.type == 2) {
+            if ((obj.responsefields || {})["Scene-Name"] != undefined) {
+                return styles.yellow
+            }
             return obj.flag == Warning ? styles.magenta : styles.pink;
         }
         switch (obj.flag) {

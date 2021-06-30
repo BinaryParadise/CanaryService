@@ -41,7 +41,7 @@ class ProjectEditForm extends React.Component {
                 <Form.Item label="公开">
                     {getFieldDecorator('shared', {
                         valuePropName: 'checked',
-                        initialValue: data.share || true
+                        initialValue: data.shared
                     })(<Checkbox />)}
                 </Form.Item>
             </Form>

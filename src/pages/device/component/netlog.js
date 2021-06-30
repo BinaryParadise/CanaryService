@@ -21,7 +21,7 @@ export default class NetLogPage extends React.Component {
                 CopyToClipboard(window.location.origin + '/log/snapshot/' + data.identify)
                 message.success('复制成功')
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         })
     }

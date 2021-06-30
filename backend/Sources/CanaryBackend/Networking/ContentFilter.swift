@@ -99,7 +99,8 @@ public extension HTTPRequest {
     }
     
     var pid: Int {
-        return (session?.data["user"] as? ProtoUser)?.app?.id ?? 0
+        let user = session?.data["user"] as? ProtoUser
+        return user?.app?.id ?? 0
     }
     
     func intParamValue(_ name: String) -> Int {

@@ -12,7 +12,7 @@ class ConfController {
     @Mapping(path: "/conf/list", method: .get)
     var list: ResultHandler = { request, response in
         let rs = try ConfMapper.shared.findAll(pid: request.pid, type: request.intParamValue("type"))
-        return ProtoResult(entry: rs)
+        return ProtoResult(entry: rs ?? [])
     }
     
     @Mapping(path: "/conf/full", method: .get)

@@ -39,6 +39,7 @@ class UserController {
         try UserMapper.shared.changeApp(uid: args.intValue("uid"), pid: args.intValue("id"))
         var user = UserMapper.shared.findByToken(token: request.header(.custom(name: AccessToken))!, agent: request.header(.userAgent) ?? "unknown")
         user?.app = try? ProjectMapper.shared.findBy(appId: args.intValue("id"))
+        request.session?.data["user"] = user
         return ProtoResult(entry: try JSONEncoder().encode(user))
     }
     

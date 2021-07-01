@@ -18,7 +18,7 @@ class ProjectController {
         return ProtoResult(entry: JSON(rs))
     }
     
-    @Mapping(path: "/project/update", method: .post)
+    @Mapping(path: "/project/update", method: [.post])
     var update: ResultHandler = { (request, response) in
         var app = try JSONDecoder().decode(ProtoProject.self, from: JSON(request.postDictionary).rawData())
         if app.id > 0 {
@@ -32,13 +32,13 @@ class ProjectController {
         return ProtoResult(.none)
     }
     
-    @Mapping(path: "/project/delete/{id}", method: .post)
+    @Mapping(path: "/project/delete/{id}", method: [.post])
     var delete: ResultHandler = { (request, response) in
         try ProjectMapper.shared.delete(appid: request.urlVariables.intValue("id"))
         return ProtoResult(.none)
     }
     
-    @Mapping(path: "/project/appsecret/reset", method: .post)
+    @Mapping(path: "/project/appsecret/reset", method: [.post])
     var resetAppKey: ResultHandler = { request, response throws in
         if var app = try ProjectMapper.shared.findBy(appId: request.intParamValue("id")) {
             app.identify = CanaryProto.generateIdentify()

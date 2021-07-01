@@ -22,9 +22,9 @@ public struct Mapping {
 }
 
 extension Mapping {
-    public init(wrappedValue: @escaping ResultHandler, path: String, method: HTTPMethod = .get) {
+    public init(wrappedValue: @escaping ResultHandler, path: String, method: [HTTPMethod] = HTTPMethod.allMethods) {
         self.init(path: path, wrappedValue: wrappedValue)
-        routes.add(method: method, uri: path) { request, response in
+        routes.add(Route(methods: method, uri: path, handler: { request, response in
             do {
                 if let rs = try wrappedValue(request, response) {
                     let _ = try response.setBody(json: rs)
@@ -43,7 +43,7 @@ extension Mapping {
                 let _ = try? response.setBody(json: result)
                 response.completed(status: .ok)
             }
-        }
+        }))
     }
 }
 

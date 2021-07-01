@@ -10,14 +10,14 @@ import PerfectHTTP
 import CanaryProto
 
 class HomeController {
-    @Mapping(path: "/", method: .get)
+    @Mapping(path: "/")
     var home: ResultHandler = { request, response in
         var rs = ProtoResult(.none)
         rs.msg = "Hello, world!"
         return rs
     }
     
-    @Mapping(path: "/info", method: .get)
+    @Mapping(path: "/info")
     var info: ResultHandler = { request, response in
         response.setHeader(.contentType, value: "application/json")
         let _ = try? response.setBody(json: ["version": "1.0",

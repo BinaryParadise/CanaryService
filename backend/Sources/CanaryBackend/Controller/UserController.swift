@@ -11,7 +11,7 @@ import SwiftyJSON
 import CanaryProto
 
 class UserController {
-    @Mapping(path: "/user/login", method: .post)
+    @Mapping(path: "/user/login", method: [.post])
     var login: ResultHandler = { request, response in
         let args = request.postDictionary
         do {
@@ -33,7 +33,7 @@ class UserController {
         return ProtoResult(.system)
     }
     
-    @Mapping(path: "/user/change/app", method: .post)
+    @Mapping(path: "/user/change/app", method: [.post])
     var change: ResultHandler = { request, response in
         let args = request.postDictionary
         try UserMapper.shared.changeApp(uid: args.intValue("uid"), pid: args.intValue("id"))
@@ -48,14 +48,14 @@ class UserController {
         return ProtoResult(entry: try UserMapper.shared.findAll())
     }
     
-    @Mapping(path: "/user/update", method: .post)
+    @Mapping(path: "/user/update", method: [.post])
     var updateUser: ResultHandler = { request, response in
         let user = try request.postDictionary.decode(ProtoUser.self)
         try UserMapper.shared.update(user: user)
         return .done
     }
     
-    @Mapping(path: "/user/resetpwd", method: .post)
+    @Mapping(path: "/user/resetpwd", method: [.post])
     var resetPwd: ResultHandler = { request, response in
         var user = ProtoUser()
         user.id = request.postDictionary.intValue("id")
@@ -64,7 +64,7 @@ class UserController {
         return .done
     }
     
-    @Mapping(path: "/user/delete/{uid}", method: .post)
+    @Mapping(path: "/user/delete/{uid}", method: [.post])
     var deleteUser: ResultHandler = { request, response in
         try UserMapper.shared.delete(uid: request.urlVariables.intValue("uid"))
         return .done

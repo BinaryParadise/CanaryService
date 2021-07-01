@@ -33,20 +33,20 @@ class MockController {
         return .entry(try MockMapper.findAllMock(pid: request.pid, uid: request.uid, paging: paging, groupId: request.getDictionary.intValue("groupid")))
     }
     
-    @Mapping(path: "/mock/update", method: .post)
+    @Mapping(path: "/mock/update", method: [.post])
     var updateMock: ResultHandler = { request, response in
         let mock = try request.postDictionary.decode(ProtoMock.self)
         try MockMapper.update(mock: mock)
         return .done
     }
     
-    @Mapping(path: "/mock/active", method: .post)
+    @Mapping(path: "/mock/active", method: [.post])
     var activeMock: ResultHandler = { req, res in
         try MockMapper.activeMock(mockid: req.postDictionary.intValue("mockid"), enabled: req.postDictionary.boolValue("enabled"))
         return .done
     }
     
-    @Mapping(path: "/mock/delete/{id}", method: .post)
+    @Mapping(path: "/mock/delete/{id}", method: [.post])
     var deleteMock: ResultHandler = {  request, response in
         try MockMapper.deleteMock(mockid: request.urlVariables.intValue("id"))
         return .done
@@ -66,7 +66,7 @@ class MockController {
         return .entry(try JSONEncoder().encode(scenes))
     }
     
-    @Mapping(path: "/mock/app/scene/{id}")
+    @Mapping(path: "/mock/app/scene/{id}", method: [.get, .post])
     var sceneDetail: ResultHandler = { request, response in
         let scene = try MockMapper.findScene(sceneId: request.urlVariables.intValue("id"))?.decode(ProtoMockScene.self)
         if let scene = scene {
@@ -81,31 +81,31 @@ class MockController {
         return nil
     }
     
-    @Mapping(path: "/mock/scene/update", method: .post)
+    @Mapping(path: "/mock/scene/update", method: [.post])
     var updateScene: ResultHandler = { request, response in
         try MockMapper.updateScene(scene: request.postDictionary.decode(ProtoMockScene.self))
         return .done
     }
     
-    @Mapping(path: "/mock/param/update", method: .post)
+    @Mapping(path: "/mock/param/update", method: [.post])
     var updateParam: ResultHandler = { request, response in
         try MockMapper.updateParam(param: request.postDictionary.decode(ProtoMockParam.self))
         return .done
     }
     
-    @Mapping(path: "/mock/param/delete/{id}", method: .post)
+    @Mapping(path: "/mock/param/delete/{id}", method: [.post])
     var deleteParam: ResultHandler = { request, response in
         try MockMapper.deleteParam(paramid: request.urlVariables.intValue("id"))
         return .done
     }
     
-    @Mapping(path: "/mock/scene/delete/{id}", method: .post)
+    @Mapping(path: "/mock/scene/delete/{id}", method: [.post])
     var deleteScene: ResultHandler = {  request, response in
         try MockMapper.deleteScene(sceneid: request.urlVariables.intValue("id"))
         return .done
     }
     
-    @Mapping(path: "/mock/scene/active", method: .post)
+    @Mapping(path: "/mock/scene/active", method: [.post])
     var activeScene: ResultHandler = { request, response in
         try MockMapper.activeScene(request.postDictionary.intValue("sceneid"), enabled: request.postDictionary.boolValue("enabled"), mockid: request.postDictionary.intValue("mockid"))
         return .done

@@ -134,6 +134,9 @@ extension CanarySwift {
     }
 
     func storeNetworkLogger(netLog: NetLogMessage) {
+        if !CanaryWebSocket.shared.isReady() {
+            return
+        }
         let timestamp = Date().timeIntervalSince1970*1000;
         
         var msg = ProtoMessage(type: .log);
@@ -149,19 +152,11 @@ extension CanarySwift {
         mdict["method"] = netLog.method
         mdict["requestfields"] = netLog.requestHeaderFields
         mdict["responsefields"] = netLog.responseHeaderFields
-        do {
-            if netLog.requestBody != nil {
-                mdict["requestbody"] = try JSONSerialization.jsonObject(with: netLog.requestBody ?? Data(), options: .mutableLeaves)
-            } else {
-                mdict["requestbody"] = netLog.requestBody
-            }
-            if netLog.responseBody != nil {
-                mdict["responsebody"] = try JSONSerialization.jsonObject(with: netLog.responseBody ?? Data(), options: .mutableLeaves)
-            } else {
-                mdict["responsebody"] = netLog.responseBody
-            }
-        } catch {
-            print("\(#file).\(#function)+\(#line)\(error)")
+        if let requestBody = netLog.requestBody {
+            mdict["requestbody"] = (try? JSONSerialization.jsonObject(with: requestBody, options: .mutableLeaves)) ?? requestBody.string(encoding:.utf8)
+        }
+        if let responseBody = netLog.requestBody {
+            mdict["responsebody"] = (try? JSONSerialization.jsonObject(with: responseBody, options: .mutableLeaves)) ?? responseBody
         }
         mdict["timestamp"] = timestamp
         mdict["statusCode"] = netLog.statusCode

@@ -82,7 +82,7 @@ public func LogMessage(_ message: @autoclosure () -> String,
     if dynamicLogLevel.contains(level) {
         let fmt = DateFormatter()
         fmt.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let fname = URL(string: String(describing: file))?.lastPathComponent ?? ""
+        let fname = URL(string: String(describing: file))?.lastPathComponent.deletingFileExtension ?? ""
         let log = "\(fmt.string(from: Date())) \(fname).\(function) +\(line) \(message())"
         if level == .error {
             print(log.red)

@@ -46,9 +46,14 @@ struct Result: Codable {
     }
     
     func checkIntercept(for request: URLRequest) -> (should:Bool, url: URL?) {
+        if let host = request.url?.host {
+            if CanarySwift.shared.baseURL?.contains(host) ?? false {
+                return (false, nil)
+            }
+        }
         //完全匹配
         let path = request.url?.path ?? ""
-        if path == MockGroupURL {
+        if path == MockGroupURL || request.url?.host == CanarySwift.shared.baseURL {
             return (false, nil)
         }
         var matchMock = mockMap[path]

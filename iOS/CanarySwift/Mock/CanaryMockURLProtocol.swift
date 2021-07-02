@@ -73,7 +73,6 @@ public let CanaryMockedURLKey = "Canary.MockedURLKey"
     }
     URLProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: newRequest)
     newRequest.url = MockManager.shared.checkIntercept(for: newRequest as URLRequest).url
-    NotificationCenter.default.post(name: NSNotification.Name(rawValue: CanaryMockedNotification), object: nil, userInfo: [CanaryOriginURLKey: request.url, CanaryMockedURLKey: newRequest.url])
     receiveData = Data()
     sessionTask = session?.dataTask(with: newRequest as URLRequest)
     sessionTask?.resume()

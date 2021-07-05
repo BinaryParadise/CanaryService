@@ -133,7 +133,11 @@ class DTSWebHandler: WebSocketSessionHandler {
         self.socket = socket
         if socket.isConnected {
             LogInfo("Web监听设备: \(deviceId)")
-            handleMessage()
+            do {
+                handleMessage()
+            } catch {
+                LogError("\(error)")
+            }
         }
     }
     

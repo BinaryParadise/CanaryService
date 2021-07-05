@@ -23,7 +23,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSLog(@"获取配置参数：A = %@", [CanarySwift.shared stringValueFor:@"A" def:@"123"]);
+    NSLog(@"获取配置参数：A = %@", [CanaryManager.shared stringValueFor:@"A" def:@"123"]);
     
     self.textView = [[UITextView alloc] init];
     self.textView.editable = false;
@@ -37,7 +37,7 @@
 }
 
 - (IBAction)showCanary:(id)sender {
-    [CanarySwift.shared show];
+    [CanaryManager.shared show];
     DDLogVerbose(@"verbose");
     DDLogInfo(@"info");
     DDLogWarn(@"warn");

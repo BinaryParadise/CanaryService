@@ -27,7 +27,7 @@ class LoggerManager: NSObject {
             var mdict = dict
             mdict["appVersion"] = Bundle.main.infoDictionary!["CFBundleShortVersionString"]
             mdict["timestamp"] = timestamp*1000
-            mdict["deviceId"] = CanarySwift.shared.deviceId;
+            mdict["deviceId"] = CanaryManager.shared.deviceId;
             mdict["type"] = 1;
             message.data = JSON(mdict)
             CanaryWebSocket.shared.sendMessage(message: message)
@@ -36,7 +36,7 @@ class LoggerManager: NSObject {
     
     func register(webSocket: CanaryWebSocket) {
         var msg = ProtoMessage(type: .register)
-        var device = ProtoDevice(deviceId: CanarySwift.shared.deviceId ?? "")
+        var device = ProtoDevice(deviceId: CanaryManager.shared.deviceId ?? "")
         var dict: [String : JSON] = [:]
         customProfile?().forEach({ (key, value) in
             dict[key] = JSON(value)

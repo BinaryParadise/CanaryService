@@ -11,6 +11,6 @@ import Canary
 public class CanaryTTYLogger: DDAbstractLogger {
     @objc static let shared = CanaryTTYLogger()
     public override func log(message logMessage: DDLogMessage) {
-        CanarySwift.shared.storeLogMessage(dict: logMessage.dictionaryWithValues(forKeys: StoreLogKeys), timestamp: logMessage.timestamp.timeIntervalSince1970)
+        CanaryManager.shared.storeLogMessage(dict: logMessage.dictionaryWithValues(forKeys: CanaryManager.StoreLogKeys), timestamp: logMessage.timestamp.timeIntervalSince1970)
     }
 }

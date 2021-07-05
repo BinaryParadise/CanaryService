@@ -47,13 +47,13 @@ struct Result: Codable {
     
     func checkIntercept(for request: URLRequest) -> (should:Bool, url: URL?) {
         if let host = request.url?.host {
-            if CanarySwift.shared.baseURL?.contains(host) ?? false {
+            if CanaryManager.shared.baseURL?.contains(host) ?? false {
                 return (false, nil)
             }
         }
         //完全匹配
         let path = request.url?.path ?? ""
-        if path == MockGroupURL || request.url?.host == CanarySwift.shared.baseURL {
+        if path == MockGroupURL || request.url?.host == CanaryManager.shared.baseURL {
             return (false, nil)
         }
         var matchMock = mockMap[path]
@@ -83,7 +83,7 @@ struct Result: Codable {
                 if let q = request.url?.query {
                     queryStr.append("?\(q)")
                 }
-                url = URL(string: "\(CanarySwift.shared.baseURL ?? "")/api/mock/app/scene/\(scendid)\(queryStr)")
+                url = URL(string: "\(CanaryManager.shared.baseURL ?? "")/api/mock/app/scene/\(scendid)\(queryStr)")
             }
 
         }

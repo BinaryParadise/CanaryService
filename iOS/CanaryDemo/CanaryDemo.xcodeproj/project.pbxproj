@@ -270,7 +270,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" != \"Release\" ]; then\nruby \"../CanarySwift/Configuration/ProjectConfigurator.rb\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}${WRAPPER_SUFFIX}\" \"82e439d7968b7c366e24a41d7f53f47d\" http://127.0.0.1:8081\nfi";
+			shellScript = "if [ \"$CONFIGURATION\" != \"Release\" ]; then\nruby \"../Sources/Configuration/ProjectConfigurator.rb\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}${WRAPPER_SUFFIX}\" \"82e439d7968b7c366e24a41d7f53f47d\" http://127.0.0.1:8081\nfi";
 		};
 		647B339DA34884CB6C9F8DD6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

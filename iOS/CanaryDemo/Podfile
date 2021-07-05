@@ -22,6 +22,6 @@ target 'CanaryDemo' do
 end
 
 post_install do |installer|
-  require_relative '../CanarySwift/Configuration/ProjectConfigurator.rb'
+  require_relative '../Sources/Configuration/ProjectConfigurator.rb'
   ProjectConfigurator::configure_project(installer, '82e439d7968b7c366e24a41d7f53f47d', 'http://127.0.0.1:8081')
 end

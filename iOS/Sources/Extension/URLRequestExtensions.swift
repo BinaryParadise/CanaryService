@@ -16,9 +16,9 @@ import CoreServices
 
 extension URLRequest {
     static func get(with path: String, completion: ((Result, Error?) -> Void)?) -> Void {
-        let r = NSMutableURLRequest(url: URL(string: "\(CanarySwift.shared.baseURL ?? "")\(path)")!)
+        let r = NSMutableURLRequest(url: URL(string: "\(CanaryManager.shared.baseURL ?? "")\(path)")!)
         r.httpMethod = "GET"
-        if let user = CanarySwift.shared.user() {
+        if let user = CanaryManager.shared.user() {
             r.setValue(user.token, forHTTPHeaderField: "Canary-Access-Token")
         }
         r.setValue(userAgent(), forHTTPHeaderField: "User-Agent")
@@ -28,7 +28,7 @@ extension URLRequest {
                 do {
                     let result = try JSONDecoder().decode(Result.self, from: data ?? Data())
                     if result.code == 401 {
-                        CanarySwift.shared.logout()
+                        CanaryManager.shared.logout()
                         return
                     }
                     completion?(result, error)
@@ -40,10 +40,10 @@ extension URLRequest {
     }
     
     static func post(with path: String, params: [String : AnyHashable]?, completion: ((Result, Error?) -> Void)?) -> Void {
-        let r = NSMutableURLRequest(url: URL(string: "\(CanarySwift.shared.baseURL ?? "")\(path)")!)
+        let r = NSMutableURLRequest(url: URL(string: "\(CanaryManager.shared.baseURL ?? "")\(path)")!)
         r.httpMethod = "POST"
         r.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let user = CanarySwift.shared.user() {
+        if let user = CanaryManager.shared.user() {
             r.setValue(user.token, forHTTPHeaderField: "Canary-Access-Token")
         }
         r.setValue(userAgent(), forHTTPHeaderField: "User-Agent")

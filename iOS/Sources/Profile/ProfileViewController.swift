@@ -36,7 +36,7 @@ class ProfileViewController: UIViewController {
             make.left.equalToSuperview().offset(20)
         }
         
-        switchOn.isEnabled = CanarySwift.shared.user() != nil
+        switchOn.isEnabled = CanaryManager.shared.user() != nil
         switchOn.isOn = CanaryMockURLProtocol.isEnabled
         view.addSubview(switchOn)
         switchOn.snp.makeConstraints { (make) in
@@ -59,7 +59,7 @@ class ProfileViewController: UIViewController {
         infoView = nil
         loginView?.removeFromSuperview()
         loginView = nil
-        if let user = CanarySwift.shared.user() {
+        if let user = CanaryManager.shared.user() {
             infoView = InfoView(frame: .zero)
             view.addSubview(infoView!)
             infoView?.snp.makeConstraints({ (make) in
@@ -88,7 +88,7 @@ class ProfileViewController: UIViewController {
         let alert = UIAlertController(title: nil, message: "确定退出登录?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { [weak self] (action) in
-            CanarySwift.shared.logout()
+            CanaryManager.shared.logout()
             self?.configView()
         }))
         present(alert, animated: true, completion: nil)
@@ -141,7 +141,7 @@ class ProfileViewController: UIViewController {
         override init(frame: CGRect) {
             super.init(frame: frame)
             
-            guard let user = CanarySwift.shared.user() else { return }
+            guard let user = CanaryManager.shared.user() else { return }
             
             let spaceing = 15
             

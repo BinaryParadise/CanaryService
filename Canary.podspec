@@ -38,7 +38,7 @@ TODO: Add long description of the pod here.
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |ss|
-    ss.source_files = 'iOS/CanarySwift/**/*'
+    ss.source_files = 'iOS/Sources/**/*'
     ss.dependency 'SwifterSwift'
     ss.dependency 'SnapKit'
     ss.dependency 'SwiftyJSON'

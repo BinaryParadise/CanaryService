@@ -77,7 +77,7 @@ class MajorViewController: UIViewController {
     
     @objc func onBackButton() {
         dismiss(animated: true) {
-            CanarySwift.shared.lock.unlock()
+            CanaryManager.shared.lock.unlock()
         }
     }
     
@@ -86,7 +86,7 @@ class MajorViewController: UIViewController {
     }
     
     deinit {
-        CanarySwift.shared.lock.unlock()
+        CanaryManager.shared.lock.unlock()
     }
 }
 

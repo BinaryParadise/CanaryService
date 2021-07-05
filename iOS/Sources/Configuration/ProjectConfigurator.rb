@@ -35,7 +35,7 @@ class ProjectConfigurator
         end
       end
 
-      rubyfile = @ruby_path + "/CanarySwift/Configuration/ProjectConfigurator.rb"
+      rubyfile = @ruby_path + "/Sources/Configuration/ProjectConfigurator.rb"
 
       phase = self.fetch_exist_phase(CN_PHASE_NAME_FETCH_ENV, project_target)
       if phase.nil?

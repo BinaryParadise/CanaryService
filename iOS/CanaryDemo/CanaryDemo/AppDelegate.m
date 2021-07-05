@@ -20,7 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    CanarySwift *shared = CanarySwift.shared;
+    CanaryManager *shared = CanaryManager.shared;
     shared.appSecret = @"82e439d7968b7c366e24a41d7f53f47d";
     shared.deviceId = UIDevice.currentDevice.identifierForVendor.UUIDString;
     shared.baseURL = @"http://127.0.0.1";

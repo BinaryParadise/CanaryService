@@ -47,7 +47,7 @@ public class ConfigProvider {
     }
 
     func fetchRemoteConfig(completion: @escaping (() -> Void)) {
-        var confURL = "/api/conf/full?appkey=\(CanarySwift.shared.appSecret)"
+        var confURL = "/api/conf/full?appkey=\(CanaryManager.shared.appSecret)"
         URLRequest.get(with: confURL) { [weak self] (result, error) in
             if result.code == 0 {
                 self?.processRemoteConfig(data: result.data)

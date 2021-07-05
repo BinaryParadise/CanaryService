@@ -13,7 +13,7 @@
 + (void)load {
     //用以初始化Mock
     if (CanaryMockURLProtocol.isEnabled) {
-        [CanarySwift shared];
+        [CanaryManager shared];
     }
 }
 

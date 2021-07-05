@@ -8,7 +8,7 @@
 import Foundation
 import SwiftyJSON
 
-@objc public class CanarySwift: NSObject {
+@objc public class CanaryManager: NSObject {
     
     /// 金丝雀服务域名
     @objc public var baseURL: String?
@@ -24,7 +24,7 @@ import SwiftyJSON
     private var _user: UserAuth?
     private var nav: UINavigationController?
         
-    @objc public static let shared = CanarySwift()
+    @objc public static let shared = CanaryManager()
     
     /// 日志对象Key集合
     @objc public static let StoreLogKeys = ["message",
@@ -93,7 +93,7 @@ import SwiftyJSON
     }
 }
 
-extension CanarySwift {
+extension CanaryManager {
     @objc public func startLogger(domain: String? = nil, customProfile: (() -> [String: Any])? = nil) {
         setup()
         LoggerManager.shared.customProfile = customProfile

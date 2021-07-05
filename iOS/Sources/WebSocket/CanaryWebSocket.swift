@@ -34,9 +34,9 @@ class CanaryWebSocket: NSObject {
     
     func start() {
         mySocket?.disconnect()
-        let fullURL = URL(string: "\(webSocketURL)/\(UIDevice.current.systemName)/\(CanarySwift.shared.deviceId!)")!
+        let fullURL = URL(string: "\(webSocketURL)/\(UIDevice.current.systemName)/\(CanaryManager.shared.deviceId!)")!
         var mreq = URLRequest(url: fullURL)
-        mreq.setValue(CanarySwift.shared.appSecret, forHTTPHeaderField: "app-secret")
+        mreq.setValue(CanaryManager.shared.appSecret, forHTTPHeaderField: "app-secret")
         mySocket = WebSocket(request: mreq)
         mySocket?.delegate = self
         
@@ -44,7 +44,7 @@ class CanaryWebSocket: NSObject {
             pingTimer = Timer.scheduledTimer(timeInterval: retryInterval, target: self, selector: #selector(pingAction), userInfo: nil, repeats: true)
             RunLoop.main.add(pingTimer!, forMode: .default)
         }
-        pingTimer?.fire()
+        pingTimer?.fireDate = Date(timeIntervalSinceNow: retryInterval)
         mySocket?.connect()
         print("[Canary] 尝试连接到\(fullURL)")
     }

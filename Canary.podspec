@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Canary'
-  s.version          = '0.7.0'
+  s.version          = '0.7.1'
   s.summary          = 'Canary is SDK For CanaryService.'
 
 # This description is used to generate tags and improve search results.

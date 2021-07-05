@@ -15,11 +15,11 @@ PODS:
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - Alamofire (4.9.1)
-  - Canary (0.7.0):
-    - Canary/Core (= 0.7.0)
-  - Canary/CanaryProto (0.7.0):
+  - Canary (0.7.1):
+    - Canary/Core (= 0.7.1)
+  - Canary/CanaryProto (0.7.1):
     - SwiftyJSON
-  - Canary/Core (0.7.0):
+  - Canary/Core (0.7.1):
     - Canary/CanaryProto
     - SnapKit
     - Starscream (~> 4.0)
@@ -88,7 +88,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  Canary: 71178165ef00f247a424785c734e37c74d4fa853
+  Canary: bb70b30b7bebeaa327962b8825ed058e5392e89f
   CocoaLumberjack: e8955b9d337ac307103b0a34fd141c32f27e53c5
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37

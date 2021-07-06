@@ -34,8 +34,25 @@ class MockData: Codable {
     /// 匹配场景，未指定时，默认第一个场景生效
     func matchScene(sceneid: Int?, request: URLRequest) -> Int? {
         if sceneid ?? 0 == AutomaticMode {
+            var queryParameters: [String : String]?
+            if request.httpMethod == "GET" {
+                queryParameters = request.url?.queryParameters
+            } else if request.httpMethod == "POST" {
+                let dict = (try? request.httpBodyData?.jsonObject()) as? [String : Any]
+                queryParameters = dict?.mapValues({ value -> String in
+                    if let v = value as? String {
+                        return v
+                    } else if let v = value as? Int {
+                        return v.string
+                    } else if let v = value as? Float {
+                        return v.string
+                    }
+                    return String(describing: value)
+                })
+            }
+            
             //匹配参数
-            if let queryParameters = request.url?.queryParameters {
+            if let queryParameters = queryParameters {
                 var lowerQuery: [String : String] = [:]
                 queryParameters.forEach { (key, value) in
                     lowerQuery[key.lowercased()] = value
@@ -45,7 +62,7 @@ class MockData: Codable {
                         continue
                     }
                     if scene.params?.all(matching: { (param) -> Bool in
-                        print("\(param.name.lowercased())=\(lowerQuery[param.name.lowercased()]) \(param.name.lowercased())=\(param.value)")
+                        print("\(param.name.lowercased())=\(String(describing: lowerQuery[param.name.lowercased()])) \(param.name.lowercased())=\(param.value)")
                         return lowerQuery[param.name.lowercased()] == param.value
                     }) == true {
                         return scene.id

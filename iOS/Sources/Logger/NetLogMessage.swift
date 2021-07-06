@@ -21,32 +21,33 @@ class NetLogMessage {
         method = request.httpMethod;
         requestURL = request.url;
         requestHeaderFields = request.allHTTPHeaderFields;
-        requestBody = request.httpBody;
-        if requestBody == nil {
-            requestBody = bodyData(stream: request.httpBodyStream)
-        }
+        requestBody = (request as URLRequest).httpBodyData;
         responseHeaderFields = response.allHeaderFields
         responseBody = data
         statusCode = response.statusCode
     }
-    
-    private func bodyData(stream: InputStream?) -> Data? {
-        guard let stream = stream else { return nil }
-        var data = Data()
-        stream.open()
-        
-        let bufferSize = 1024
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
-        defer {
-            buffer.deallocate()
-        }
-        while stream.hasBytesAvailable {
-            let len = stream.read(buffer, maxLength: bufferSize)
-            if len > 0 && stream.streamError == nil {
-                data.append(buffer, count: len)
+}
+
+extension URLRequest {
+    var httpBodyData: Data? {
+        if let stream = httpBodyStream {
+            var data = Data()
+            stream.open()
+            
+            let bufferSize = 1024
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+            defer {
+                buffer.deallocate()
             }
+            while stream.hasBytesAvailable {
+                let len = stream.read(buffer, maxLength: bufferSize)
+                if len > 0 && stream.streamError == nil {
+                    data.append(buffer, count: len)
+                }
+            }
+            stream.close()
+            return data.count > 0 ? data:nil
         }
-        stream.close()
-        return data.count > 0 ? data:nil
+        return httpBody
     }
 }

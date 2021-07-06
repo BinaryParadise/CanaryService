@@ -155,7 +155,7 @@ extension CanaryManager {
         if let requestBody = netLog.requestBody {
             mdict["requestbody"] = (try? JSONSerialization.jsonObject(with: requestBody, options: .mutableLeaves)) ?? requestBody.string(encoding:.utf8)
         }
-        if let responseBody = netLog.requestBody {
+        if let responseBody = netLog.responseBody {
             mdict["responsebody"] = (try? JSONSerialization.jsonObject(with: responseBody, options: .mutableLeaves)) ?? responseBody
         }
         mdict["timestamp"] = timestamp

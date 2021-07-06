@@ -17,6 +17,9 @@ class MockController {
                 if var mocks = try MockMapper.findAllMock(pid: req.pid, uid: req.uid, paging: Paging(["pageSize": "1000", "pageNum": "1"]), groupId: item.id)?.decode([ProtoMock].self) {
                     for (i, mock) in mocks.enumerated() {
                         mocks[i].scenes = try MockMapper.findAllScene(mockid: mock.id)?.decode([ProtoMockScene].self)
+                        for (y, scene) in (mocks[i].scenes ?? []).enumerated() {
+                            mocks[i].scenes?[y].params = try MockMapper.findAllParam(sceneid: scene.id)?.decode([ProtoMockParam].self)
+                        }
                         mocks[i].scenes?.insert(ProtoMockScene(mockid: mock.id, name: "自动"), at: 0)
                     }
                     groups[index].mocks = mocks

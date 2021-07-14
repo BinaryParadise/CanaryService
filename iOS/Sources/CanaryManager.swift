@@ -141,6 +141,8 @@ extension CanaryManager {
         
         var msg = ProtoMessage(type: .log);
         var mdict: [String: Any] = [:]
+        mdict["identify"] = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
+        mdict["timestamp"] = timestamp
         if let sceneid = netLog.responseHeaderFields?["scene_id"] as? String {
             mdict["flag"] = 2 //DDLogFlag.DDLogFlagWarning
             let scenename = (netLog.responseHeaderFields?["scene_name"] as! String)
@@ -158,7 +160,6 @@ extension CanaryManager {
         if let responseBody = netLog.responseBody {
             mdict["responsebody"] = (try? JSONSerialization.jsonObject(with: responseBody, options: .mutableLeaves)) ?? responseBody
         }
-        mdict["timestamp"] = timestamp
         mdict["statusCode"] = netLog.statusCode
         mdict["type"] = 2
         msg.data = JSON(mdict)

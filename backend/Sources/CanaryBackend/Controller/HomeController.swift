@@ -37,6 +37,25 @@ class HomeController {
     var snapshot: ResultHandler = { request, response in
         let data = try DBManager.shared.query(statement: "SELECT * FROM APISnapshot WHERE identify=:1", args: [request.urlVariables["identify"]])?.first
         let obj = try JSONSerialization.jsonObject(with: (data?["data"] as? String)?.data(using: .utf8) ?? Data(), options: .mutableLeaves)
-        return .entry(obj)
+        if request.header(.xRequestedWith) == "XMLHttpRequest" {
+            return .entry(obj)
+        } else {
+            response.setHeader(.contentType, value: "text/html; charset=utf-8")
+            if let dict = obj as? NSDictionary {
+                response.setBody(string: """
+                    <html>
+                    <head>
+                        <title>接口请求响应快照 - 金丝雀</title>
+                        <meta property="og:title" content="接口请求响应快照" />
+                        <meta property="og:url" content="\(dict["url"] as? String ?? "")" />
+                        <meta property="og:description" content="可查看请求和响应的详细数据" />
+                    </head>
+                    <body>Open Graph Data</body>
+                    </html>
+                    """)
+                response.completed(status: .ok)
+            }
+            return nil
+        }
     }
 }

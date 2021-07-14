@@ -28,7 +28,6 @@ export default class NetLogPage extends React.Component {
 
     render() {
         const { data } = this.props
-        console.log(data)
         if (data == undefined || data == null) {
             return <p></p>
         }

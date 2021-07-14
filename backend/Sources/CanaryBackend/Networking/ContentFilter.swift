@@ -14,7 +14,7 @@ let AccessToken = "Canary-Access-Token"
 
 public struct ContentFilter: HTTPRequestFilter {
     /// 无需鉴权白名单
-    let whiteList = ["/channel", "/conf/full", "/info", "/user/login", "/net/snapshot", "/mock/app/scene"]
+    let whiteList = ["/channel", "/conf/full", "/info", "/user/login", "/net/snapshot", "/mock/app/scene", "/log/snapshot/"]
     /// 需指定角色权限
     let adminList = ["/user/add", "/user/update", "/user/role/list"]
     public init() {

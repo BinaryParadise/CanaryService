@@ -33,7 +33,7 @@ class HomeController {
         return .done
     }
     
-    @Mapping(path: "/net/snapshot/{identify}")
+    @Mapping(path: "/log/snapshot/{identify}")
     var snapshot: ResultHandler = { request, response in
         let data = try DBManager.shared.query(statement: "SELECT * FROM APISnapshot WHERE identify=:1", args: [request.urlVariables["identify"]])?.first
         let obj = try JSONSerialization.jsonObject(with: (data?["data"] as? String)?.data(using: .utf8) ?? Data(), options: .mutableLeaves)

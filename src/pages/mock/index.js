@@ -5,6 +5,7 @@ import MockEditForm from './edit'
 import moment from 'moment'
 import { routerURL } from '../../common/util'
 import { Link } from 'react-router-dom'
+import edit from './edit';
 
 export default class MockIndexPage extends React.Component {
     state = {
@@ -16,10 +17,7 @@ export default class MockIndexPage extends React.Component {
             pageSize: 200,
             pageNum: 1
         },
-        editItem: {
-            visible: false,
-            data: {}
-        },
+        editItem: { visible: false },
         groups: [],
         group: {
             name: "全部分类",
@@ -102,7 +100,7 @@ export default class MockIndexPage extends React.Component {
             if (result.code != 0) {
                 return
             }
-            this.setState({ listData: result.data, loading: false, editItem: { visible: false, data: {} } })
+            this.setState({ listData: result.data, loading: false, editItem: { visible: false } })
         })
     }
 
@@ -137,30 +135,11 @@ export default class MockIndexPage extends React.Component {
     }
 
     onEdit = (record) => {
-        this.setState({ editItem: { visible: true, data: record } })
-    }
-
-    onSave = () => {
-        const { form } = this.formRef.props;
-        form.validateFields((err, values) => {
-            if (err) {
-                return;
-            }
-
-            this.submit(values, () => {
-                form.resetFields()
-                this.queryAll()
-            });
-        });
-    }
-
-    onCancel = () => {
-        const { editItem } = this.state
-        this.setState({ editItem: { ...editItem, visible: false } })
+        this.setState({ editItem: { ...record, visible: true, key: Math.random() } })
     }
 
     handleDelete = (record) => {
-        return axios.post('/mock/delete/'+record.id, {}).then(result => {
+        return axios.post('/mock/delete/' + record.id, {}).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")
                 this.queryAll()
@@ -170,23 +149,12 @@ export default class MockIndexPage extends React.Component {
         })
     }
 
-    submit = (values, callback) => {
-        return axios.post('/mock/update', values).then(result => {
-            if (result.code == 0) {
-                message.success("保存成功")
-                callback()
-            } else {
-                message.error(result.error)
-            }
-        });
-    }
-
     componentDidMount() {
         this.queryGroup()
     }
 
     render() {
-        const { loading, listData, editItem, group, groups } = this.state
+        const { loading, listData, editItem } = this.state
         var columns = this.filtersColumns()
         return (
             <Layout>
@@ -200,18 +168,7 @@ export default class MockIndexPage extends React.Component {
                 <Button type="primary" style={{ width: 100, marginBottom: 12 }} onClick={() => this.onEdit({})}>+添加接口</Button>
 
                 <Table rowKey="id" loading={loading} pagination={{ pageSize: 200, showTotal: (total, range) => `${range[0]}-${range[1]} 共 ${total} 条` }} dataSource={listData} onChange={this.handleChange} columns={columns}></Table>
-                <Modal
-                    visible={editItem.visible}
-                    title={editItem.data == null ? "新增" : "修改"}
-                    cancelText="取消"
-                    okText="保存"
-                    width={900}
-                    onCancel={this.onCancel}
-                    onOk={this.onSave}
-                    destroyOnClose={true}
-                >
-                    <MockEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data || {}}></MockEditForm>
-                </Modal>
+                <MockEditForm key={editItem.key} data={editItem} onClose={this.queryAll}></MockEditForm>
             </Layout >
         )
     }

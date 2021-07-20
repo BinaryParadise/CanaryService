@@ -39,41 +39,51 @@ class DBManager {
     func execute(statement: String ,args: [Any?] = []) throws {
         sema.wait()
         log(statement: statement, args: args)
-        try db?.execute(statement: statement, doBindings: { stmt in
-            try self.bindArgs(stmt: stmt, args: args)
-        })
-        sema.signal()
+        do {
+            try db?.execute(statement: statement, doBindings: { stmt in
+                try self.bindArgs(stmt: stmt, args: args)
+            })
+            sema.signal()
+        } catch {
+            sema.signal()
+            throw error
+        }
     }
     
     func query(statement: String, args: [Any] = []) throws -> [[String : AnyHashable]]? {
         sema.wait()
         log(statement: statement, args: args)
         var result: [[String : AnyHashable]] = []
-        try db?.forEachRow(statement: statement, doBindings: { stmt in
-            try self.bindArgs(stmt: stmt, args: args)
-        }, handleRow: { stmt, idx in
-            var map:[String : AnyHashable] = [:]
-            for i in 0..<stmt.columnCount() {
-                var type = ColumnType(rawValue: Int(stmt.columnType(position: i))) ?? .null
-                let columnName = stmt.columnName(position: i)
-                if stmt.columnDeclType(position: i).lowercased().hasPrefix("bit") {
-                    type = .boolean
+        do {
+            try db?.forEachRow(statement: statement, doBindings: { stmt in
+                try self.bindArgs(stmt: stmt, args: args)
+            }, handleRow: { stmt, idx in
+                var map:[String : AnyHashable] = [:]
+                for i in 0..<stmt.columnCount() {
+                    var type = ColumnType(rawValue: Int(stmt.columnType(position: i))) ?? .null
+                    let columnName = stmt.columnName(position: i)
+                    if stmt.columnDeclType(position: i).lowercased().hasPrefix("bit") {
+                        type = .boolean
+                    }
+                    //LogDebug("\(columnName) = \(stmt.columnDeclType(position: i))")
+                    switch type {
+                    case .int:
+                        map[columnName] = stmt.columnInt64(position: i)
+                    case .text:
+                        map[columnName] = stmt.columnText(position: i)
+                    case .boolean:
+                        map[columnName] = stmt.columnInt(position: i) > 0
+                    case .null:
+                        break
+                    }
                 }
-                //LogDebug("\(columnName) = \(stmt.columnDeclType(position: i))")
-                switch type {
-                case .int:
-                    map[columnName] = stmt.columnInt64(position: i)
-                case .text:
-                    map[columnName] = stmt.columnText(position: i)
-                case .boolean:
-                    map[columnName] = stmt.columnInt(position: i) > 0
-                case .null:
-                    break
-                }
-            }
-            result.append(map)
-        })
-        sema.signal()
+                result.append(map)
+            })
+            sema.signal()
+        } catch {
+            sema.signal()
+            throw error
+        }
         return result.count > 0 ? result : nil
     }
     

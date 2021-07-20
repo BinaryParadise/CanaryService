@@ -263,11 +263,6 @@ class MockScenePage extends React.Component {
 
 
                     <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns} rowKey="id" expandedRowRender={(e) => this.expandTable(e)}></Table>
-
-                    <span style={{ fontWeight: 'bold', marginTop: 8, marginBottom: 8 }}>模板数据</span>
-
-                    <Input.TextArea placeholder="请在设备中上传模板数据" autoSize={{ minRows: 6, maxRows: 100 }} value={mock.template} />
-                    <Button type="primary" style={{ width: 100, marginTop: 8, marginBottom: 12 }} onClick={() => this.onEdit({})}>保存模板</Button>
                 </div>
                 <Modal
                     visible={editItem.visible}

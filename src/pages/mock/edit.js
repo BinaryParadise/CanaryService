@@ -18,7 +18,7 @@ const formItemLayout = {
 class MockEditForm extends React.Component {
     state = {
         visiable: false,
-        groups: [],
+        groups: null,
         data: this.props.data,
         appid: (window.__config__.projectInfo || {}).id
     }
@@ -42,7 +42,8 @@ class MockEditForm extends React.Component {
             if (result.code != 0) {
                 return
             }
-            this.setState({ groups: result.data })
+            const { data } = this.state
+            this.setState({ groups: result.data, data: { ...data, groupid: data.groupid || result.data[0].id } })
         })
     }
 
@@ -59,7 +60,7 @@ class MockEditForm extends React.Component {
                 return
             }
 
-            this.groupField.value = ""
+            this.props.form.setFieldsValue({ groupname: "" })
             this.queryAll()
         })
     }
@@ -77,8 +78,8 @@ class MockEditForm extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form
         const { visiable, groups, data } = this.state
-        if (data.groupid == undefined && groups.length > 0) {
-            data.groupid = groups[0].id
+        if (groups == null) {
+            return <div></div>
         }
         const methodSelecor = getFieldDecorator('method', {
             initialValue: data.method || "GET",
@@ -118,10 +119,10 @@ class MockEditForm extends React.Component {
                     {getFieldDecorator('groupid', {
                         initialValue: data.groupid,
                         rules: [{ required: true, message: '请选择分类' }],
-                    })(<div><Select placeholder="请选择分类" defaultValue={data.groupid} style={{ width: 245 }} onChange={(e) => this.onGroupChange(e)}>
+                    })(<div><Select defaultValue={data.groupid} placeholder="请选择分类" style={{ width: 245 }} onChange={(e) => this.onGroupChange(e)}>
                         {
                             groups.map(item => (
-                                <Select.Option key={item.id} value={item.id} label={item.name}>{item.name}</Select.Option>
+                                <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
                             ))
                         }
                     </Select><a style={{ marginLeft: 8 }} onClick={() => this.showGroup(visiable)}>管理分类</a></div>)}

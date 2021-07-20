@@ -10,7 +10,7 @@
  Target Server Version : 3030001
  File Encoding         : 65001
 
- Date: 24/06/2021 10:38:17
+ Date: 20/07/2021 14:10:58
 */
 
 PRAGMA foreign_keys = false;
@@ -38,7 +38,9 @@ CREATE TABLE "MockData" (
   "updatetime" integer NOT NULL ON CONFLICT REPLACE DEFAULT (STRFTIME('%s', 'now')*1000 + SUBSTR(STRFTIME('%f', 'now'), 4)),
   "groupid" INTEGER NOT NULL,
   "sceneid" integer,
-  "enabled" bit NOT NULL ON CONFLICT REPLACE DEFAULT 0
+  "enabled" bit NOT NULL ON CONFLICT REPLACE DEFAULT 0,
+  CONSTRAINT "uk_mockdata_path" UNIQUE ("path" ASC, "groupid" ASC) ON CONFLICT FAIL,
+  CONSTRAINT "uk_mockdata_name" UNIQUE ("name", "groupid")
 );
 
 -- ----------------------------

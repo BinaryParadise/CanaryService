@@ -53,7 +53,7 @@ class SceneEditForm extends React.Component {
                     {getFieldDecorator('response', {
                         initialValue: data.response,
                         rules: [{ required: false }],
-                    })(<Input.TextArea placeholder="请输入响应结果" autoSize={{ minRows: 6, maxRows: 50 }} value={data.response} />)}
+                    })(<Input.TextArea placeholder="请输入响应结果" autoSize={{ minRows: 6, maxRows: 50 }} />)}
                 </Form.Item>
             </Form >
         </div>

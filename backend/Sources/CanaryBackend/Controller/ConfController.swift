@@ -21,4 +21,9 @@ class ConfController {
         let rs = try ConfMapper.shared.findFull(pid: app?.id ?? 0)
         return ProtoResult(entry: try JSONEncoder().encode(rs))
     }
+    
+    @Mapping(path: "/conf/update", method: [.post])
+    var update: ResultHandler = { request, response in
+        return .done
+    }
 }

@@ -2,7 +2,6 @@
 
 var headers = ""
 export default {
-  treeShaking: true,
   routes: [
     {
       path: '/',
@@ -63,28 +62,16 @@ export default {
       ],
     },
   ],
-  plugins: [
-    // ref: https://umijs.org/plugin/umi-plugin-react.html
-    [
-      'umi-plugin-react',
-      {
-        antd: true,
-        dva: true,
-        dynamicImport: false,
-        title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
-        dll: false,
-        routes: {
-          exclude: [
-            /models\//,
-            /services\//,
-            /model\.(t|j)sx?$/,
-            /service\.(t|j)sx?$/,
-            /components\//,
-          ],
-        },
-      },
-    ],
-  ],
+  mfsu: {},
+  antd: {},
+  dva: {
+    immer: false,
+    hmr: false,
+    skipModelValidate: true
+  },
+  dynamicImport: {},
+  title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
+  mock: false,
   proxy: {
     '/api': {
       // target: 'http://127.0.0.1:9001',

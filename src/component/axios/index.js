@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import paramsUtil from './params'
 import { baseURI } from '../../common/config'
-import router from 'umi/router'
+import {history} from 'umi'
 import { notification } from 'antd'
 
 axios.withCredentials = true;
@@ -80,7 +80,7 @@ instance.interceptors.response.use(
 
     if (result.code == 401) {
       localStorage.removeItem("user")
-      router.push('/login')
+      history.push('/login')
       return;
     }
 

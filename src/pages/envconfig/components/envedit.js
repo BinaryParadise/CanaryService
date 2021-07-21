@@ -1,10 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { Button, Form, Input, Select, message, Menu, Radio } from 'antd'
-import axios from '../../../component/axios'
+import { Form, Input, Select, Radio, Modal } from 'antd'
+import axios from '@/component/axios'
 
-const Option = Select.Option
-const TextArea = Input.TextArea
+const { Option, OptGroup } = Select
 
 const formItemLayout = {
   labelCol: {
@@ -18,11 +16,10 @@ const formItemLayout = {
 };
 
 class EnvEditForm extends React.Component {
-  constructor(props) {
-    super(props)
-  }
+  formRef = React.createRef();
   state = {
-    listData: []
+    data: this.props.data,
+    listData: null
   }
 
   envTypeList = [
@@ -38,63 +35,72 @@ class EnvEditForm extends React.Component {
     axios.get("/conf/full", {}).then(result => this.setState({ listData: result.data }))
   }
 
-  render() {
-    const { getFieldDecorator } = this.props.form
-    const { data } = this.props
-    const { listData } = this.state
+  chooseTemplate = (list) => {
+    return (<Select placeholder="选择模板" allowClear>
+      {
+        list.map(g => <OptGroup key={g.type} label={g.name}>{g.items.map(d => <Option
+          key={d.id} value={d.id}>{d.name}</Option>)}</OptGroup>)
+      }
+    </Select>)
+  }
 
-    return (
-      <Form {...formItemLayout}>
-        <Form.Item style={{ display: 'none' }}>
-          {getFieldDecorator('appId', {
-            initialValue: data.appId
-          })(<Input type="hidden" />)}
-        </Form.Item>
-        <Form.Item style={{ display: 'none' }}>
-          {getFieldDecorator('id', {
-            initialValue: data.id
-          })(<Input type="hidden" />)}
-        </Form.Item>
-
-        {data.id <= 0 &&
-          <Form.Item {...formItemLayout} hasFeedback label="模板">
-            {getFieldDecorator('copyid', {
-              rules: [{ required: false }]
-            })(
-              <Select placeholder="选择模板" allowClear>
-                {
-                  listData.map(g => <Select.OptGroup key={g.type} label={g.name}>{g.items.map(d => <Option
-                    key={d.id} value={d.id}>{d.name}</Option>)}</Select.OptGroup>)
-                }
-
-              </Select>
-            )}
-          </Form.Item>
+  onFinished = (values) => {
+    return axios.post(`/conf/update/${values.id}`, values).then(result => {
+      if (result.code == 0) {
+        message.success("保存成功")
+        if (this.onClose) {
+          this.onClose()
         }
+      } else {
+        message.error(result.msg)
+      }
+    });
+  }
 
-        <Form.Item {...formItemLayout} hasFeedback label="环境名称">
-          {getFieldDecorator('name', {
-            initialValue: data.name,
-            rules: [{ required: true, message: '请输入环境名称!' }]
-          })(<Input placeholder="请勿使用特殊字符" />)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} hasFeedback label="描述">
-          {getFieldDecorator('comment', {
-            initialValue: data.comment,
-            rules: [{ required: true, message: '请输入说明' }]
-          })(<Input placeholder="环境说明" />)}
-        </Form.Item>
-        <Form.Item {...formItemLayout} label="类型">
-          {getFieldDecorator('type', {
-            initialValue: data.type,
-            rules: [{ required: false }]
-          })(<Radio.Group name='envtypes'>
-            {this.envTypeList.map(record => <Radio.Button key={record.type}
-              value={record.type}>{record.title}</Radio.Button>)}
-          </Radio.Group>)}
-        </Form.Item>
-      </Form>
+  onCancel = () => {
+    this.setState({ data: { ...this.state.data, visible: false } })
+  }
+
+  render() {
+    const { listData, data } = this.state
+    if (listData == null || !data.visible) {
+      return <div></div>
+    }
+    return (
+      <Modal title={data.id ? "修改" : "添加"}
+        visible={data.visible}
+        confirmLoading={data.loading}
+        onOk={() => {
+          this.formRef.current.validateFields().then(values => this.onFinished(values))
+        }}
+        onCancel={this.onCancel}
+        maskClosable={false} >
+        <Form ref={this.formRef} {...formItemLayout}>
+          <Form.Item name="id" initialValue={data.id || 0} style={{ display: 'none' }}>
+            <Input type="hidden" />
+          </Form.Item>
+
+          {data.id == undefined &&
+            <Form.Item name="copyid" {...formItemLayout} label="模板">
+              {this.chooseTemplate(listData)}
+            </Form.Item>
+          }
+
+          <Form.Item name="name" initialValue={data.name} rules={[{ required: true, message: '请输入环境名称!' }]} {...formItemLayout} hasFeedback label="环境名称">
+            <Input placeholder="请勿使用特殊字符" />
+          </Form.Item>
+          <Form.Item name="comment" initialValue={data.comment} rules={[{ required: true, message: '请输入说明' }]} {...formItemLayout} hasFeedback label="描述">
+            <Input placeholder="环境说明" />
+          </Form.Item>
+          <Form.Item name="type" initialValue={data.type} {...formItemLayout} label="类型">
+            <Radio.Group name='envtypes'>
+              {this.envTypeList.map(record => <Radio.Button key={record.type}
+                value={record.type}>{record.title}</Radio.Button>)}
+            </Radio.Group>
+          </Form.Item>
+        </Form>
+      </Modal>
     )
   }
 }
-export default Form.create()(EnvEditForm)
+export default EnvEditForm

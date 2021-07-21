@@ -123,9 +123,7 @@ export default class MockIndexPage extends React.Component {
     }
 
     onActive = (record) => {
-        var newR = { ...record }
-        newR.enabled = !record.enabled
-        return axios.post('/mock/update', newR).then(result => {
+        return axios.post('/mock/active', { mockid: record.id }).then(result => {
             if (result.code != 0) {
                 message.error(result.error)
                 return

@@ -1,5 +1,5 @@
 // 导入WebSocket模块:
-const { WebSocket } = require('ws');
+// const { WebSocket } = require('ws');
 // const sqlite3 = require('sqlite3')
 
 export const dva = {

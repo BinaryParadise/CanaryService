@@ -55,7 +55,6 @@ public enum ProtoError: Hashable, Error {
 public struct ProtoResult: Codable {
     /// 状态码，0表示成功
     public var code: Int = 0
-    public var error: String?
     public var msg: String?
     public var data: JSON?
     public var timestamp: Int64 = Int64(Date().timeIntervalSince1970*1000)
@@ -63,7 +62,6 @@ public struct ProtoResult: Codable {
     public init(_ error: ProtoError) {
         if error != .none {
             code = error.rawValue
-            self.error = error.description
             msg = error.description
         }
     }

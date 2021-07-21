@@ -13,6 +13,7 @@ class MockMapper {
         var sql = """
         SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE
             b.appid=:1 AND b.uid=:2
+        ORDER BY updatetime desc
         """
         if groupId > 0 {
             sql.append(" AND a.groupid=\(groupId)")
@@ -22,7 +23,7 @@ class MockMapper {
     }
     
     class func findAllGroup(pid: Int, uid: Int) throws -> [Any]? {
-        var sql = """
+        let sql = """
         SELECT * FROM MockGroup WHERE appid=:1 and uid=:2
         """
         return try DBManager.shared.query(statement: sql, args: [pid, uid])
@@ -30,8 +31,8 @@ class MockMapper {
     
     class func update(mock: ProtoMock) throws {
         if mock.id > 0 {
-            let sql = "UPDATE MockData set name=:1, method=:2, path=:3, groupid=:4, enabled=:5, updatetime=null where id=:6"
-            try DBManager.shared.execute(statement: sql, args: [mock.name,mock.method,mock.path, mock.groupid,mock.enabled,mock.id])
+            let sql = "UPDATE MockData set name=:1, method=:2, path=:3, groupid=:4, enabled=true, updatetime=null where id=:5"
+            try DBManager.shared.execute(statement: sql, args: [mock.name,mock.method,mock.path, mock.groupid,mock.id])
         } else {
             let sql = "INSERT INTO MockData(name, method, path, groupid) values(:1, :2, :3, :4)"
             try DBManager.shared.execute(statement: sql, args: [mock.name, mock.method, mock.path, mock.groupid])
@@ -39,8 +40,10 @@ class MockMapper {
     }
     
     class func activeMock(mockid: Int, enabled: Bool) throws {
-        let sql = "UPDATE MockData set enabled=:1, updatetime=null where id=:2"
-        try DBManager.shared.execute(statement: sql, args: [enabled, mockid])
+        let sql = """
+            UPDATE MockData set enabled=(CASE WHEN enabled THEN false ELSE true END), updatetime=null where id=:1
+            """
+        try DBManager.shared.execute(statement: sql, args: [mockid])
     }
     
     class func deleteMock(mockid: Int) throws {
@@ -103,5 +106,18 @@ class MockMapper {
                 """
             try DBManager.shared.execute(statement: sql, args: [enabled ? sceneid: nil, sceneid])
         }
+    }
+    
+    class func updateGroup(_ group: ProtoMockGroup) throws {
+        if group.id == 0 {
+            let sql = """
+                INSERT INTO MockGroup(name,appid, uid) VALUES(:1, :2, :3)
+                """
+            try DBManager.shared.execute(statement: sql, args: [group.name, group.appid, group.uid])
+        }
+    }
+    
+    class func deleteGroup(_ groupid: Int) throws {
+        try DBManager.shared.execute(statement: "DELETE FROM MockGroup WHERE id=:1", args: [groupid])
     }
 }

@@ -3,7 +3,7 @@ import styles from './logger.css';
 import PropTypes from 'prop-types'
 import { Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
 import WebSocket from '@/component/websocket'
-import router from 'umi/router';
+import {history} from 'umi';
 import NetLog from '../component/netlog'
 import { MessageType } from '@/common/util'
 
@@ -37,13 +37,13 @@ export default class LoggerMonitor extends React.Component {
         autoscroll: true,
         avaiable: false,
         logLevel: LevelVerbose,
-        visiable: false
+        visible: false
     }
     wsInstance = WebSocket.create(this.state.data.deviceId)
 
     componentDidMount() {
         if (this.state.data == undefined) {
-            router.push('/device')
+            history.push('/device')
             return
         }
         this.wsInstance.connect(this.onMessage)

@@ -1,8 +1,9 @@
 import styles from './index.css';
 import React from 'react'
 
-import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
-import router from 'umi/router';
+import { Layout, Drawer, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
+import { ContainerOutlined, HddOutlined, LinkOutlined, ProjectOutlined, SettingOutlined, ToolOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
+import { history } from 'umi';
 import axios from '../component/axios'
 import { AuthUser, Auth } from '../common/util'
 import default_handsome from '../assets/default_handsome.jpg'
@@ -37,7 +38,7 @@ class BasicLayout extends React.Component {
 
   onMenuSelect = (item) => {
     this.setState({ visible: false })
-    router.push(item.key);
+    history.push(item.key);
   }
 
   confirmSwitchProject = () => {
@@ -73,12 +74,12 @@ class BasicLayout extends React.Component {
 
   logout = () => {
     localStorage.removeItem("user")
-    router.push('/login')
+    history.push('/login')
   }
 
   componentDidMount() {
     if (localStorage.getItem("user") == null) {
-      router.push('/login')
+      history.push('/login')
     }
   }
 
@@ -114,7 +115,7 @@ class BasicLayout extends React.Component {
               }
             </Select> <a style={{ marginLeft: 6 }} hidden={!Auth('user')} onClick={() => {
               this.setState({ project: false })
-              router.push('/project')
+              history.push('/project')
             }}>管理</a>
           </Modal>
           <Drawer
@@ -136,37 +137,37 @@ class BasicLayout extends React.Component {
               onSelect={this.onMenuSelect}
             >
               <Menu.Item key="/env">
-                <Icon type="setting" />
+                <SettingOutlined></SettingOutlined>
                 <span>环境配置</span>
               </Menu.Item>
               <Menu.Item key="/device">
-                <Icon type="hdd" />
+                <HddOutlined></HddOutlined>
                 <span>设备列表</span>
               </Menu.Item>
               <Menu.Item key="/source" hidden={true}>
-                <Icon type="link" />
+                <LinkOutlined></LinkOutlined>
                 <span>路由配置</span>
               </Menu.Item>
               <Menu.Item key="/mock/data">
-                <Icon type="container" />
+                <ContainerOutlined></ContainerOutlined>
                 <span>Mock数据</span>
               </Menu.Item>
               <Menu.Item key="/tool" hidden={true}>
-                <Icon type="tool"></Icon>
+                <ToolOutlined></ToolOutlined>
                 <span>工具箱</span>
               </Menu.Item>
               <Menu.Item key="/project" hidden={!Auth('project')}>
-                <Icon type="project" />
+                <ProjectOutlined></ProjectOutlined>
                 <span>应用管理</span>
               </Menu.Item>
               <Menu.Item key="/user" hidden={!Auth('user')}>
-                <Icon type="user" />
+                <UserOutlined></UserOutlined>
                 <span>用户管理</span>
               </Menu.Item>
             </Menu>
           </Drawer>
           <Header className={styles.header}>
-            <Icon type="unordered-list" className={styles.logo} onMouseOver={this.showDrawer} />
+            <UnorderedListOutlined className={styles.logo} onMouseOver={this.showDrawer}></UnorderedListOutlined>
             <Button className={styles.title} onClick={this.switchProject}>
               {(user || {}).app == undefined ? "未选择应用" : user.app.name}
             </Button>

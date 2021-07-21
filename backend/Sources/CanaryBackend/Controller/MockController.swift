@@ -60,6 +60,18 @@ class MockController {
         return .entry(try MockMapper.findAllGroup(pid: request.pid, uid: request.uid))
     }
     
+    @Mapping(path: "/mock/group/update", method: [.post])
+    var groupUpdate: ResultHandler = { request, response in
+        try MockMapper.updateGroup(request.postDictionary.decode(ProtoMockGroup.self))
+        return .done
+    }
+    
+    @Mapping(path: "/mock/group/delete/{id}", method: [.post])
+    var groupDelete: ResultHandler = { request, resposne in
+        try MockMapper.deleteGroup(request.urlVariables.intValue("id"))
+        return .done
+    }
+    
     @Mapping(path: "/mock/scene/list/{mockid}")
     var sceneList: ResultHandler = { request, response in
         var scenes = try MockMapper.findAllScene(mockid: request.urlVariables.intValue("mockid"))?.decode([ProtoMockScene].self)

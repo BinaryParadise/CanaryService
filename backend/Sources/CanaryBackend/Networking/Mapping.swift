@@ -34,10 +34,10 @@ extension Mapping {
                 }
             } catch {
                 var result = ProtoResult(.system)
-                result.error = "\(error)"
+                result.msg = "\(error)"
                 if let sqlErr = error as? SQLiteError {
                     if sqlErr.code == 19 {
-                        result.error = "违反唯一约束"
+                        result.msg = "记录已存在"
                     }
                 }
                 let _ = try? response.setBody(json: result)

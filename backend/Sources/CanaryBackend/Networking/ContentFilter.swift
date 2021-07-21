@@ -65,13 +65,13 @@ public struct ContentFilter: HTTPRequestFilter {
     
     public func filter(request: HTTPRequest, response: HTTPResponse, callback: (HTTPRequestFilterResult) -> ()) {
         if !canRequest(request: request) {
-            try? response.setBody(json: ProtoResult(.unauthorized))
+            let _ = try? response.setBody(json: ProtoResult(.unauthorized))
             callback(.halt(request, response))
             return
         }
         if permissionDenied(request: request) {
             callback(.halt(request, response))
-            try? response.setBody(json: ProtoResult(.unauthorized))
+            let _ = try? response.setBody(json: ProtoResult(.unauthorized))
             return
         }
         callback(.continue(request, response))
@@ -83,7 +83,10 @@ public struct ContentFilter: HTTPRequestFilter {
 public extension HTTPRequest {
     var postDictionary: [String : Any] {
         let obj = JSON(parseJSON: postBodyString ?? "")
-        return obj.dictionaryObject ?? [:]
+        var dict = obj.dictionaryObject ?? [:]
+        dict["appid"] = pid
+        dict["uid"] = uid
+        return dict
     }
     
     var getDictionary: [String : String] {
@@ -95,7 +98,8 @@ public extension HTTPRequest {
     }
     
     var uid: Int {
-        return Int(session?.userid ?? "0")!
+        let userid = session?.userid
+        return Int(userid ?? "0") ?? 0
     }
     
     var pid: Int {

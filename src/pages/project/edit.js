@@ -1,7 +1,7 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import { Form, Input, Checkbox } from 'antd'
-import { AuthUser } from '../../common/util'
+import { Form, Input, Checkbox, Modal, message } from 'antd'
+import axios from '@/component/axios'
 
 const formItemLayout = {
     labelCol: {
@@ -15,37 +15,66 @@ const formItemLayout = {
 };
 
 class ProjectEditForm extends React.Component {
-    render() {
-        const { getFieldDecorator } = this.props.form
-        const { data } = this.props
-        return (
-            <Form {...formItemLayout} layout="horizontal">
-                {data.id > 0 &&
-                    <Form.Item style={{ display: 'none' }}>
-                        {getFieldDecorator('id', {
-                            initialValue: data.id
-                        })(<Input type="hidden"></Input>)}
-                    </Form.Item>
+    formRef = React.createRef()
+
+    state = {
+        data: this.props.data
+    }
+
+    onCancel = () => {
+        this.setState({ data: { ...this.state.data, visible: false } })
+    }
+
+    onSave = () => {
+        this.formRef.current.validateFields().then(values => {
+            this.submit(values, () => {
+                this.formRef.current.resetFields()
+                if (this.props.onClose) {
+                    this.props.onClose()
                 }
-                <Form.Item style={{ display: 'none' }}>
-                    {getFieldDecorator('uid', {
-                        initialValue: AuthUser().id
-                    })(<Input type="hidden"></Input>)}
+            });
+        })
+    }
+
+    submit = (values, callback) => {
+        if (values.id == undefined) {
+            values.id = 0
+            values.identify = "unknown"
+        }
+        return axios.post('/project/update', values).then(result => {
+            if (result.code == 0) {
+                message.success("保存成功")
+                callback()
+            } else {
+                message.error(result.error)
+            }
+        });
+    }
+
+    render() {
+        const { data } = this.state
+        return (<Modal
+            visible={data.visible}
+            title={data.id ? "新增" : "修改"}
+            cancelText="取消"
+            okText="保存"
+            onCancel={this.onCancel}
+            onOk={this.onSave}
+            destroyOnClose
+        >
+            <Form ref={this.formRef} initialValues={data} {...formItemLayout} layout="horizontal">
+                <Form.Item name="id" style={{ display: 'none' }}>
+                    <Input type="hidden"></Input>
                 </Form.Item>
-                <Form.Item label="名称">
-                    {getFieldDecorator('name', {
-                        initialValue: data.name,
-                        rules: [{ required: true, message: '请输入名称!' }],
-                    })(<Input />)}
+                <Form.Item name="name" rules={[{ required: true, message: '请输入名称!' }]} label="名称">
+                    <Input />
                 </Form.Item>
-                <Form.Item label="公开">
-                    {getFieldDecorator('shared', {
-                        valuePropName: 'checked',
-                        initialValue: data.shared
-                    })(<Checkbox />)}
+                <Form.Item name="shared" label="公开" valuePropName="checked">
+                    <Checkbox checked />
                 </Form.Item>
             </Form>
+        </Modal>
         )
     }
 }
-export default Form.create()(ProjectEditForm)
+export default ProjectEditForm

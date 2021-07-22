@@ -57,12 +57,12 @@ export default class ProjectPage extends React.Component {
         listData: [],
         editItem: {
             visible: false,
-            data: {}
+            key: Math.random()
         }
     }
 
     onEdit = (record) => {
-        this.setState({ editItem: { visible: true, data: record } })
+        this.setState({ editItem: { ...record, visible: true, key: Math.random() } })
     }
 
     componentDidMount() {
@@ -75,7 +75,7 @@ export default class ProjectPage extends React.Component {
             if (result.code != 0) {
                 return
             }
-            this.setState({ listData: result.data, loading: false, editItem: { visible: false, data: {} } })
+            this.setState({ listData: result.data, loading: false, editItem: { visible: false, key: Math.random() } })
         })
     }
 
@@ -91,25 +91,6 @@ export default class ProjectPage extends React.Component {
         })
     }
 
-    onCancel = () => {
-        const { editItem } = this.state
-        this.setState({ editItem: { ...editItem, visible: false } })
-    }
-
-    onSave = () => {
-        const { form } = this.formRef.props;
-        form.validateFields((err, values) => {
-            if (err) {
-                return;
-            }
-
-            this.submit(values, () => {
-                form.resetFields()
-                this.getAppList()
-            });
-        });
-    }
-
     resetAppSecret = (record) => {
         return axios.post("/project/appsecret/reset", record).then(result => {
             if (result.code == 0) {
@@ -119,25 +100,6 @@ export default class ProjectPage extends React.Component {
                 message.error(result.error);
             }
         })
-    }
-
-    saveFormRef = (formRef) => {
-        this.formRef = formRef
-    }
-
-    submit = (values, callback) => {
-        if (values.id == undefined) {
-            values.id = 0
-            values.identify = "unknown"
-        }
-        return axios.post('/project/update', values).then(result => {
-            if (result.code == 0) {
-                message.success("保存成功")
-                callback()
-            } else {
-                message.error(result.error)
-            }
-        });
     }
 
     render() {
@@ -151,17 +113,9 @@ export default class ProjectPage extends React.Component {
                     <Breadcrumb.Item>应用管理</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Button type="primary" style={{ width: 80, marginBottom: 12 }} onClick={() => this.onEdit({})}>添加</Button>
-                <Modal
-                    visible={editItem.visible}
-                    title={editItem.data == null ? "新增" : "修改"}
-                    cancelText="取消"
-                    okText="保存"
-                    onCancel={this.onCancel}
-                    onOk={this.onSave}
-                >
-                    <ProjectEditForm wrappedComponentRef={this.saveFormRef} data={editItem.data || {}}></ProjectEditForm>
-                </Modal>
+                <Button type="primary" style={{ width: 80, marginBottom: 12 }} onClick={this.onEdit}>添加</Button>
+
+                <ProjectEditForm data={editItem} key={editItem.key} onClose={this.getAppList}></ProjectEditForm>
                 <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns}></Table>
             </Layout>
         )

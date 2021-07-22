@@ -13,12 +13,11 @@ class MockMapper {
         var sql = """
         SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE
             b.appid=:1 AND b.uid=:2
-        ORDER BY updatetime desc
         """
         if groupId > 0 {
             sql.append(" AND a.groupid=\(groupId)")
         }
-        sql.append(" LIMIT :3,:4")
+        sql.append(" ORDER BY updatetime desc LIMIT :3,:4")
         return try DBManager.shared.query(statement: sql, args: [pid, uid, paging.begin, paging.end])
     }
     

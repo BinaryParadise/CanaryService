@@ -50,7 +50,6 @@ class BasicLayout extends React.Component {
     const projectInfo = this.state.appData.filter(item => item.id == this.state.selectedItem)[0];
     return axios.post('/user/change/app', projectInfo).then(result => {
       localStorage.setItem("user", JSON.stringify(result.data))
-      window.__config__.user = result.data
       this.setState({ project: false })
       message.success("应用切换成功!")
       window.location.href = window.location.href
@@ -84,7 +83,7 @@ class BasicLayout extends React.Component {
   }
 
   render() {
-    const { user } = window.__config__
+    const user = AuthUser()
     const { appData } = this.state
     const { pathname } = this.props.location
     if (pathname === "/login") {
@@ -181,7 +180,7 @@ class BasicLayout extends React.Component {
                   </Menu.Item>
                 </Menu>)}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                  {AuthUser().name}
+                  {user.name}
                   <Avatar style={{ marginRight: 16, marginLeft: 8 }} src={default_handsome}></Avatar>
                 </a>
               </Dropdown>

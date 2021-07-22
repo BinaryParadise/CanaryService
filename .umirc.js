@@ -1,7 +1,8 @@
 // ref: https://umijs.org/config/
 
-var headers = ""
-export default {
+import { defineConfig } from "umi"
+
+export default defineConfig({
   routes: [
     {
       path: '/',
@@ -64,19 +65,7 @@ export default {
   ],
   mfsu: {},
   antd: {},
-  dva: {
-    immer: false,
-    hmr: false,
-    skipModelValidate: true
-  },
-  dynamicImport: {},
+  history: { type: "browser" },
+  //dynamicImport: {},
   title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
-  mock: false,
-  proxy: {
-    '/api': {
-      // target: 'http://127.0.0.1:9001',
-      // pathRewrite: { '^/api': '' },
-      changeOrigin: false
-    }
-  }
-};
+});

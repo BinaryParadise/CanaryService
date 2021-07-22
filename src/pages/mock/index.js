@@ -12,7 +12,6 @@ export default class MockIndexPage extends React.Component {
         loading: false,
         listData: [],
         queryParam: {
-            appid: (window.__config__.projectInfo || {}).id,
             groupid: null,
             pageSize: 200,
             pageNum: 1

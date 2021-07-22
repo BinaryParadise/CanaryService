@@ -2,15 +2,6 @@
 // const { WebSocket } = require('ws');
 // const sqlite3 = require('sqlite3')
 
-export const dva = {
-  config: {
-    onError(err) {
-      err.preventDefault();
-      console.error(err.message);
-    },
-  },
-};
-
 const xxx = process.env
 window.__config__ = {
   env: xxx,

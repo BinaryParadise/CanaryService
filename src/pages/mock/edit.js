@@ -28,8 +28,7 @@ class MockEditForm extends React.Component {
     state = {
         groups: [{ id: 0, name: "默认" }],
         visible: false,
-        data: this.props.data,
-        appid: (window.__config__.projectInfo || {}).id
+        data: this.props.data
     }
 
     componentDidMount() {

@@ -5,13 +5,9 @@ import { routerURL, AuthUser } from '@/common/util'
 import axios from '@/component/axios'
 
 const formItemLayout = {
-    labelCol: {
-        xs: { span: 2 },
-        sm: { span: 3 },
-    },
     wrapperCol: {
-        xs: { span: 22 },
-        sm: { span: 21 },
+        xs: { span: 18 },
+        sm: { span: 24 },
     },
 };
 
@@ -26,16 +22,24 @@ class ParamEditForm extends React.Component {
     componentDidMount() {
     }
 
-    onParamSave = (values) => {
+    submit = (values, callback) => {
         return axios.post('/mock/param/update', values).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")
-                form.resetFields()
-                this.queryAll()
+                callback()
             } else {
                 message.error(result.error)
             }
         });
+    }
+
+    onParamSave = (values) => {
+        this.submit(values, () => {
+            this.formRef.current.resetFields()
+            if (this.props.onClose) {
+                this.props.onClose()
+            }
+        })
     }
 
     render() {
@@ -51,20 +55,18 @@ class ParamEditForm extends React.Component {
             destroyOnClose={true}
         >
             <Form ref={this.formRef} {...formItemLayout} initialValues={data} layout="inline">
-                <div>
-                    <Form.Item name="sceneid" rules={[{ required: true }]}>
-                        <Input type="hidden" />
-                    </Form.Item>
-                    <Form.Item label="" name="name" rules={[{ required: true, message: '请输入名称!' }]}>
-                        <Input placeholder="请输入参数名称" maxLength={80} />
-                    </Form.Item>
-                    <Form.Item name="value" rules={[{ required: true, message: '请输入名称!' }]}>
-                        <Input placeholder="请输入参数值" maxLength={80} />
-                    </Form.Item>
-                    <Form.Item name="comment">
-                        <Input placeholder="请输入说明" maxLength={80} />
-                    </Form.Item>
-                </div>
+                <Form.Item name="sceneid" rules={[{ required: true }]}>
+                    <Input type="hidden" />
+                </Form.Item>
+                <Form.Item label="" name="name" rules={[{ required: true, message: '请输入名称!' }]}>
+                    <Input placeholder="请输入参数名称" maxLength={80} />
+                </Form.Item>
+                <Form.Item name="value" rules={[{ required: true, message: '请输入名称!' }]}>
+                    <Input placeholder="请输入参数值" maxLength={80} />
+                </Form.Item>
+                <Form.Item name="comment">
+                    <Input placeholder="请输入说明" maxLength={80} />
+                </Form.Item>
             </Form >
         </Modal>
         )

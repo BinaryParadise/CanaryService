@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon, Tag, Divider } from 'antd'
+import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Tag, Divider } from 'antd'
+import { MinusCircleOutlined, MinusOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { routerURL } from '../../../common/util'
 import axios from '../../../component/axios'
 import Layout from 'antd/lib/layout/layout'
@@ -99,12 +100,12 @@ class MockScenePage extends React.Component {
         return axios.get('/mock')
     }
 
-    queryAll() {
+    queryAll = () => {
         return axios.get('/mock/scene/list/' + this.state.mock.id, {}).then(result => {
             if (result.code != 0) {
                 return
             }
-            this.setState({ listData: result.data, editItem: { ...this.state.editItem, visible: false } })
+            this.setState({ listData: result.data, editItem: { ...this.state.editItem, visible: false, key: Math.random() } })
         })
     }
 
@@ -194,11 +195,11 @@ class MockScenePage extends React.Component {
                 dataIndex: 'id',
                 render: (text, record) => {
                     return <span>
-                        <Icon type="plus-circle" style={{ color: 'green' }} onClick={() => this.onParam(record)} />
+                        <PlusCircleOutlined style={{ color: 'green' }} onClick={() => this.onParam({ sceneid: record.sceneid })}></PlusCircleOutlined>
                         {
                             text != null &&
                             <Popconfirm title="确认删除?" onConfirm={() => this.onDeleteParam(record)}>
-                                <Icon style={{ marginLeft: 8, color: 'red' }} type="minus-circle" />
+                                <MinusCircleOutlined style={{ marginLeft: 8, color: 'red' }}></MinusCircleOutlined>
                             </Popconfirm>
                         }
                     </span>

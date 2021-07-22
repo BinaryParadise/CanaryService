@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select } from 'antd'
-import axios from '../../component/axios'
+import { Form, Input, Select, Modal, message } from 'antd'
+import axios from '@/component/axios'
+import { MD5 } from '@/common/util'
 
 const { Option } = Select;
 
@@ -17,11 +18,12 @@ const formItemLayout = {
 };
 
 class UserEditorForm extends React.Component {
+    formRef = React.createRef()
     static propTypes = {
         resetPwd: PropTypes.bool.isRequired
     }
     state = {
-        confirmDirty: false,
+        data: this.props.data,
         roleList: []
     }
 
@@ -35,99 +37,116 @@ class UserEditorForm extends React.Component {
         });
     }
 
-    handleConfirmBlur = e => {
-        const { value } = e.target;
-        this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-    };
+    onCancel = () => {
+        this.setState({ data: { visible: false } })
+    }
 
-    compareToFirstPassword = (rule, value, callback) => {
-        const { form } = this.props;
-        if (value && value !== form.getFieldValue('password')) {
-            callback('两次输入的密码不一致!');
-        } else {
-            callback();
-        }
-    };
+    onSave = () => {
+        this.formRef.current.validateFields().then(values => {
+            this.setState({ confirmLoading: true })
+            this.submit(values, () => {
+                this.formRef.current.resetFields()
+                if (this.props.onClose) {
+                    this.props.onClose()
+                }
+            });
+        })
+    }
 
-    validateToNextPassword = (rule, value, callback) => {
-        const { form } = this.props;
-        if (value && this.state.confirmDirty) {
-            form.validateFields(['confirm'], { force: true });
+    submit = (values, callback) => {
+        const { resetPwd } = this.props
+        let newValues = { ...values }
+        if (newValues.id == undefined) {
+            newValues.id = 0
         }
-        callback();
-    };
+        if (newValues.password) {
+            newValues.password = MD5(newValues.password)
+            newValues.confirm = newValues.password
+        }
+        return axios.post(resetPwd ? '/user/resetpwd' : '/user/update', newValues).then(result => {
+            if (result.code == 0) {
+                message.success("保存成功")
+                callback()
+            } else {
+                message.error(result.error)
+                this.setState({ confirmLoading: false })
+            }
+        });
+    }
 
     render() {
-        const { getFieldDecorator } = this.props.form
-        let { data, resetPwd } = this.props
-        const { roleList } = this.state
-        data = data || {}
+        const { resetPwd } = this.props
+        const { roleList, data } = this.state
         return (
-            <Form {...formItemLayout} layout="horizontal">
-                {data.id &&
-                    <Form.Item style={{ display: 'none' }}>
-                        {getFieldDecorator('id', {
-                            initialValue: data.id || 0
-                        })(<Input type="hidden"></Input>)}
+            <Modal
+                title={resetPwd ? "重置密码" : ((data || {}).id ? '编辑用户' : '添加用户')}
+                visible={data.visible}
+                onOk={this.onSave}
+                closable={true}
+                onCancel={this.onCancel}
+                destroyOnClose={true}
+            >
+                <Form ref={this.formRef} initialValues={{ ...data, id: data.id || 0, password: '' }} {...formItemLayout} layout="horizontal">
+                    <Form.Item name="id" style={{ display: 'none' }}>
+                        <Input type="hidden"></Input>
                     </Form.Item>
-                }
-                {!resetPwd &&
-                    < div >
-                        <Form.Item label="用户名">
-                            {getFieldDecorator('username', {
-                                initialValue: data.username,
-                                rules: [{ required: true, message: '请输入用户名!' }],
-                            })(<Input />)}
+                    {!resetPwd &&
+                        < div >
+                            <Form.Item name="username" rules={[{ required: true, message: '请输入用户名!' }]} label="用户名">
+                                <Input />
+                            </Form.Item>
+                            <Form.Item name="name" rules={[{ required: true, message: '请输入名称!' }]} label="昵称">
+                                <Input />
+                            </Form.Item>
+                        </div>
+                    }
+                    {
+                        (resetPwd || !data.id) &&
+                        <Form.Item name="password" label="密码" rules={[{ required: true, message: '请输入密码!' }]} hasFeedback>
+                            <Input.Password />
                         </Form.Item>
-                        <Form.Item label="昵称">
-                            {getFieldDecorator('name', {
-                                initialValue: data.name,
-                                rules: [{ required: true, message: '请输入名称!' }],
-                            })(<Input />)}
-                        </Form.Item>
-                    </div>
-                }
-                {
-                    (resetPwd || !data.id) &&
-                    <Form.Item label="密码" hasFeedback>
-                        {getFieldDecorator('password', {
-                            initialValue: data.identify,
-                            rules: [{ required: true, message: '请输入密码!' }]
-                        })(<Input.Password />)}
-                    </Form.Item>
-                }
-                {
-                    (resetPwd || !data.id) &&
-                    <Form.Item label="确认密码" hasFeedback>
-                        {getFieldDecorator('confirm', {
-                            rules: [
+                    }
+                    {
+                        (resetPwd || !data.id) &&
+                        <Form.Item
+                            name="confirm"
+                            label="确认密码"
+                            dependencies={['password']}
+                            hasFeedback
+                            rules={[
                                 {
                                     required: true,
-                                    message: '请确认你的密码!',
+                                    message: '请输入确认密码!',
                                 },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve();
+                                        }
+
+                                        return Promise.reject(new Error('两次输入的密码不一致!'));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                    }
+                    {
+                        !resetPwd &&
+                        <Form.Item name="roleid" rules={[
+                            { required: true, message: '请选择角色' },
+                        ]} label="角色">
+                            <Select>
                                 {
-                                    validator: this.compareToFirstPassword,
-                                },
-                            ],
-                        })(<Input.Password onBlur={this.handleConfirmBlur} />)}
-                    </Form.Item>
-                }
-                {!resetPwd &&
-                    <Form.Item label="角色">
-                        {getFieldDecorator('roleid', {
-                            initialValue: data.roleid,
-                            rules: [
-                                { required: true, message: '请选择角色' },
-                            ],
-                        })(<Select>
-                            {
-                                roleList.map(role => <Option key={role.id} value={role.id}>{role.name}</Option>)
-                            }
-                        </Select>)}
-                    </Form.Item>
-                }
-            </Form >
+                                    roleList.map(role => <Option key={role.id} value={role.id}>{role.name}</Option>)
+                                }
+                            </Select>
+                        </Form.Item>
+                    }
+                </Form >
+            </Modal>
         )
     }
 }
-export default Form.create()(UserEditorForm)
+export default UserEditorForm

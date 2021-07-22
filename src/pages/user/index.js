@@ -1,21 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import axios from '../../component/axios'
+import axios from '@/component/axios'
 import { Popconfirm, Table, Tooltip, Dropdown, Menu, Button, Divider, Layout, Modal } from 'antd'
 import moment from 'moment'
-import { Auth, MD5 } from '../../common/util'
+import { Auth, MD5 } from '@/common/util'
 import { message } from 'antd/lib'
 import { Link } from 'react-router-dom'
 import UserEditorForm from './editor'
 import Countdown from 'antd/lib/statistic/Countdown'
+import { PlusOutlined } from '@ant-design/icons'
 
 export class UserList extends React.Component {
     state = {
+        resetPwd: false,
         data: [],
         loading: false,
-        confirmLoading: false,
         pageSize: 20,
-        editData: null
+        editData: { visible: false }
     }
 
     constructor(props) {
@@ -43,71 +44,27 @@ export class UserList extends React.Component {
             {
                 title: '操作',
                 render: (text, record) => {
-                    return this.renderActions(record);
+                    const auth = Auth()
+                    return (<div>
+                        <a style={{ margin: "0px 5px" }} onClick={() => this.setState({ editData: { ...record, visible: true, key: Math.random() }, resetPwd: false })}>编辑</a>
+                        <Popconfirm placement="topRight" hidden={auth.level == 0}
+                            title="确定要删除该项？" onConfirm={() => this.deleteUser(record.id)}
+                        >{(record.isDefault ? false : true) && <a>删除</a>}
+                        </Popconfirm>
+                        <Divider type="vertical" />
+                        <a style={{ margin: "0px 5px", color: "#e02a31" }} onClick={() => this.setState({ editData: { ...record, visible: true, key: Math.random() }, resetPwd: true })}>重置密码</a>
+                    </div>)
                 }
             }
         ]
 
     }
 
-    renderActions = (record) => {
-        const auth = Auth()
-        return (<div>
-            <a style={{ margin: "0px 5px" }} onClick={() => this.setState({ editData: record, visible: true })}>编辑</a>
-            <Popconfirm placement="topRight" hidden={auth.level == 0}
-                title="确定要删除该项？" onConfirm={() => this.deleteUser(record.id)}
-            >{(record.isDefault ? false : true) && <a>删除</a>}
-            </Popconfirm>
-            <Divider type="vertical" />
-            <a style={{ margin: "0px 5px", color: "#e02a31" }} onClick={() => this.setState({ visible: true, editData: record, resetPwd: true })}>重置密码</a>
-        </div>)
-    }
-
     query = () => {
-        this.setState({ loading: true, visible: false, resetPwd: false, confirmLoading: false })
+        this.setState({ loading: true, resetPwd: false, editData: { visible: false } })
         axios.get("/user/list", {}).then(result => {
             this.setState({ data: result.data, loading: false })
         }).finally(() => this.setState({ loading: false }))
-    }
-
-    onSave = () => {
-        const { form } = this.formRef.props;
-        form.validateFields((err, values) => {
-            if (err) {
-                return;
-            }
-
-            this.setState({ confirmLoading: true })
-            this.submit(values, () => {
-                form.resetFields()
-                this.query()
-            });
-        });
-    }
-
-    submit = (values, callback) => {
-        const { resetPwd } = this.state
-        let newValues = { ...values }
-        if (newValues.id == undefined) {
-            newValues.id = 0
-        }
-        if (newValues.password) {
-            newValues.password = MD5(newValues.password)
-            newValues.confirm = newValues.password
-        }
-        return axios.post(resetPwd ? '/user/resetpwd' : '/user/update', newValues).then(result => {
-            if (result.code == 0) {
-                message.success("保存成功")
-                callback()
-            } else {
-                message.error(result.error)
-                this.setState({ confirmLoading: false })
-            }
-        });
-    }
-
-    onCancel = () => {
-        this.setState({ visible: false, resetPwd: false, editData: null })
     }
 
     componentDidMount() {
@@ -126,22 +83,12 @@ export class UserList extends React.Component {
     }
 
     render() {
-        const { loading, data, pageSize, editData, resetPwd, confirmLoading } = this.state
+        const { loading, data, pageSize, editData, resetPwd } = this.state
         var total = data.length
         return (
             <Layout>
-                <Button type="primary" style={{ width: 100, marginBottom: 12 }} onClick={() => this.setState({ visible: true })}>添加用户</Button>
-                <Modal
-                    title={resetPwd ? "重置密码" : ((editData || {}).id ? '编辑用户' : '添加用户')}
-                    visible={this.state.visible}
-                    onOk={this.onSave}
-                    closable={!confirmLoading}
-                    confirmLoading={confirmLoading}
-                    onCancel={() => this.setState({ visible: false })}
-                    afterClose={this.onCancel}
-                >
-                    <UserEditorForm resetPwd={this.state.resetPwd} wrappedComponentRef={(formRef) => this.formRef = formRef} data={editData}></UserEditorForm>
-                </Modal>
+                <Button type="primary" style={{ width: 100, marginBottom: 12 }} onClick={() => this.setState({ editData: { visible: true, key: Math.random() } })}><PlusOutlined></PlusOutlined> 添加用户</Button>
+                <UserEditorForm resetPwd={resetPwd} data={editData} key={editData.key} onClose={this.query}></UserEditorForm>
                 <Table className="env-records"
                     rowKey="id"
                     loading={loading}
@@ -158,7 +105,7 @@ export class UserList extends React.Component {
                         showTotal: total => `共 ${total} 条`
                     }}
                 />
-            </Layout>
+            </Layout >
         )
     }
 }

@@ -25,17 +25,17 @@ class SceneEditForm extends React.Component {
     onSave = (values) => {
         this.submit(values, () => {
             this.formRef.current.resetFields()
-            this.setState({ data: { visible: false } })
             if (this.props.onClose) {
                 this.props.onClose()
             }
         });
     }
 
-    submit = (values) => {
+    submit = (values, callback) => {
         return axios.post('/mock/scene/update', values).then(result => {
             if (result.code == 0) {
                 message.success("保存成功")
+                callback()
             } else {
                 message.error(result.msg)
             }

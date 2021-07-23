@@ -1,4 +1,5 @@
-import styles from './index.css';
+import 'antd/dist/antd.css'
+import styles from './index.less';
 import React from 'react'
 
 import { Layout, Drawer, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';

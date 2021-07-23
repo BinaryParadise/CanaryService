@@ -3,6 +3,9 @@
 import { defineConfig } from "umi"
 
 export default defineConfig({
+  nodeModulesTransform: {
+    type: 'none',
+  },
   routes: [
     {
       path: '/',
@@ -63,9 +66,10 @@ export default defineConfig({
       ],
     },
   ],
+  locale: { antd: true },
   mfsu: {},
   antd: {},
   history: { type: "browser" },
-  //dynamicImport: {},
+  dynamicImport: {},
   title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
 });

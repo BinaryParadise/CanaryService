@@ -104,7 +104,7 @@ class BasicLayout extends React.Component {
     }
     return (
       <ConfigProvider locale={zhCN}>
-        <Layout className={styles.normal}>
+        <Layout id="layroot" className={styles.normal}>
           <Modal visible={this.state.project} title="请选择应用" onOk={this.confirmSwitchProject} onCancel={() => this.setState({ project: false })}>
             <Select placeholder="请选择" style={{ width: 180 }} onChange={this.onChange}>
               {
@@ -165,11 +165,13 @@ class BasicLayout extends React.Component {
               </Menu.Item>
             </Menu>
           </Drawer>
-          <Header className={styles.header}>
-            <UnorderedListOutlined className={styles.logo} onMouseOver={this.showDrawer}></UnorderedListOutlined>
-            <Button className={styles.title} onClick={this.switchProject}>
-              {(user || {}).app == undefined ? "未选择应用" : user.app.name}
-            </Button>
+          <Header className={styles.myheader}>
+            <UnorderedListOutlined className={styles.mylogo} onMouseOver={this.showDrawer}></UnorderedListOutlined>
+            <span>
+              <Button className={styles.mytitle} onClick={this.switchProject}>
+                {(user || {}).app == undefined ? "未选择应用" : user.app.name}
+              </Button>
+            </span>
             <span style={{ float: "right" }}>
               <a style={{ marginRight: 8, color: "orange" }} href="https://github.com/BinaryParadise/CanaryService" target="_blank">帮助</a>
 
@@ -186,7 +188,7 @@ class BasicLayout extends React.Component {
               </Dropdown>
             </span>
           </Header>
-          <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
+          <Content className={styles.mycontent} ref={this.saveContainer}>
             {
               user && user.app ? this.props.children :
                 <Empty style={{ marginTop: 60 }}>
@@ -194,6 +196,7 @@ class BasicLayout extends React.Component {
                 </Empty>
             }
           </Content>
+          <Footer style={{ textAlign: 'center' }}>金丝雀 ©2021 Created by <a href="https://github.com/rakeyang">rakeyang</a> with Ant Design</Footer>
         </Layout >
       </ConfigProvider>
     );

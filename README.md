@@ -12,7 +12,7 @@
 
 ## Web
 
-> umijs、nodejs
+> umijs、nodejs `PS:注意版本一致性`
 
 ```bash
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Icon, Tag, Divider } from 'antd'
+import { Popconfirm, Input, Button, Breadcrumb, message, Table, Modal, Tag, Divider } from 'antd'
+import { MinusCircleOutlined, MinusOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { routerURL } from '../../../common/util'
 import axios from '../../../component/axios'
 import Layout from 'antd/lib/layout/layout'
@@ -15,9 +16,7 @@ class MockScenePage extends React.Component {
         loading: false,
         mock: this.props.location.state,
         listData: [],
-        editItem: {},
-        editParam: {},
-        showParam: false
+        editItem: { visible: false, key: Math.random() },
     }
 
     mock = () => {
@@ -101,17 +100,17 @@ class MockScenePage extends React.Component {
         return axios.get('/mock')
     }
 
-    queryAll() {
+    queryAll = () => {
         return axios.get('/mock/scene/list/' + this.state.mock.id, {}).then(result => {
             if (result.code != 0) {
                 return
             }
-            this.setState({ listData: result.data, editItem: {}, editParam: {} })
+            this.setState({ listData: result.data, editItem: { ...this.state.editItem, visible: false, key: Math.random() } })
         })
     }
 
     onEdit = (record) => {
-        this.setState({ editItem: { visible: true, data: record } })
+        this.setState({ editItem: { ...record, visible: true, type: "scene", key: Math.random() } })
     }
 
     onActive = (record, active) => {
@@ -141,26 +140,7 @@ class MockScenePage extends React.Component {
     }
 
     onParam = (record) => {
-        this.setState({ editParam: { visiable: true, data: record } })
-    }
-
-    onParamSave = () => {
-        const { form } = this.formParam.props;
-        form.validateFields((err, values) => {
-            if (err) {
-                return;
-            }
-
-            return axios.post('/mock/param/update', values).then(result => {
-                if (result.code == 0) {
-                    message.success("保存成功")
-                    form.resetFields()
-                    this.queryAll()
-                } else {
-                    message.error(result.error)
-                }
-            });
-        });
+        this.setState({ editItem: { ...record, type: "param", visible: true, key: Math.random() } })
     }
 
     onDeleteParam = (record) => {
@@ -168,21 +148,6 @@ class MockScenePage extends React.Component {
             if (result.code == 0) {
                 this.props.location.state = { ...this.mock(), sceneid: null }
                 this.queryAll()
-            } else {
-                message.error(result.error)
-            }
-        });
-    }
-
-    onCancel = () => {
-        this.setState({ editItem: { visible: false, data: {} } })
-    }
-
-    submit = (values, callback) => {
-        return axios.post('/mock/scene/update', values).then(result => {
-            if (result.code == 0) {
-                message.success("保存成功")
-                callback()
             } else {
                 message.error(result.error)
             }
@@ -230,11 +195,11 @@ class MockScenePage extends React.Component {
                 dataIndex: 'id',
                 render: (text, record) => {
                     return <span>
-                        <Icon type="plus-circle" style={{ color: 'green' }} onClick={() => this.onParam(record)} />
+                        <PlusCircleOutlined style={{ color: 'green' }} onClick={() => this.onParam({ sceneid: record.sceneid })}></PlusCircleOutlined>
                         {
                             text != null &&
                             <Popconfirm title="确认删除?" onConfirm={() => this.onDeleteParam(record)}>
-                                <Icon style={{ marginLeft: 8, color: 'red' }} type="minus-circle" />
+                                <MinusCircleOutlined style={{ marginLeft: 8, color: 'red' }}></MinusCircleOutlined>
                             </Popconfirm>
                         }
                     </span>
@@ -246,7 +211,7 @@ class MockScenePage extends React.Component {
     }
 
     render() {
-        const { loading, listData, mock, editItem, editParam } = this.state
+        const { loading, listData, mock, editItem } = this.state
         return (
             <Layout>
                 <Breadcrumb style={{ marginBottom: 12 }}>
@@ -264,30 +229,13 @@ class MockScenePage extends React.Component {
 
                     <Table rowKey="id" loading={loading} dataSource={listData} columns={this.columns} rowKey="id" expandedRowRender={(e) => this.expandTable(e)}></Table>
                 </div>
-                <Modal
-                    visible={editItem.visible}
-                    title={editItem.data == null ? "新增" : "修改"}
-                    cancelText="取消"
-                    okText="保存"
-                    width={1500}
-                    onCancel={this.onCancel}
-                    onOk={this.onSave}
-                    destroyOnClose={true}
-                >
-                    <SceneEditForm wrappedComponentRef={(ref) => this.formRef = ref} data={editItem.data || {}}></SceneEditForm>
-                </Modal>
-                <Modal
-                    visible={editParam.visiable}
-                    title={"参数配置"}
-                    cancelText="取消"
-                    okText="保存"
-                    width={666}
-                    onCancel={() => this.setState({ editParam: { visiable: false, data: {} } })}
-                    onOk={this.onParamSave}
-                    destroyOnClose={true}
-                >
-                    <ParamEditForm wrappedComponentRef={(ref) => this.formParam = ref} data={editParam.data || {}}></ParamEditForm>
-                </Modal>
+
+                {
+                    editItem.type != "param" ?
+                        <SceneEditForm data={editItem} key={editItem.key} onClose={this.queryAll}></SceneEditForm>
+                        :
+                        <ParamEditForm data={editItem} key={editItem.key} onClose={this.queryAll}></ParamEditForm>
+                }
 
             </Layout>
         )

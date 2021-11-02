@@ -62,7 +62,6 @@ class MockData: Codable {
                         continue
                     }
                     if scene.params?.all(matching: { (param) -> Bool in
-                        print("\(param.name.lowercased())=\(String(describing: lowerQuery[param.name.lowercased()])) \(param.name.lowercased())=\(param.value)")
                         return lowerQuery[param.name.lowercased()] == param.value
                     }) == true {
                         return scene.id

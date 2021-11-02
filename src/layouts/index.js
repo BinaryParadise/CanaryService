@@ -1,8 +1,10 @@
-import styles from './index.css';
+import 'antd/dist/antd.css'
+import styles from './index.less';
 import React from 'react'
 
-import { Layout, Drawer, Icon, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
-import router from 'umi/router';
+import { Layout, Drawer, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
+import { ContainerOutlined, HddOutlined, LinkOutlined, ProjectOutlined, SettingOutlined, ToolOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
+import { history } from 'umi';
 import axios from '../component/axios'
 import { AuthUser, Auth } from '../common/util'
 import default_handsome from '../assets/default_handsome.jpg'
@@ -37,7 +39,7 @@ class BasicLayout extends React.Component {
 
   onMenuSelect = (item) => {
     this.setState({ visible: false })
-    router.push(item.key);
+    history.push(item.key);
   }
 
   confirmSwitchProject = () => {
@@ -49,7 +51,6 @@ class BasicLayout extends React.Component {
     const projectInfo = this.state.appData.filter(item => item.id == this.state.selectedItem)[0];
     return axios.post('/user/change/app', projectInfo).then(result => {
       localStorage.setItem("user", JSON.stringify(result.data))
-      window.__config__.user = result.data
       this.setState({ project: false })
       message.success("应用切换成功!")
       window.location.href = window.location.href
@@ -73,17 +74,17 @@ class BasicLayout extends React.Component {
 
   logout = () => {
     localStorage.removeItem("user")
-    router.push('/login')
+    history.push('/login')
   }
 
   componentDidMount() {
     if (localStorage.getItem("user") == null) {
-      router.push('/login')
+      history.push('/login')
     }
   }
 
   render() {
-    const { user } = window.__config__
+    const user = AuthUser()
     const { appData } = this.state
     const { pathname } = this.props.location
     if (pathname === "/login") {
@@ -104,7 +105,7 @@ class BasicLayout extends React.Component {
     }
     return (
       <ConfigProvider locale={zhCN}>
-        <Layout className={styles.normal}>
+        <Layout id="layroot" className={styles.normal}>
           <Modal visible={this.state.project} title="请选择应用" onOk={this.confirmSwitchProject} onCancel={() => this.setState({ project: false })}>
             <Select placeholder="请选择" style={{ width: 180 }} onChange={this.onChange}>
               {
@@ -114,7 +115,7 @@ class BasicLayout extends React.Component {
               }
             </Select> <a style={{ marginLeft: 6 }} hidden={!Auth('user')} onClick={() => {
               this.setState({ project: false })
-              router.push('/project')
+              history.push('/project')
             }}>管理</a>
           </Modal>
           <Drawer
@@ -136,40 +137,42 @@ class BasicLayout extends React.Component {
               onSelect={this.onMenuSelect}
             >
               <Menu.Item key="/env">
-                <Icon type="setting" />
+                <SettingOutlined></SettingOutlined>
                 <span>环境配置</span>
               </Menu.Item>
               <Menu.Item key="/device">
-                <Icon type="hdd" />
+                <HddOutlined></HddOutlined>
                 <span>设备列表</span>
               </Menu.Item>
               <Menu.Item key="/source" hidden={true}>
-                <Icon type="link" />
+                <LinkOutlined></LinkOutlined>
                 <span>路由配置</span>
               </Menu.Item>
               <Menu.Item key="/mock/data">
-                <Icon type="container" />
+                <ContainerOutlined></ContainerOutlined>
                 <span>Mock数据</span>
               </Menu.Item>
               <Menu.Item key="/tool" hidden={true}>
-                <Icon type="tool"></Icon>
+                <ToolOutlined></ToolOutlined>
                 <span>工具箱</span>
               </Menu.Item>
               <Menu.Item key="/project" hidden={!Auth('project')}>
-                <Icon type="project" />
+                <ProjectOutlined></ProjectOutlined>
                 <span>应用管理</span>
               </Menu.Item>
               <Menu.Item key="/user" hidden={!Auth('user')}>
-                <Icon type="user" />
+                <UserOutlined></UserOutlined>
                 <span>用户管理</span>
               </Menu.Item>
             </Menu>
           </Drawer>
-          <Header className={styles.header}>
-            <Icon type="unordered-list" className={styles.logo} onMouseOver={this.showDrawer} />
-            <Button className={styles.title} onClick={this.switchProject}>
-              {(user || {}).app == undefined ? "未选择应用" : user.app.name}
-            </Button>
+          <Header className={styles.myheader}>
+            <UnorderedListOutlined className={styles.mylogo} onMouseOver={this.showDrawer}></UnorderedListOutlined>
+            <span>
+              <Button className={styles.mytitle} onClick={this.switchProject}>
+                {(user || {}).app == undefined ? "未选择应用" : user.app.name}
+              </Button>
+            </span>
             <span style={{ float: "right" }}>
               <a style={{ marginRight: 8, color: "orange" }} href="https://github.com/BinaryParadise/CanaryService" target="_blank">帮助</a>
 
@@ -180,13 +183,13 @@ class BasicLayout extends React.Component {
                   </Menu.Item>
                 </Menu>)}>
                 <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                  {AuthUser().name}
+                  {user.name}
                   <Avatar style={{ marginRight: 16, marginLeft: 8 }} src={default_handsome}></Avatar>
                 </a>
               </Dropdown>
             </span>
           </Header>
-          <Content ref={this.saveContainer} style={{ padding: '12px 24px', marginTop: 50, overflow: 'auto' }}>
+          <Content className={styles.mycontent} ref={this.saveContainer}>
             {
               user && user.app ? this.props.children :
                 <Empty style={{ marginTop: 60 }}>
@@ -194,6 +197,7 @@ class BasicLayout extends React.Component {
                 </Empty>
             }
           </Content>
+          <Footer style={{ textAlign: 'center' }}>金丝雀 ©2021 Created by <a href="https://github.com/rakeyang">rakeyang</a> with Ant Design</Footer>
         </Layout >
       </ConfigProvider>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import router from 'umi/router';
-import { Form, Icon, Input, Button, message } from 'antd';
+import { history } from 'umi';
+import { Form, Input, Button, message } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from '../../component/axios'
 import { MD5 } from '../../common/util'
 
@@ -10,15 +10,9 @@ class NormalLoginForm extends React.Component {
         loading: false
     }
 
-    handleSubmit = e => {
+    handleSubmit = (values) => {
         this.setState({ loading: true })
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                message.loading("登录中...", 2.5)
-                    .then(() => this.doLogin(values))
-            }
-        });
+        this.doLogin(values)
     };
 
     doLogin = (values) => {
@@ -38,36 +32,25 @@ class NormalLoginForm extends React.Component {
 
     componentDidMount() {
         if (localStorage.getItem("user") != null) {
-            router.push('/')
+            history.push('/')
             return
         }
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form className="login-form" onFinish={this.handleSubmit}>
                 <Form.Item><h1><span style={{ color: '#2c5cce', fontSize: 36 }}>欢迎使用金丝雀</span></h1></Form.Item>
-                <Form.Item>
-                    {getFieldDecorator('username', {
-                        rules: [{ required: true, message: '请输入用户名或邮箱!' }],
-                    })(
-                        <Input
-                            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            placeholder="用户名或邮箱"
-                        />,
-                    )}
+                <Form.Item name="username" rules={[{ required: true, message: '请输入用户名或邮箱!' }]}>
+                    <Input
+                        prefix={<UserOutlined />}
+                        placeholder="用户名或邮箱" />
                 </Form.Item>
-                <Form.Item>
-                    {getFieldDecorator('password', {
-                        rules: [{ required: true, message: '请输入密码!' }],
-                    })(
-                        <Input
-                            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                            type="password"
-                            placeholder="密码"
-                        />,
-                    )}
+                <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
+                    <Input
+                        prefix={<LockOutlined />}
+                        type="password"
+                        placeholder="密码" />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" loading={this.state.loading} htmlType="submit" className="login-form-button">
@@ -79,6 +62,4 @@ class NormalLoginForm extends React.Component {
     }
 }
 
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(NormalLoginForm);
-
-export default WrappedNormalLoginForm;
+export default NormalLoginForm;

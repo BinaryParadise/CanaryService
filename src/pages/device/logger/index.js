@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './logger.css';
-import PropTypes from 'prop-types'
-import { Affix, Icon, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
+import { DeleteOutlined, DownOutlined, PauseCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { Affix, Breadcrumb, Menu, Badge, notification, Dropdown } from 'antd'
 import WebSocket from '@/component/websocket'
-import router from 'umi/router';
+import { history } from 'umi';
 import NetLog from '../component/netlog'
 import { MessageType } from '@/common/util'
 
@@ -37,13 +37,13 @@ export default class LoggerMonitor extends React.Component {
         autoscroll: true,
         avaiable: false,
         logLevel: LevelVerbose,
-        visiable: false
+        visible: false
     }
     wsInstance = WebSocket.create(this.state.data.deviceId)
 
     componentDidMount() {
         if (this.state.data == undefined) {
-            router.push('/device')
+            history.push('/device')
             return
         }
         this.wsInstance.connect(this.onMessage)
@@ -145,6 +145,12 @@ export default class LoggerMonitor extends React.Component {
         return ipv4[key]
     }
 
+    onPause = () => {
+        this.setState({
+            autoscroll: !this.state.autoscroll
+        });
+    }
+
     render() {
         const { autoscroll, data, avaiable, logLevel } = this.state
         const filterLogs = this.state.logs.filter(item => item.flag & logLevel)
@@ -173,16 +179,17 @@ export default class LoggerMonitor extends React.Component {
                 </div>
 
                 <Affix style={{ position: 'absolute', height: 40, width: '100vw', paddingLeft: 20, paddingTop: 12, left: 0, bottom: 0, background: '#222' }}>
-                    <Icon type="delete" style={iconStyle.clear} onClick={() => {
+                    <DeleteOutlined style={iconStyle.clear} onClick={() => {
                         this.setState({ logs: [] })
-                    }} />
-                    <Icon type={autoscroll ? "sync" : "pause-circle"} spin={autoscroll} style={autoscroll ? iconStyle.sync : iconStyle.paus} onClick={() => {
-                        this.setState({
-                            autoscroll: !this.state.autoscroll,
-                        });
-                    }} />
+                    }}></DeleteOutlined>
+                    {
+                        autoscroll ?
+                            <SyncOutlined spin style={iconStyle.sync} onClick={this.onPause}></SyncOutlined>
+                            :
+                            <PauseCircleOutlined style={iconStyle.pause} onClick={this.onPause}></PauseCircleOutlined>
+                    }
                     <Dropdown overlay={this.logMenu()} placement="topRight">
-                        <a>{levelInfo.name}<Icon type="down"></Icon></a>
+                        <a>{levelInfo.name}<DownOutlined></DownOutlined></a>
                     </Dropdown>
                 </Affix>
                 <NetLog data={this.state.curData} onClose={this.onLogClose}></NetLog>
@@ -192,6 +199,7 @@ export default class LoggerMonitor extends React.Component {
 
     onMessage = (obj) => {
         if (obj.code != 0) {
+            this.setState({ avaiable: false })
             notification['error']({
                 message: '错误',
                 description:
@@ -201,15 +209,13 @@ export default class LoggerMonitor extends React.Component {
         }
         const { logs } = this.state
         switch (obj.type) {
-            case MessageType.Connected: notification['success']({
-                message: '信息',
-                description:
-                    obj.msg,
-            });
-                return true;
-            case MessageType.DeviceList:
-                this.setState({ avaiable: obj.data.avaiable })
-                this.setState({ logs: [...logs, { flag: 8, message: obj.msg, key: 'key-' + logs.length, type: 1 }] })
+            case MessageType.Connected:
+                this.setState({ avaiable: true })
+                notification['success']({
+                    message: '信息',
+                    description:
+                        obj.msg,
+                });
                 return true;
             case MessageType.Logger:
                 obj.data.key = 'key-' + logs.length
@@ -228,14 +234,10 @@ const iconStyle = {
     },
     sync: {
         color: '#B1FD79',
-        width: '25px',
-        height: '25px',
         marginRight: '6px'
     },
-    paus: {
+    pause: {
         color: 'gray',
-        width: '25px',
-        height: '25px',
         marginRight: '6px'
     }
 }

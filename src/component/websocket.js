@@ -1,4 +1,4 @@
-import { wsPath, baseURI } from '../common/config'
+import { wsPath, baseURI } from '@/common/config'
 import URL from 'url'
 
 export default {

@@ -22,7 +22,7 @@
     // Override point for customization after application launch.
     CanaryManager *shared = CanaryManager.shared;
     shared.appSecret = @"82e439d7968b7c366e24a41d7f53f47d";
-    shared.deviceId = UIDevice.currentDevice.identifierForVendor.UUIDString;
+    shared.deviceId = @"BD5CCC91170E4D56B9FF2F7E8284A740".lowercaseString;
     shared.baseURL = @"http://127.0.0.1";
     [DDLog addLogger:CanaryTTYLogger.shared];
     [DDLog addLogger:DDTTYLogger.sharedInstance];

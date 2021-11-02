@@ -1,8 +1,6 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { Form, Input, Icon, Select, Popconfirm, message } from 'antd'
-import { routerURL, AuthUser } from '../../../common/util'
-import axios from '../../../component/axios'
+import { Form, Input, Modal, message } from 'antd'
+import axios from '@/component/axios'
 
 const formItemLayout = {
     labelCol: {
@@ -16,48 +14,67 @@ const formItemLayout = {
 };
 
 class SceneEditForm extends React.Component {
+    formRef = React.createRef()
     state = {
-        visible: false
+        data: this.props.data
     }
 
     componentDidMount() {
     }
 
-    render() {
-        const { getFieldDecorator } = this.props.form
-        const { data } = this.props
+    onSave = (values) => {
+        this.submit(values, () => {
+            this.formRef.current.resetFields()
+            if (this.props.onClose) {
+                this.props.onClose()
+            }
+        });
+    }
 
-        return (<div>
-            <Form {...formItemLayout} layout="horizontal">
+    submit = (values, callback) => {
+        return axios.post('/mock/scene/update', values).then(result => {
+            if (result.code == 0) {
+                message.success("保存成功")
+                callback()
+            } else {
+                message.error(result.msg)
+            }
+        });
+    }
+
+    render() {
+        const { data } = this.state
+
+        return (<Modal
+            visible={data.visible}
+            title={data.id == undefined ? "新增" : "修改"}
+            cancelText="取消"
+            okText="保存"
+            width={1500}
+            onCancel={() => this.setState({ data: { visible: false } })}
+            onOk={() => this.formRef.current.validateFields().then(this.onSave)}
+            destroyOnClose={true}
+        >
+            <Form ref={this.formRef} {...formItemLayout} initialValues={data} layout="horizontal">
                 {data.id > 0 &&
-                    <Form.Item style={{ display: 'none' }}>
-                        {getFieldDecorator('id', {
-                            initialValue: data.id
-                        })(<Input type="hidden"></Input>)}
+                    <Form.Item name="id" style={{ display: 'none' }}>
+                        <Input type="hidden"></Input>
                     </Form.Item>
                 }
                 {data.mockid > 0 &&
-                    <Form.Item>
-                        {getFieldDecorator('mockid', {
-                            initialValue: data.mockid
-                        })(<Input type="hidden"></Input>)}
+                    <Form.Item name="mockid">
+                        <Input type="hidden"></Input>
                     </Form.Item>
                 }
-                <Form.Item label="场景名称">
-                    {getFieldDecorator('name', {
-                        initialValue: data.name,
-                        rules: [{ required: true, message: '请输入名称!' }],
-                    })(<Input placeholder="请输入名称" maxLength={8} />)}
+                <Form.Item name="name" rules={[{ required: true, message: '请输入名称!' }]} label="场景名称">
+                    <Input placeholder="请输入名称" maxLength={8} />
                 </Form.Item>
-                <Form.Item label="响应结果">
-                    {getFieldDecorator('response', {
-                        initialValue: data.response,
-                        rules: [{ required: false }],
-                    })(<Input.TextArea placeholder="请输入响应结果" autoSize={{ minRows: 6, maxRows: 50 }} />)}
+                <Form.Item name="response" label="响应结果">
+                    <Input.TextArea placeholder="请输入响应结果" autoSize={{ minRows: 6, maxRows: 50 }} />
                 </Form.Item>
             </Form >
-        </div>
+        </Modal>
         )
     }
 }
-export default Form.create()(SceneEditForm)
+export default SceneEditForm

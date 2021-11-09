@@ -7,17 +7,16 @@ let package = Package(
 	products: [
 		.executable(name: "CanaryBackend", targets: ["CanaryBackend"])
 	],
-	dependencies: [
-		.package(name: "PerfectHTTPServer", url: "https://github.com/PerfectlySoft/Perfect-HTTPServer.git", from: "3.0.0"),
-        .package(name: "PerfectWebSockets", url: "https://github.com/PerfectlySoft/Perfect-WebSockets.git", from: "3.0.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "0.4.0"),
+    dependencies: [
+        .package(name: "PerfectHTTPServer", url: "https://github.com/PerfectlySoft/Perfect-HTTPServer.git", .upToNextMinor(from: "3.0.0")),
+        .package(name: "PerfectWebSockets", url: "https://github.com/PerfectlySoft/Perfect-WebSockets.git", .upToNextMinor(from: "3.1.0")),
+        .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "1.0.0")),
         .package(url: "https://github.com/onevcat/Rainbow", .upToNextMajor(from: "4.0.0")),
-        .package(name: "SwiftyJSON", path: "../common/SwiftyJSON"),
+        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", .upToNextMinor(from: "5.0.0")),
         .package(name: "PerfectSQLite", path: "../common/Perfect-SQLite"),
         .package(name: "CanaryProto", path: "../common/CanaryProto"),
-        .package(name: "PerfectSession", url:"https://github.com/PerfectlySoft/Perfect-Session.git", from: "3.0.0"),
-	],
-	targets: [
+        .package(name: "PerfectSession", url:"https://github.com/PerfectlySoft/Perfect-Session.git", .upToNextMinor(from: "3.1.0")),
+    ], targets: [
         .target(
             name: "CanaryBackend",
             dependencies: [

@@ -22,10 +22,11 @@ public struct ContentFilter: HTTPRequestFilter {
     }
     
     func canRequest(request: HTTPRequest) -> Bool {
-        let ctxPath = request.path[baseUri.endIndex...]
+        var ctxPath = request.path
         if ctxPath == "/" {
             return true
         }
+        ctxPath = String(request.path[baseUri.endIndex...])
         let contain = whiteList.contains { str in
             ctxPath.starts(with: str)
         }
@@ -53,6 +54,9 @@ public struct ContentFilter: HTTPRequestFilter {
     }
     
     func permissionDenied(request: HTTPRequest) -> Bool {
+        if request.path == "/" {
+            return false
+        }
         let ctxPath = request.path[baseUri.endIndex...]
         let contain = adminList.contains { str in
             str.hasPrefix(ctxPath)

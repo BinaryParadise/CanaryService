@@ -9,7 +9,7 @@ import Foundation
 import PerfectHTTP
 import PerfectLib
 import PerfectWebSockets
-import CanaryProto
+import Proto
 import SwiftyJSON
 
 /// 设备列表

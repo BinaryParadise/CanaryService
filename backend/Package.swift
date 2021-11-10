@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
 	name: "CanaryBackend",
+    platforms: [.macOS(.v10_13)],
 	products: [
 		.executable(name: "CanaryBackend", targets: ["CanaryBackend"])
 	],
@@ -14,7 +15,7 @@ let package = Package(
         .package(url: "https://github.com/onevcat/Rainbow", .upToNextMajor(from: "4.0.0")),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", .upToNextMinor(from: "5.0.0")),
         .package(name: "PerfectSQLite", path: "../common/Perfect-SQLite"),
-        .package(name: "CanaryProto", path: "../common/CanaryProto"),
+        .package(url: "https://github.com/BinaryParadise/Canary.git", .upToNextMinor(from: "0.8.0")),
         .package(name: "PerfectSession", url:"https://github.com/PerfectlySoft/Perfect-Session.git", .upToNextMinor(from: "3.1.0")),
     ], targets: [
         .target(
@@ -24,7 +25,7 @@ let package = Package(
 				"PerfectWebSockets",
                 "Rainbow",
                 "SwiftyJSON",
-                "CanaryProto",
+                .product(name: "Proto", package: "Canary"),
                 "PerfectSQLite",
                 "PerfectSession",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")

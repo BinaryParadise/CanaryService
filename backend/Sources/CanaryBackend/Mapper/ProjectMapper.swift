@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CanaryProto
+import Proto
 
 struct ProjectMapper {
     static var shared = ProjectMapper()

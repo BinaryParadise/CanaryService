@@ -7,7 +7,7 @@
 
 import Foundation
 import PerfectHTTP
-import CanaryProto
+import Proto
 import PerfectSQLite
 
 public var routes = Routes()

@@ -8,7 +8,7 @@
 import Foundation
 import PerfectHTTP
 import SwiftyJSON
-import CanaryProto
+import Proto
 
 class UserController {
     @Mapping(path: "/user/login", method: [.post])
@@ -24,13 +24,11 @@ class UserController {
                 user.app = try ProjectMapper.shared.findBy(appId: user.app_id ?? 0)
                 response.addCookie(HTTPCookie.init(name: "token", value: token))
                 return ProtoResult(entry: try JSONEncoder().encode(user))
-            } else {
-                return ProtoResult(.custom("用户名或密码错误"))
             }
         } catch {
             LogError("\(error)")
         }
-        return ProtoResult(.system)
+        return ProtoResult(.custom("用户名或密码错误"))
     }
     
     @Mapping(path: "/user/change/app", method: [.post])

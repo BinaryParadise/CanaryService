@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CanaryProto
+import Proto
 
 class MockMapper {
     class func findAllMock(pid: Int, uid: Int, paging: Paging, groupId: Int) throws -> [Any]? {

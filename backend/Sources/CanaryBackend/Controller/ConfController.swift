@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CanaryProto
+import Proto
 
 class ConfController {
     @Mapping(path: "/conf/list")

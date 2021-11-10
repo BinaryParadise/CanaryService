@@ -7,7 +7,7 @@
 
 import Foundation
 import PerfectHTTP
-import CanaryProto
+import Proto
 import SwiftyJSON
 
 /// 应用管理

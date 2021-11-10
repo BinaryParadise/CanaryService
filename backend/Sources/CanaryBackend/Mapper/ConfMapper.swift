@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import CanaryProto
+import Proto
 import SwiftyJSON
 
 struct ConfMapper {

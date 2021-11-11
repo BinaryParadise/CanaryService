@@ -21,17 +21,31 @@ export PATH=/opt/swift/usr/bin:$PATH
 swift build --skip-update
 ```
 
+## [CentOS 8安装Docker](https://www.cnblogs.com/ding2016/p/11592999.html)
+
+```bash
+dnf install docker -y
+```
+
+```
+docker pull swift
+
+docker run -itd --privileged --interactive --tty \
+-p 10010:9001 --name swiftfun swift:5.3.3-centos8 /bin/bash
+```
+
+
 ## 依赖
 
 `Centos 8 - Swift 5.3.3`
 
 ```bash
-dnf install epel-release
 # dnf install swift-lang
-dnf install libuuid-devel
-dnf install openssl-devel
-dnf install libcurl-devel
-dnf install libsqlite3x-devel
+dnf install epel-release -y \
+libuuid-devel -y \
+openssl-devel -y \
+libcurl-devel -y \
+libsqlite3x-devel -y
 ```
 
 `Ubunto 20.04`
@@ -57,19 +71,6 @@ sudo apt-get install \
 
 
 sudo apt-get install openssl libssl-dev uuid-dev
-```
-
-## [CentOS 8安装Docker](https://www.cnblogs.com/ding2016/p/11592999.html)
-
-```bash
-dnf install docker -y
-```
-
-```
-docker pull swift
-
-docker run --privileged --interactive --tty \
--p 8443:8443 --name swiftfun swift:5.3.3-centos8 /bin/bash
 ```
 
 ## [Ubuntu 18.04安装Docker](https://segmentfault.com/a/1190000022374119)

@@ -140,9 +140,8 @@ export default class LoggerMonitor extends React.Component {
     }
 
     transformIp = (data) => {
-        const ipv4 = (data.ipAddrs || { ipv4: [] }).ipv4
-        let key = Object.keys(ipv4).filter(item => !ipv4[item].startsWith('169') && item.startsWith('en'))[0]
-        return ipv4[key]
+        //let key = Object.keys(ipv4).filter(item => !ipv4[item].startsWith('169') && item.startsWith('en'))[0]
+        return { "IP地址": data.ipAddrs || [] }
     }
 
     onPause = () => {

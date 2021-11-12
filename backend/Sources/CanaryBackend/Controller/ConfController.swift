@@ -26,4 +26,19 @@ class ConfController {
     var update: ResultHandler = { request, response in
         return .done
     }
+    
+    @Mapping(path: "/env/list")
+    var envlist: ResultHandler = {request, response in        
+        let rs = try ConfMapper.shared.findItemAll(envid: request.getDictionary.intValue("id"))
+        return ProtoResult(entry: rs)
+    }
+    
+    @Mapping(path: "/env/update/{id}", method: [.post])
+    var envupdate: ResultHandler = { request, response in
+        let env = try request.postDictionary.decode(ProtoConfItem.self)
+        try ConfMapper.shared.updateItem(env: env)
+        return .done
+    }
+    
+    //TODO:参数维护
 }

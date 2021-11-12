@@ -1,12 +1,12 @@
 // 应用管理
 import React from 'react'
-import { message, Breadcrumb } from 'antd'
+import { message, Breadcrumb, Modal } from 'antd'
 
 import axios from '../../component/axios'
 import { Link } from 'react-router-dom'
 
 import EnvList from './env-list'
-import EnvItemAdd from './modify'
+import EnvItemAdd from './itemform'
 
 export default class RemoteConfigPage extends React.Component {
   state = {
@@ -22,7 +22,7 @@ export default class RemoteConfigPage extends React.Component {
     params: {
       pageIndex: 1,
       pageSize: 20,
-      envid: this.props.location.state.id
+      id: this.props.location.state.id
     }
   }
 
@@ -74,7 +74,7 @@ export default class RemoteConfigPage extends React.Component {
     this.setState({ tableLoading: true })
     const newParams = Object.assign(this.state.params)
     return axios
-      .get(`/envitem/list`, { params: newParams })
+      .get(`/env/list`, { params: newParams })
       .then(result => this.setState({ listData: result.data, tableLoading: false }))
       .finally(() => this.setState({ tableLoading: false, params: newParams }))
   }
@@ -113,7 +113,7 @@ export default class RemoteConfigPage extends React.Component {
 
   // 删除
   onRemove = id => {
-    return axios.post(`/envitem/delete/${id}`).then(result => {
+    return axios.post(`/env/delete/${id}`).then(result => {
       message.success('删除成功！')
       this.query(this.state.modal.envid)
     })

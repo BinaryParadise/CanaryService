@@ -40,6 +40,22 @@ struct ConfMapper {
         return try DBManager.shared.query(statement: itemAll, args: [envid])
     }
     
+    func updateItem(env: ProtoConfItem) throws {
+        if env.id == 0 {
+            let sql = """
+            INSERT INTO RemoteConfigParam(`name`, `value`, envid, `comment`, uid,`type`,`platform`)
+            VALUES(:1,:2,:3,:4,:5,0,:6)
+            """
+            return try DBManager.shared.execute(statement: sql, args: [env.name, env.value, env.envid, env.comment, env.uid, 0])
+        } else {
+            let sql = """
+            UPDATE RemoteConfigParam SET
+                `name`=:1,`value`=:2,`comment`=:3,`uid`=:4, updateTime=null where id=:5
+            """
+            return try DBManager.shared.execute(statement: sql, args: [env.name, env.value, env.comment, env.uid, env.id])
+        }
+    }
+    
     private var findAll: String {
         return """
         SELECT
@@ -58,7 +74,8 @@ struct ConfMapper {
     
     private var itemAll: String {
         return """
-            select * from RemoteConfigParam where envid=:1 order by updateTime desc
+        select a.*,b.name as author from RemoteConfigParam a LEFT JOIN User b on a.uid=b.id where envid=:1 order by
+            updateTime desc
         """
     }
 }

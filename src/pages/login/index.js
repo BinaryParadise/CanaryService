@@ -24,7 +24,7 @@ class NormalLoginForm extends React.Component {
                 message.success("登录成功,即将跳转", 0.5)
                     .then(() => window.location.href = "/")
             } else {
-                message.error(result.error);
+                message.error(result.msg);
                 this.setState({ loading: false })
             }
         })

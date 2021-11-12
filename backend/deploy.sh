@@ -1,5 +1,5 @@
-#git reset --hard
-#git pull
+git reset --hard
+git pull
 rm -f Package.resolved
 swift build -c release
-cp -r .build/debug/CanaryBackend release/canary
+cp -r .build/release/CanaryBackend release/canary

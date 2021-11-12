@@ -31,7 +31,7 @@ dnf install docker -y
 docker pull swift
 
 docker run -itd --privileged --interactive --tty \
--p 10010:9001 --name swiftfun swift:5.3.3-centos8 /bin/bash
+-p 10010:9001 --name swiftfun swift:5.3.3-centos8 /sbin/init
 ```
 
 

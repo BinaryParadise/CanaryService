@@ -1,6 +1,6 @@
 # CanaryBackend
 
-推荐使用`Centos 8`
+推荐使用`Docker`
 
 # CentOS 8
 
@@ -15,12 +15,6 @@ mv swift-5.5-RELEASE-centos8 /opt/swift
 export PATH=/opt/swift/usr/bin:$PATH
 ```
 
-## 编译
-
-```bash
-swift build --skip-update
-```
-
 ## [CentOS 8安装Docker](https://www.cnblogs.com/ding2016/p/11592999.html)
 
 ```bash
@@ -28,12 +22,16 @@ dnf install docker -y
 ```
 
 ```
-docker pull swift
-
-docker run -itd --privileged --interactive --tty \
+# 创建新容器
+docker run -itd --privileged --restart=always --interactive --tty \
 -p 10010:9001 --name swiftfun swift:5.3.3-centos8 /sbin/init
 
+# 自启动服务
+podman generate systemd --new --files --name swiftfun
+
+# 启动容器
 docker start swiftfun
+# 容器终端
 docker exec -it swift /bin/bash
 ```
 

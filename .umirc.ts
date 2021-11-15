@@ -24,7 +24,7 @@ export default defineConfig({
           component: '../pages/project'
         },
         {
-          path: '/device/log',
+          path: '/device/monitor',
           component: '../pages/device/logger',
         },
         {
@@ -70,6 +70,7 @@ export default defineConfig({
   mfsu: {},
   antd: {},
   history: { type: "browser" },
+  // exportStatic: {},
   dynamicImport: {},
   title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
 });

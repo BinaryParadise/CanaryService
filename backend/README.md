@@ -1,6 +1,6 @@
 # CanaryBackend
 
-推荐使用`Ubuntu 20.04`
+推荐使用`Centos 8`
 
 # CentOS 8
 
@@ -32,6 +32,9 @@ docker pull swift
 
 docker run -itd --privileged --interactive --tty \
 -p 10010:9001 --name swiftfun swift:5.3.3-centos8 /sbin/init
+
+docker start swiftfun
+docker exec -it swift /bin/bash
 ```
 
 
@@ -47,33 +50,6 @@ openssl-devel -y \
 libcurl-devel -y \
 libsqlite3x-devel -y
 ```
-
-`Ubunto 20.04`
-
-```bash
-sudo apt-get install \
-          binutils \
-          git \
-          gnupg2 \
-          libc6-dev \
-          libcurl4 \
-          libedit2 \
-          libgcc-9-dev \
-          libpython2.7 \
-          libsqlite3-0 \
-          libstdc++-9-dev \
-          libxml2 \
-          libz3-dev \
-          pkg-config \
-          tzdata \
-          uuid-dev \
-          zlib1g-dev
-
-
-sudo apt-get install openssl libssl-dev uuid-dev
-```
-
-## [Ubuntu 18.04安装Docker](https://segmentfault.com/a/1190000022374119)
 
 ## [swift docker](https://swift.org/download/#docker)
 

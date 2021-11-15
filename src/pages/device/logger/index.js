@@ -164,7 +164,7 @@ export default class LoggerMonitor extends React.Component {
                         <a href="/device">设备列表</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Badge status={avaiable ? 'processing' : 'default'}></Badge> {data.name}（<span style={{ color: 'orange' }}>{this.transformIp(data)}</span>）
+                        <Badge status={avaiable ? 'processing' : 'default'}></Badge> {data.name}（<span style={{ color: 'orange' }}>{data.ipAddrs[0] ?? ""}</span>）
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={styles.logbody}>

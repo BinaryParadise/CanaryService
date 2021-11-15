@@ -67,7 +67,7 @@ export default class IndexPage extends React.Component {
         title: '操作',
         key: 'action',
         render: (text, record) => {
-          return (<Link to={routerURL('/device/log', record)}>日志监控</Link>);
+          return (<Link to={routerURL('/device/monitor', record)}>日志监控</Link>);
         }
       }
     ],

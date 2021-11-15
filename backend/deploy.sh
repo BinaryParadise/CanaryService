@@ -1,7 +1,7 @@
 git reset --hard
 git pull
 rm -f Package.resolved
-swift build -c release
+swift build
 if [ -f ".build/release/CanaryBackend" ];then
     cp -r .build/release/CanaryBackend release/canary
   else  

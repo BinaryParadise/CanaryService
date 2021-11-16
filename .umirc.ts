@@ -71,6 +71,6 @@ export default defineConfig({
   antd: {},
   history: { type: "browser" },
   // exportStatic: {},
-  dynamicImport: {},
+  // dynamicImport: {},
   title: process.env.title ? process.env.title : '金丝雀 - 奶味蓝的乐园',
 });

@@ -6,6 +6,7 @@ import WebSocket from '@/component/websocket'
 import { history } from 'umi';
 import NetLog from '../component/netlog'
 import { MessageType } from '@/common/util'
+import { Link } from 'react-router-dom'
 
 // 日志标记
 const Error = (1 << 0)
@@ -161,7 +162,7 @@ export default class LoggerMonitor extends React.Component {
                         <a href="/">首页</a>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <a href="/device">设备列表</a>
+                        <Link to="/device">设备列表</Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
                         <Badge status={avaiable ? 'processing' : 'default'}></Badge> {data.name}（<span style={{ color: 'orange' }}>{data.ipAddrs[0] ?? ""}</span>）

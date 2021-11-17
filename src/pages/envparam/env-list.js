@@ -141,7 +141,7 @@ export default class EnvList extends React.Component {
     const newData = [...this.props.listData]
     const target = newData.filter(item => key === item.id)[0]
     if (target) {
-      axios.post('/envitem/update/' + target.id, Object.assign(target))
+      axios.post('/env/update/' + target.id, Object.assign(target))
         .then(() => {
           this.onFinished(true, target)
         })

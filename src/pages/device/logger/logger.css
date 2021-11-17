@@ -22,11 +22,11 @@
 }
 
 .ansi .red {
-    color: #FF6C60
+    color: #FC4651
 }
 
 .ansi .red.bold {
-    color: #FF9B93
+    color: #ec1625
 }
 
 .ansi .green {
@@ -38,11 +38,11 @@
 }
 
 .ansi .yellow {
-    color: #FFFFB6
+    color: #F2248C
 }
 
 .ansi .yellow.bold {
-    color: #FFFF91
+    color: #F2248C
 }
 
 .ansi .pink {

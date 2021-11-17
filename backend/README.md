@@ -1,5 +1,7 @@
 # CanaryBackend
 
+推荐使用`Docker`
+
 # CentOS 8
 
 ```bash
@@ -13,12 +15,6 @@ mv swift-5.5-RELEASE-centos8 /opt/swift
 export PATH=/opt/swift/usr/bin:$PATH
 ```
 
-## 编译
-
-```bash
-swift build --skip-update
-```
-
 ## [CentOS 8安装Docker](https://www.cnblogs.com/ding2016/p/11592999.html)
 
 ```bash
@@ -26,13 +22,32 @@ dnf install docker -y
 ```
 
 ```
-docker pull swift
+# 创建新容器
+docker run -itd --privileged --restart=always --interactive --tty \
+-p 10010:9001 --name swiftfun swift:5.3.3-centos8 /sbin/init
 
-docker run --privileged --interactive --tty \
--p 8443:8443 --name swiftfun swift:5.5.0-centos8 /bin/bash
+# 自启动服务
+podman generate systemd --new --files --name swiftfun
+
+# 启动容器
+docker start swiftfun
+# 容器终端
+docker exec -it swift /bin/bash
 ```
 
-## [Ubuntu 18.04安装Docker](https://segmentfault.com/a/1190000022374119)
+
+## 依赖
+
+`Centos 8 - Swift 5.3.3`
+
+```bash
+# dnf install swift-lang
+dnf install epel-release -y \
+libuuid-devel -y \
+openssl-devel -y \
+libcurl-devel -y \
+libsqlite3x-devel -y
+```
 
 ## [swift docker](https://swift.org/download/#docker)
 

@@ -53,7 +53,7 @@ export default class IndexPage extends React.Component {
         dataIndex: 'ipAddrs',
         width: 200,
         render: (text, record) => {
-          return (<div><span style={{ color: "orange", marginRight: 6 }}> {this.transformIp(record)}</span> <Button onClick={() => this.showDrawer(record, false)}>查看</Button></div>)
+          return (<div><span style={{ color: "orange", marginRight: 6 }}> {record.ipAddrs[0] || ""}</span> <Button onClick={() => this.showDrawer(record, false)}>查看</Button></div>)
         }
       },
       {
@@ -67,7 +67,7 @@ export default class IndexPage extends React.Component {
         title: '操作',
         key: 'action',
         render: (text, record) => {
-          return (<Link to={routerURL('/device/log', record)}>日志监控</Link>);
+          return (<Link to={routerURL('/device/monitor', record)}>日志监控</Link>);
         }
       }
     ],
@@ -75,9 +75,7 @@ export default class IndexPage extends React.Component {
   }
 
   transformIp = (data) => {
-    const ipv4 = (data.ipAddrs || {}).ipv4
-    let key = Object.keys(ipv4).filter(item => !ipv4[item].startsWith('169') && item.startsWith('en'))[0]
-    return ipv4[key]
+    return { "IP地址": data.ipAddrs || [] }
   }
 
   showDrawer = (device, isProfile) => {

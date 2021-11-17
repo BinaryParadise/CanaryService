@@ -18,7 +18,7 @@ export default class ExtraPage extends React.Component {
         }
 
         const title = isProfile ? "额外信息" : "IP详细信息"
-        const data = isProfile ? device.profile : device.ipAddrs
+        const data = isProfile ? device.profile : { "地址列表": device.ipAddrs }
 
         return (<Drawer
             width={isProfile ? 800 : 600}
@@ -32,11 +32,12 @@ export default class ExtraPage extends React.Component {
             style={{ position: 'absolute' }}
         >
             <Descriptions column={1} size='middle' layout="horizontal" bordered>
-                {Object.keys(data).map((key) => {
-                    return <Descriptions.Item label={key}>
-                        <ReactJson name={false} src={data[key]} collapseStringsAfterLength={50}></ReactJson>
-                    </Descriptions.Item>
-                })}
+                {
+                    Object.keys(data).map((key) => {
+                        return <Descriptions.Item label={key}>
+                            <ReactJson name={false} src={data[key]} collapseStringsAfterLength={50}></ReactJson>
+                        </Descriptions.Item>
+                    })}
             </Descriptions>
         </Drawer >)
     }

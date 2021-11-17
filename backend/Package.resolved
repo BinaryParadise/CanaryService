@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Canary",
+        "repositoryURL": "https://github.com/BinaryParadise/Canary.git",
+        "state": {
+          "branch": null,
+          "revision": "60acf0c4e5fefbd95e488a26a6613c12e3d7478b",
+          "version": "0.8.1"
+        }
+      },
+      {
         "package": "COpenSSL",
         "repositoryURL": "https://github.com/PerfectlySoft/Perfect-COpenSSL.git",
         "state": {
@@ -137,12 +146,30 @@
         }
       },
       {
+        "package": "Starscream",
+        "repositoryURL": "https://github.com/daltoniam/Starscream.git",
+        "state": {
+          "branch": null,
+          "revision": "df8d82047f6654d8e4b655d1b1525c64e1059d21",
+          "version": "4.0.4"
+        }
+      },
+      {
         "package": "swift-argument-parser",
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
-          "version": "0.4.3"
+          "revision": "d2930e8fcf9c33162b9fcc1d522bc975e2d4179b",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "SwifterSwift",
+        "repositoryURL": "https://github.com/SwifterSwift/SwifterSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "f9f0c151aa70d3199eff512b903d1f8cff7ff856",
+          "version": "5.1.0"
         }
       }
     ]

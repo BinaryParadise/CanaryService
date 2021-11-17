@@ -7,7 +7,7 @@
 
 import Foundation
 import PerfectHTTP
-import CanaryProto
+import Proto
 
 class HomeController {
     @Mapping(path: "/")

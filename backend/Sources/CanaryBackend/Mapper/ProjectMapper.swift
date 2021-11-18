@@ -23,7 +23,7 @@ struct ProjectMapper {
         return try result?.first?.decode(ProtoProject.self)
     }
     
-    func findAll(uid: Int) -> Any? {
+    func findAll(uid: Int) -> [[String : AnyHashable]]? {
         return try? DBManager.shared.query(statement: findAll, args: [uid])
     }
     

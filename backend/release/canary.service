@@ -3,7 +3,7 @@ Description=The canary backend server
 After=network.target
 
 [Service]
-ExecStart=/usr/sbin/canary -c /usr/local/etc/canary/canary.json
+ExecStart=/usr/sbin/canary serve --env production /usr/local/etc/canary/canary.json
 StandardOutput=append:/var/log/canary/access.log
 StandardError=append:/var/log/canary/error.log
 ExecReload=/bin/kill -s HUP $MAINPID

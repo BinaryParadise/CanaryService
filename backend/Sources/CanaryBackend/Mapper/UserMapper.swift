@@ -41,7 +41,7 @@ struct UserMapper {
         return try? DBManager.shared.query(statement: sql, args: args)?.first
     }
     
-    func findAll() throws -> Any {
+    func findAll() throws -> [[String : AnyHashable]]? {
         let sql = """
         SELECT
             null as password,
@@ -61,7 +61,7 @@ struct UserMapper {
         return try DBManager.shared.query(statement: sql)
     }
     
-    func findRoleList() throws -> Any {
+    func findRoleList() throws -> [[String : AnyHashable]]? {
         return try DBManager.shared.query(statement: "SELECT * FROM UserRole")
     }
     

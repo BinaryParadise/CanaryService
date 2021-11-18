@@ -46,7 +46,7 @@ struct ConfMapper {
             INSERT INTO RemoteConfigParam(`name`, `value`, envid, `comment`, uid,`type`,`platform`)
             VALUES(:1,:2,:3,:4,:5,0,:6)
             """
-            return try DBManager.shared.execute(statement: sql, args: [env.name, env.value, env.envid, env.comment, env.uid, 0])
+            return try DBManager.shared.execute(statement: sql, args: [env.name, env.value, env.envid, env.comment, env.uid, env.platform ?? 0])
         } else {
             let sql = """
             UPDATE RemoteConfigParam SET
@@ -54,6 +54,10 @@ struct ConfMapper {
             """
             return try DBManager.shared.execute(statement: sql, args: [env.name, env.value, env.comment, env.uid, env.id])
         }
+    }
+    
+    func deleteItem(itemid: Int) throws {
+        return try DBManager.shared.execute(statement: "DELETE FROM RemoteConfigParam WHERE id=:1", args: [itemid])
     }
     
     private var findAll: String {

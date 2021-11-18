@@ -9,7 +9,7 @@ import Foundation
 import Proto
 
 class MockMapper {
-    class func findAllMock(pid: Int, uid: Int, paging: Paging, groupId: Int) throws -> [Any]? {
+    class func findAllMock(pid: Int, uid: Int, paging: Paging, groupId: Int) throws -> RowElements {
         var sql = """
         SELECT a.*, b.name as groupname FROM MockData a LEFT JOIN MockGroup b ON a.groupid = b.id WHERE
             b.appid=:1 AND b.uid=:2
@@ -21,7 +21,7 @@ class MockMapper {
         return try DBManager.shared.query(statement: sql, args: [pid, uid, paging.begin, paging.end])
     }
     
-    class func findAllGroup(pid: Int, uid: Int) throws -> [Any]? {
+    class func findAllGroup(pid: Int, uid: Int) throws -> RowElements {
         let sql = """
         SELECT * FROM MockGroup WHERE appid=:1 and uid=:2
         """

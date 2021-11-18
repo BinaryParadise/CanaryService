@@ -62,7 +62,7 @@ class ProjectEditForm extends React.Component {
             onOk={this.onSave}
             destroyOnClose
         >
-            <Form ref={this.formRef} initialValues={data} {...formItemLayout} layout="horizontal">
+            <Form ref={this.formRef} initialValues={{ ...data, id: data.id || 0, shared: data.shared || true }} {...formItemLayout} layout="horizontal">
                 <Form.Item name="id" style={{ display: 'none' }}>
                     <Input type="hidden"></Input>
                 </Form.Item>

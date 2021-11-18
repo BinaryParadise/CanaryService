@@ -8,6 +8,8 @@
 import Foundation
 import PerfectSQLite
 
+typealias RowElements = [[String : AnyHashable]]?
+
 enum ColumnType: Int {
     case int = 1
     case text = 3
@@ -88,7 +90,7 @@ class DBManager {
     }
     
     func log(statement: String, args: [Any?]) {
-        #if DEBUG
+        #if false
         var sql = statement
         for (index, item) in args.enumerated() {
             if item is String {

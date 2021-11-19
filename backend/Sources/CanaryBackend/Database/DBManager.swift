@@ -94,11 +94,11 @@ class DBManager {
         var sql = statement
         for (index, item) in args.enumerated() {
             if item is String {
-                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "'\(item!)'")
+                sql = sql.replacingOccurrences(of: ":\(index+1)", with: "'\(item!)'")
             } else if item is Int || item is Bool || item is Int64 {
-                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "\(item!)")
+                sql = sql.replacingOccurrences(of: ":\(index+1)", with: "\(item!)")
             } else {
-                sql = sql.stringByReplacing(string: ":\(index+1)", withString: "null")
+                sql = sql.replacingOccurrences(of: ":\(index+1)", with: "null")
             }
         }
         LogDebug(sql)

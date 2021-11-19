@@ -15,4 +15,7 @@ public func configure(_ app: Application) throws {
 
     // register routes
     try routes(app)
+    app.sessions.use(.memory)
+    app.middleware.use(app.sessions.middleware)
+    app.middleware.use(ContentFilter())
 }

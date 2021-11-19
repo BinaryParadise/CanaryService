@@ -14,22 +14,22 @@ class MockController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.group("mock") { mock in
             mock.get("app/whole", use: appWhole)
-            mock.get("app/scene", ":id", use: appScene)
+            mock.get("app", "scene", ":id", use: appScene)
             mock.get("list", use: list)
-            mock.get("update", use: update)
+            mock.post("update", use: update)
             mock.post("active", use: active)
             mock.post("delete", ":id", use: delete)
             
             mock.group("group") { group in
                 group.get("list", use: groupList)
                 group.post("update", use: groupUpdate)
-                group.post("delete/:id", use: groupDelete)
+                group.post("delete", ":id", use: groupDelete)
             }
             
             mock.group("scene") { scene in
-                scene.get("list/:mockid", use: sceneList)
+                scene.get("list", ":mockid", use: sceneList)
                 scene.post("update", use: updateScene)
-                scene.post("delete/:id", use: deleteScene)
+                scene.post("delete", ":id", use: deleteScene)
                 scene.post("active", use: activeScene)
             }
             
@@ -40,7 +40,7 @@ class MockController: RouteCollection {
                     return .success()
                 }
                 
-                param.post("delete/:id") { request -> Response in
+                param.post("delete", ":id") { request -> Response in
                     try MockMapper.deleteParam(paramid: request.parameters.intValue("id"))
                     return .success()
                 }
@@ -70,7 +70,7 @@ class MockController: RouteCollection {
     func list(request: Request) throws -> Response {
         let paging = try request.query.decode(Paging.self)
         let r = try MockMapper.findAllMock(pid: request.pid, uid: request.uid, paging: paging, groupId: request.query.intValue("groupid"))
-        return .success(try JSON(r).rawData())
+        return .success(try JSON(r as Any).rawData())
     }
     
     func update(request: Request) throws -> Response {
@@ -80,7 +80,7 @@ class MockController: RouteCollection {
     }
     
     func active(request: Request) throws -> Response {
-        try MockMapper.activeMock(mockid: request.content.intValue("mockid"), enabled: request.content.intValue("enabled") == 0)
+        try MockMapper.activeMock(mockid: request.content.intValue("mockid"), enabled: false)
         return .success()
     }
     
@@ -91,7 +91,7 @@ class MockController: RouteCollection {
     
     func groupList(request: Request) throws -> Response {
         let r = try MockMapper.findAllGroup(pid: request.pid, uid: request.uid)
-        return .success(try JSON(r).rawData())
+        return .success(try JSON(r as Any).rawData())
     }
     
     func groupUpdate(request: Request) throws -> Response {
@@ -118,7 +118,7 @@ class MockController: RouteCollection {
             let response: Response = .init(status: .ok, version: .http1_1, headers: [:], body: .init(string: scene.response))
             response.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf8")
             response.headers.replaceOrAdd(name: "Scene-Id", value: String(scene.id))
-            response.headers.replaceOrAdd(name: "Scene-Name", value: scene.name)//TODO:编码
+            response.headers.replaceOrAdd(name: "Scene-Name", value: scene.name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
             return response
         }
         return .failed(.nodata)
@@ -135,7 +135,8 @@ class MockController: RouteCollection {
     }
     
     func activeScene(request: Request) throws -> Response {
-        try MockMapper.activeScene(request.content.intValue("sceneid"), enabled: request.content.intValue("enabled") == 1, mockid: request.content.intValue("mockid"))
+        let dict = try request.body.dictionary()
+        try MockMapper.activeScene(dict.intValue("sceneid"), enabled: dict.boolValue("enabled"), mockid: dict.intValue("mockid"))
         return .success()
     }
 }

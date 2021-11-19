@@ -119,11 +119,11 @@ public extension Request {
 }
 
 extension URLQueryContainer {
-    func intValue(_ name: String) -> Int {
+    func intValue(_ name: String, file: StaticString = #file, _ function: StaticString = #function, _ line: UInt = #line) -> Int {
         do {
             return try get(Int.self, at: name)
         } catch {
-            LogError("\(error)")
+            LogError("\(error)", file: file, function: function, line: line)
         }
         return 0
     }
@@ -141,6 +141,13 @@ extension URLQueryContainer {
 extension Parameters {
     func intValue(_ name: String) -> Int {
         return Int(self.get(name) ?? "0")!
+    }
+}
+
+extension Request.Body {
+    func dictionary() throws -> [String : AnyHashable] {
+        guard let data = data else { throw ProtoError.param }
+        return try JSONSerialization.jsonObject(with: data) as! [String : AnyHashable]
     }
 }
 

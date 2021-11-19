@@ -28,9 +28,6 @@ let app = Application(env)
 if let port = Int(Environment.get("port") ?? "") {
     app.http.server.configuration.port = port
 }
-app.middleware.use(app.sessions.middleware)
-app.sessions.use(.memory)
-app.middleware.use(ContentFilter())
 defer { app.shutdown() }
 try configure(app)
 try app.run()

@@ -114,7 +114,7 @@ class MockScenePage extends React.Component {
     }
 
     onActive = (record, active) => {
-        var newR = { sceneid: record.id, enabled: active, id: record.mockid }
+        var newR = { sceneid: record.id, enabled: active, mockid: record.mockid }
         return axios.post('/mock/scene/active', newR).then(result => {
             if (result.code != 0) {
                 message.error(result.error)

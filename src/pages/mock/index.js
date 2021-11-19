@@ -12,7 +12,7 @@ export default class MockIndexPage extends React.Component {
         loading: false,
         listData: [],
         queryParam: {
-            groupid: null,
+            groupid: 0,
             pageSize: 200,
             pageNum: 1
         },
@@ -20,7 +20,7 @@ export default class MockIndexPage extends React.Component {
         groups: [],
         group: {
             name: "全部分类",
-            id: null
+            id: 0
         }
     }
 
@@ -151,7 +151,7 @@ export default class MockIndexPage extends React.Component {
     }
 
     render() {
-        const { loading, listData, editItem } = this.state
+        const { loading, listData, editItem, groups } = this.state
         var columns = this.filtersColumns()
         return (
             <Layout>

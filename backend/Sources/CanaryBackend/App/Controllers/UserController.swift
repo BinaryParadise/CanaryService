@@ -26,9 +26,8 @@ struct UserController: RouteCollection {
     
     func login(request: Request) throws -> Response {
         do {
-            let args = try request.content.decode(ProtoUser.self)
-            let username = args.username
-            let password = args.password ?? ""
+            let username = request.content.stringValue("username")
+            let password = request.content.stringValue("password")
             let agent = request.headers.first(name: .userAgent) ?? "unknown"
             let token = try UserMapper.shared.login(username: username, password: password, agent: agent)
             if var user = try UserMapper.shared.findByLogin(args: [username, password, agent, token, Date.currentTimeMillis])?.decode(ProtoUser.self) {

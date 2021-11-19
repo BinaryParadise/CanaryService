@@ -13,7 +13,5 @@ func routes(_ app: Application) throws {
     try builder.register(collection: ConfController())
     try builder.register(collection: ProjectController())
     try builder.register(collection: MockController())
-    if #available(macOS 12, *) {
-        try builder.register(collection: WebSocketController())
-    }
+    try builder.register(collection: WebSocketController())
 }

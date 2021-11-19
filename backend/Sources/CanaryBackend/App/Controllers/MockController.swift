@@ -13,7 +13,7 @@ import Vapor
 class MockController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.group("mock") { mock in
-            mock.get("app/whole", use: appWhole)
+            mock.get("app", "whole", use: appWhole)
             mock.get("app", "scene", ":id", use: appScene)
             mock.get("list", use: list)
             mock.post("update", use: update)

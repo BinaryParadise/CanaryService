@@ -14,14 +14,13 @@ import Vapor
 var clients: [String : DTSClientHandler] = [:]
 var webSessions: [String: [DTSWebHandler]] = [:]
 
-@available(macOS 12, *)
 class WebSocketController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.webSocket("channel", ":platform", ":deviceid", onUpgrade: onUpgrade)
         routes.get("device", use: deviceList)
     }
     
-    func onUpgrade(request: Request, webSocket: WebSocket) async {
+    func onUpgrade(request: Request, webSocket: WebSocket) {
         let deviceId = request.parameters.get("deviceid") ?? ""
         if let _ = request.headers.first(name: "app-secret") {
             let handler = DTSClientHandler()
@@ -73,7 +72,7 @@ class DTSClientHandler {
     
     func handleMessage(webSocket: WebSocket, buffer: ByteBuffer) {
         var n = buffer
-        if let data = n.readData(length: buffer.capacity) {
+        if let data = n.readData(length: buffer.readableBytes) {
             do {
                 let msg = try JSONDecoder().decode(ProtoMessage.self, from: Data(data))
                 switch msg.type {
@@ -129,7 +128,7 @@ class DTSWebHandler {
     
     func handleMessage(webSocket: WebSocket, buffer: ByteBuffer) {
         var n = buffer
-        if let data = n.readData(length: n.capacity) {
+        if let data = n.readData(length: n.readableBytes) {
             if webSocket.isClosed {
                 try? self.socket?.close(code: .normalClosure).wait()
                 self.socket = nil

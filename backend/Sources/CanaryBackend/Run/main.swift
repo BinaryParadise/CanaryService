@@ -25,6 +25,7 @@ LogDebug("\(CommandLine.arguments)")
 var env = try Environment.detect()
 try LoggingSystem.bootstrap(from: &env)
 let app = Application(env)
+app.http.server.configuration.hostname = Environment.get("host") ?? "0.0.0.0"
 if let port = Int(Environment.get("port") ?? "") {
     app.http.server.configuration.port = port
 }

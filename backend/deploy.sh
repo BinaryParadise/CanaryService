@@ -5,7 +5,7 @@ if [ "$A" = "$dest" ]
 then
   name="x86_64-unknown-linux-gnu"
 else
-  echo "x86_64-apple-macosx"
+  name="x86_64-apple-macosx"
 fi
 git reset --hard
 git pull

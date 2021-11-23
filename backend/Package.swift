@@ -3,10 +3,10 @@
 import PackageDescription
 
 let package = Package(
-	name: "CanaryBackend",
+	name: "CanaryCore",
     platforms: [.macOS(.v10_15)],
 	products: [
-		.executable(name: "CanaryBackend", targets: ["CanaryBackend"])
+        .executable(name: "Run", targets: ["Run"]),
 	],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "1.0.0")),
@@ -17,8 +17,9 @@ let package = Package(
         .package(url: "https://github.com/BinaryParadise/Canary.git", .upToNextMinor(from: "0.8.0")),
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMinor(from: "4.52.0")),
     ], targets: [
+        .target(name: "Run", dependencies: ["App"]),
         .target(
-            name: "CanaryBackend",
+            name: "App",
             dependencies: [
                 "Rainbow",
                 "SwiftyJSON",
@@ -26,7 +27,7 @@ let package = Package(
                 "PerfectSQLite",
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
-			]
-        ),
+            ]
+        )
 	]
 )

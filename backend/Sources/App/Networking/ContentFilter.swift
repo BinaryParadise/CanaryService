@@ -50,7 +50,9 @@ public struct ContentFilter: Middleware {
         }
         let response = next.respond(to: request)
         response.whenSuccess { r in
-            r.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf8")
+            if !r.headers.contains(name: .contentType) {                
+                r.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf8")
+            }
         }
         return response
     }

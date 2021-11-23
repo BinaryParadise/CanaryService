@@ -128,7 +128,7 @@ class DTSWebHandler {
     
     func handleMessage(webSocket: WebSocket, buffer: ByteBuffer) {
         var n = buffer
-        if let data = n.readData(length: n.readableBytes) {
+        if let _ = n.readData(length: n.readableBytes) {
             if webSocket.isClosed {
                 try? self.socket?.close(code: .normalClosure).wait()
                 self.socket = nil

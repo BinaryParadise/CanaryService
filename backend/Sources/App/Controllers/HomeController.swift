@@ -11,18 +11,35 @@ import Proto
 
 struct HomeController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        var todos = routes
-        if let context = Environment.get("context") {
-            todos = routes.grouped(.constant(context))
-        }
-        todos.get(use: index)
+        routes.get(use: index)
         
         let log = routes.grouped("log", "snapshot")
         log.post("add", use: addSnapshot)
         log.get(":identify", use: snapshot)
     }
-    func index(req: Request) throws -> String {
-        return "Hello, world!"
+    func index(request: Request) throws -> Response {
+        let response = Response(status: .ok, version: .http1_1, headers: [:], body: .init(string: """
+            <!DOCTYPE html>
+            <html>
+
+            <head>
+                <meta charset='utf-8'>
+                <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+                <title>金丝雀</title>
+                <meta name='viewport' content='width=device-width, initial-scale=1'>
+            </head>
+
+            <body>
+                <h1 style="color: orange">
+                    Canary worked on!</h1>
+                <img src="https://img.phb123.com/uploads/allimg/190403/41-1Z403140I2-52.jpg" width="180" />
+            </body>
+
+            </html>
+
+            """))
+        response.headers.replaceOrAdd(name: .contentType, value: "text/html; charset=utf8")
+        return response
     }
     
     func info(request: Request) throws -> Response {

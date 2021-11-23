@@ -60,13 +60,18 @@ class DTSClientHandler {
             appSecret = request.headers.first(name: "app-secret")
             LogInfo("handshake: \(appSecret ?? "")")
             socket.onBinary(handleMessage)
-            //TODO: socket.onClose
-//            if let device = self.device {
-//                clients.removeValue(forKey: device.deviceId)
-//                LogInfo("设备离线: \(device.deviceId)【\(clients.count)】在线")
-//            }
-//            self.socket?.close()
-//            self.socket = nil
+            socket.onClose.whenComplete { r in
+                switch r {
+                case .success():
+                    if let device = self.device {
+                        clients.removeValue(forKey: device.deviceId)
+                        LogInfo("设备离线: \(device.deviceId)【\(clients.count)】在线")
+                        self.socket = nil
+                    }
+                case .failure(_):
+                    break
+                }
+            }
         }
     }
     

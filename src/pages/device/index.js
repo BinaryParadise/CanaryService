@@ -82,6 +82,7 @@ export default class IndexPage extends React.Component {
     this.setState({
       visible: true,
       device,
+      key: Math.random(),
       isProfile
     });
   };
@@ -136,6 +137,7 @@ export default class IndexPage extends React.Component {
         onClose={() => this.setState({ visible: false })}
         visible={this.state.visible}
         device={this.state.device}
+        key={this.state.key}
         isProfile={this.state.isProfile}></ExtraPage>
     </Layout>;
   }

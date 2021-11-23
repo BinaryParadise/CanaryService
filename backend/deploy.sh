@@ -11,8 +11,8 @@ git reset --hard
 git pull
 rm -f Package.resolved
 swift build
-if [ -f ".build/release/ServeCore" ];then
-    cp -r .build/release/ServeCore release/$name
+if [ -f ".build/release/Run" ];then
+    cp -r .build/release/Run release/$name
   else  
-    cp -r .build/debug/ServeCore release/$name
+    cp -r .build/debug/Run release/$name
 fi

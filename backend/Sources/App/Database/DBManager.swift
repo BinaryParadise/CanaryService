@@ -86,7 +86,7 @@ class DBManager {
             sema.signal()
             throw error
         }
-        return result.count > 0 ? result : nil
+        return result.count > 0 ? result : []
     }
     
     func log(statement: String, args: [Any?]) {

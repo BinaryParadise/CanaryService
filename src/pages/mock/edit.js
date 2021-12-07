@@ -51,7 +51,8 @@ class MockEditForm extends React.Component {
                 return
             }
             const { data } = this.state
-            this.setState({ groups: result.data, data: { ...data, groupid: data.groupid || result.data[0].id } })
+            var gid = result.data.length > 0 ? result.data[0].id : null
+            this.setState({ groups: result.data, data: { ...data, groupid: data.groupid || gid } })
             if (this.formRef.current) {
                 this.formRef.current.setFieldsValue({ "groupid": this.state.data.groupid })
             }
@@ -59,18 +60,18 @@ class MockEditForm extends React.Component {
     }
 
     onAddGroup = () => {
-        var gname = this.formRef.current.getFieldValue("groupname")
+        var gname = this.formRef.current.getFieldValue("gname")
         if ((gname || "") == "") {
             message.error("请输入分类名称")
             return
         }
-        var group = { name: gname, appid: confi }
+        var group = { name: gname }
         return axios.post('/mock/group/update', group).then(result => {
             if (result.code != 0) {
                 message.error(result.msg)
                 return
             }
-            this.formRef.current.setFieldsValue({ groupname: '' })
+            this.formRef.current.setFieldsValue({ groupname: '', gname: '' })
             this.queryAll()
         })
     }
@@ -111,7 +112,6 @@ class MockEditForm extends React.Component {
     }
 
     onGroupChanged = (value) => {
-        this.formRef.current.setFieldsValue({ groupid: value })
     };
 
     methodSelector = (<Form.Item name="method" style={{ width: 80 }} noStyle>
@@ -135,7 +135,7 @@ class MockEditForm extends React.Component {
                 destroyOnClose={true}
             >
                 <Form ref={this.formRef}
-                    initialValues={{ ...data, method: data.method || "GET", groupname: "", groupid: data.groupid || groups[0].id }}
+                    initialValues={{ ...data, method: data.method || "GET", groupname: "" }}
                     layout="horizontal"
                     onValuesChange={(changedValues, allValues) => {
                     }}
@@ -171,8 +171,8 @@ class MockEditForm extends React.Component {
                         </Row>
                     </Form.Item>
 
-                    <Form.Item label="" hidden={!visible}>
-                        <Form.Item>
+                    <Form.Item label=" " hidden={!visible}>
+                        <Form.Item name="gname">
                             <Input allowClear addonAfter={<a onClick={() => this.onAddGroup()}>新增</a>} onChange={this.onGroupChanged} placeholder="新分类名称" />
                         </Form.Item>
                         <List dataSource={groups} renderItem={item => (

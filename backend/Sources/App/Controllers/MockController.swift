@@ -11,6 +11,8 @@ import SwiftyJSON
 import Vapor
 
 class MockController: RouteCollection {
+    var token: String?
+    
     func boot(routes: RoutesBuilder) throws {
         routes.group("mock") { mock in
             mock.get("app", "whole", use: appWhole)

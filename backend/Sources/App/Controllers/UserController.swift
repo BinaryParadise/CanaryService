@@ -15,7 +15,7 @@ struct UserController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.group("user") { user in
             user.post("login", use: login)
-            user.post("change", use: switchApp)
+            user.post("change", "app", use: switchApp)
             user.get("list", use: list)
             user.post("update", use: update)
             user.post("resetpwd", use: resetPwd)
@@ -46,7 +46,7 @@ struct UserController: RouteCollection {
     func switchApp(request: Request) throws -> Response {
         //TODO: 切换app
         let pid = try request.content.get(Int.self, at: "id")
-        try UserMapper.shared.changeApp(uid: 0, pid: 0)
+        try UserMapper.shared.changeApp(uid: request.uid, pid: pid)
         var user = UserMapper.shared.findByToken(token: request.headers.first(name: AccessToken)!, agent: request.headers.first(name: .userAgent) ?? "unknown")
         user?.app = try? ProjectMapper.shared.findBy(appId: pid)
         let r = try JSONEncoder().encode(user)

@@ -1,6 +1,6 @@
 # CanaryBackend
 
-推荐使用`Docker`
+推荐使用`Docker`, 实体机环境不方便搭建，而且可能遇到无法解决的问题
 
 # CentOS 8
 
@@ -32,7 +32,7 @@ podman generate systemd --new --files --name swiftfun
 # 启动容器
 docker start swiftfun
 # 容器终端
-docker exec -it swift /bin/bash
+docker exec -it swiftfun /bin/bash
 ```
 
 

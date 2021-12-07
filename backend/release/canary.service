@@ -3,10 +3,11 @@ Description=The canary backend server
 After=network.target
 
 [Service]
-WorkingDirectory=/usrl/local/etc/canary
-ExecStart=/usr/local/etc/canary/x86_64-unknown-linux-gnu serve --env prod
-StandardOutput=append:/var/log/canary/access.log
-StandardError=append:/var/log/canary/error.log
+Environment=SYSTEMD_LOG_LEVEL=debug
+WorkingDirectory=/usr/local/etc/canary
+ExecStart=/usr/local/etc/canary/x86_64-unknown-linux-gnu --log debug
+StandardOutput=tty
+StandardError=tty
 ExecReload=/bin/kill -s HUP $MAINPID
 KillSignal=SIGQUIT
 Restart=always

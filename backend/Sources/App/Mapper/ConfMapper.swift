@@ -18,11 +18,13 @@ struct ConfMapper {
         for type in [.test, .dev, .production] as [ConfType] {
             var group = ProtoConfGroup(type)
             do {
-                let result = try findAll(pid: pid, type: group.type.rawValue)
-                group.items = try JSONDecoder().decode([ProtoConf].self, from: JSON(result).rawData())
-                for (i, item) in group.items.enumerated() {
-                    let subrs = try findItemAll(envid: item.id)
-                    group.items[i].subItems = try JSONDecoder().decode([ProtoConfItem].self, from: JSON(subrs).rawData())
+                if let result = try findAll(pid: pid, type: group.type.rawValue) {
+                    group.items = try JSONDecoder().decode([ProtoConf].self, from: JSON(result).rawData())
+                    for (i, item) in group.items.enumerated() {
+                        if let subrs = try findItemAll(envid: item.id) {
+                            group.items[i].subItems = try JSONDecoder().decode([ProtoConfItem].self, from: JSON(subrs).rawData())
+                        }
+                    }
                 }
             } catch {
                 LogError("\(error)")
@@ -38,6 +40,25 @@ struct ConfMapper {
     
     func findItemAll(envid: Int) throws -> [[String : AnyHashable]]? {
         return try DBManager.shared.query(statement: itemAll, args: [envid])
+    }
+    
+    func update(conf: ProtoConf) throws {
+        if conf.id == 0 {
+            let sql = """
+                INSERT INTO RemoteConfig(name, comment, type, appId, uid, defaultTag) VALUES(:1, :2, :3, :4,:5, :6)
+            """
+            let defaultTag = try findAll(pid: conf.appId!, type: 0)?.count == 0
+            return try DBManager.shared.execute(statement: sql, args: [conf.name, conf.comment, conf.type.rawValue, conf.appId, conf.uid, defaultTag])
+        } else {
+            let sql = """
+                UPDATE RemoteConfig SET `name`=:1,type=:2,`comment`=:3,uid=:4, updateTime=null WHERE id=:5
+            """
+            return try DBManager.shared.execute(statement: sql, args: [conf.name, conf.type.rawValue, conf.comment, conf.uid, conf.id])
+        }
+    }
+    
+    func delete(envid: Int) throws {
+        return try DBManager.shared.execute(statement: "DELETE FROM RemoteConfig WHERE id=:1;", args: [envid])
     }
     
     func updateItem(env: ProtoConfItem) throws {

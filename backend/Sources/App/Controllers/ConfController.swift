@@ -15,7 +15,8 @@ struct ConfController: RouteCollection {
         routes.group("conf") { conf in
             conf.get("list", use: list)
             conf.get("full", use: full)
-            conf.post("update", use: update)
+            conf.post("update", ":id", use: update)
+            conf.post("delete", ":id", use: delete)
         }
         
         routes.group("env") { env in
@@ -26,7 +27,7 @@ struct ConfController: RouteCollection {
     }
     
     func list(request: Request) throws -> Response {
-        let rs = try ConfMapper.shared.findAll(pid: request.pid, type: request.content.intValue("type"))
+        let rs = try ConfMapper.shared.findAll(pid: request.pid, type: request.query.intValue("type"))
         return .success(try JSON(rs as Any).rawData())
     }
     
@@ -36,6 +37,14 @@ struct ConfController: RouteCollection {
     }
     
     func update(request: Request) throws -> Response {
+        var conf = try request.content.decode(ProtoConf.self)
+        conf.appId = request.pid
+        try ConfMapper.shared.update(conf: conf)
+        return .success()
+    }
+    
+    func delete(request: Request) throws -> Response {
+        try ConfMapper.shared.delete(envid: request.parameters.intValue("id"))
         return .success()
     }
     

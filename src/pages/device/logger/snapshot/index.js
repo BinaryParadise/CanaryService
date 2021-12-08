@@ -13,7 +13,7 @@ export default class LogSnapshotPage extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/log/snapshot/' + this.state.identify).then(result => {
+        axios.get('/log/snapshot/view/' + this.state.identify).then(result => {
             if (result.code == 0) {
                 this.setState({ data: result.data, loading: false })
             } else {

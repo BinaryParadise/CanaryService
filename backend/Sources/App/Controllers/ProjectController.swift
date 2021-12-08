@@ -37,18 +37,18 @@ class ProjectController: RouteCollection {
             app.identify = CanaryProto.generateIdentify()
             try ProjectMapper.shared.insertNew(app)
         }
-        return .success()
+        return .done()
     }
     
     func delete(request: Request) throws -> Response {
         try ProjectMapper.shared.delete(appid: request.parameters.intValue("id"))
-        return .success()
+        return .done()
     }
     
     func resetAppKey(request: Request) throws -> Response {
         var app = try request.content.decode(ProtoProject.self)
         app.identify = CanaryProto.generateIdentify()
         try ProjectMapper.shared.update(app)
-        return .success()
+        return .done()
     }
 }

@@ -62,7 +62,7 @@ struct UserController: RouteCollection {
     func update(request: Request) throws -> Response {
         let user = try request.content.decode(ProtoUser.self)
         try UserMapper.shared.update(user: user)
-        return .success()
+        return .done()
     }
     
     func resetPwd(request: Request) throws -> Response {
@@ -70,12 +70,12 @@ struct UserController: RouteCollection {
         user.id = try request.content.get(Int.self, at: "id")
         user.password = try request.content.get(String.self, at: "password")
         try UserMapper.shared.resetPwd(user: user)
-        return .success()
+        return .done()
     }
     
     func deleteUser(request: Request) throws -> Response {
         try UserMapper.shared.delete(uid: Int(request.parameters.get("uid") ?? "")!)
-        return .success()
+        return .done()
     }
     
     func roleList(request: Request) throws -> Response {

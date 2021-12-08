@@ -8,6 +8,7 @@ import { Resizable } from 'react-resizable';
 import { Link } from 'react-router-dom'
 import ExtraPage from './component/extra'
 import WebSocket from '@/component/websocket'
+import moment from 'moment';
 
 export default class IndexPage extends React.Component {
   state = {
@@ -61,6 +62,14 @@ export default class IndexPage extends React.Component {
         dataIndex: 'profile',
         render: (text, record) => {
           return <Button onClick={() => this.showDrawer(record, true)}>查看</Button>;
+        }
+      },
+      {
+        title: '最后更新',
+        dataIndex: 'update',
+        width: 155,
+        render: (text) => {
+          return moment(text).format('YYYY-MM-DD HH:mm:ss')
         }
       },
       {

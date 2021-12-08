@@ -15,7 +15,7 @@ struct HomeController: RouteCollection {
         
         let log = routes.grouped("log", "snapshot")
         log.post("add", use: addSnapshot)
-        log.get(":identify", use: snapshot)
+        log.get("view", ":identify", use: snapshot)
     }
     func index(request: Request) throws -> Response {
         let response = Response(status: .ok, version: .http1_1, headers: [:], body: .init(string: """
@@ -48,13 +48,13 @@ struct HomeController: RouteCollection {
     
     func addSnapshot(request: Request) throws -> Response {
         try DBManager.shared.execute(statement: "INSERT INTO APISnapshot(identify, data) VALUES(:1, :2)", args: [request.content.get(String.self, at: "identify"), request.body.string])
-        return .success()
+        return .done()
     }
     
     func snapshot(request: Request) throws -> Response {
         let data = try DBManager.shared.query(statement: "SELECT * FROM APISnapshot WHERE identify=:1", args: [request.parameters.get("identify") as Any])?.first
         if request.headers.first(name: .xRequestedWith) == "XMLHttpRequest" {
-            return Response(status: .ok, version: .http1_1, headersNoUpdate: [:], body: .init(data: (data?.data)!))
+            return .success(data?["data"] as? String)
         } else {
             let response = Response(status: .ok, version: .http1_1, headers: .init(), body: .init(string: """
                     <html>

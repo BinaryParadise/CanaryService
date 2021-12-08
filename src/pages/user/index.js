@@ -74,7 +74,7 @@ export class UserList extends React.Component {
     deleteUser = (id) => {
         return axios.post("/user/delete/" + id).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
             } else {
                 message.success("删除成功")
                 this.query()

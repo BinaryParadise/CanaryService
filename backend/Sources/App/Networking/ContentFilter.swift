@@ -48,7 +48,9 @@ public struct ContentFilter: Middleware {
         if permissionDenied(request: request) {
             return request.eventLoop.makeSucceededFuture(Response(status: .unauthorized, version: .http1_1, headers: .init(), body: .empty))
         }
-        let response = next.respond(to: request)
+        let response = next.respond(to: request).flatMapErrorThrowing { error in
+            return .failed(.custom(error.localizedDescription))
+        }
         response.whenSuccess { r in
             if !r.headers.contains(name: .contentType) {                
                 r.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf8")

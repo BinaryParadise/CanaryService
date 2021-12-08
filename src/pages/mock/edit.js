@@ -79,7 +79,7 @@ class MockEditForm extends React.Component {
     onDeleteGroup(item) {
         return axios.post('/mock/group/delete/' + item.id).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
             this.queryAll()
@@ -106,7 +106,7 @@ class MockEditForm extends React.Component {
                 message.success("保存成功")
                 callback()
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         });
     }

@@ -12,11 +12,10 @@ import Vapor
 
 /// 设备列表
 var clients: [String : DTSClientHandler] = [:]
-var webSessions: [String: [DTSWebHandler]] = [:]
 
 class WebSocketController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        routes.webSocket("channel", ":platform", ":deviceid", onUpgrade: onUpgrade)
+        routes.webSocket("channel", ":platform", ":deviceid", maxFrameSize: WebSocketMaxFrameSize(integerLiteral: 1 << 16), onUpgrade: onUpgrade)
         routes.get("device", use: deviceList)
     }
     
@@ -27,16 +26,11 @@ class WebSocketController: RouteCollection {
             clients[deviceId] = handler
             handler.handleSession(request: request, socket: webSocket)
         } else {
-            let handler = DTSWebHandler(deviceId: deviceId)
-            if webSessions.contains(where: { key, value in
-                key == deviceId
-            }) {
-                var sessions = webSessions[deviceId]!
-                sessions.append(handler)
-            } else {
-                webSessions[deviceId] = [handler]
+            if var device = clients[deviceId] {
+                let handler = DTSWebHandler(deviceId: deviceId)
+                device.observe[handler.identify] = handler
+                handler.handleSession(request: request, socket: webSocket)
             }
-            handler.handleSession(request: request, socket: webSocket)
         }
     }
     
@@ -53,6 +47,7 @@ class DTSClientHandler {
     var socket: WebSocket?
     var appSecret: String?
     var device: ProtoDevice?
+    var observe: [String : DTSWebHandler] = [:]
     
     func handleSession(request: Request, socket: WebSocket) {
         self.socket = socket
@@ -64,7 +59,10 @@ class DTSClientHandler {
                 switch r {
                 case .success():
                     if let device = self.device {
-                        clients.removeValue(forKey: device.deviceId)
+                        let client = clients.removeValue(forKey: device.deviceId)
+                        client?.observe.forEach({ (key: String, value: DTSWebHandler) in
+                            _ = value.socket?.close(code: .goingAway)
+                        })
                         LogInfo("设备离线: \(device.deviceId)【\(clients.count)】在线")
                         self.socket = nil
                     }
@@ -90,6 +88,7 @@ class DTSClientHandler {
                     self.device = try JSONDecoder().decode(ProtoDevice.self, from: msg.data?.rawData() ?? Data())
                     if let device = self.device {
                         clients[device.deviceId] = self
+                        self.device?.update = Date().timeIntervalSince1970 * 1000
                         LogInfo("设备\(isNew ? "连接":"更新"): \(device.deviceId), 【\(clients.count)】在线")
                     }
                 case .log:
@@ -107,9 +106,9 @@ class DTSClientHandler {
     }
     
     func forwardLog(data: [UInt8]) {
-        guard let sessions = webSessions[device?.deviceId ?? ""] else { return }
-        sessions.forEach { web in
-            web.socket?.send(raw: data, opcode: .binary)
+        guard let client = clients[device?.deviceId ?? ""] else { return }
+        client.observe.forEach { (key: String, value: DTSWebHandler) in
+            value.socket?.send(raw: data, opcode: .binary)
         }
     }
 }
@@ -118,9 +117,11 @@ class DTSWebHandler {
     var deviceId: String
     var socketProtocol: String?
     var socket: WebSocket?
+    var identify: String
     
     init(deviceId: String) {
         self.deviceId = deviceId
+        identify = UUID().uuidString
     }
     
     func handleSession(request: Request, socket: WebSocket) {
@@ -128,22 +129,17 @@ class DTSWebHandler {
         if !socket.isClosed {
             LogInfo("Web监听设备: \(deviceId)")
             socket.onBinary(handleMessage)
+            socket.onClose.whenComplete { r in
+                clients[self.deviceId]?.observe.removeValue(forKey: self.identify)
+                LogInfo("Web离线: \(self.deviceId)")
+            }
         }
     }
     
     func handleMessage(webSocket: WebSocket, buffer: ByteBuffer) {
         var n = buffer
         if let _ = n.readData(length: n.readableBytes) {
-            if webSocket.isClosed {
-                try? self.socket?.close(code: .normalClosure).wait()
-                self.socket = nil
-                webSessions.removeValue(forKey: self.deviceId)
-                var count = 0
-                webSessions.forEach { key, value in
-                    count += value.count
-                }
-                LogWarn("Web端离线: \(self.deviceId), 【\(count)】在线")
-            }
+            //TODO: 读取数据
         }
     }
 }

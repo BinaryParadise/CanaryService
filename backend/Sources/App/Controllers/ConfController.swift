@@ -46,12 +46,12 @@ struct ConfController: RouteCollection {
         var conf = try request.content.decode(ProtoConf.self)
         conf.appId = request.pid
         try ConfMapper.shared.update(conf: conf)
-        return .success()
+        return .done()
     }
     
     func delete(request: Request) throws -> Response {
         try ConfMapper.shared.delete(envid: request.parameters.intValue("id"))
-        return .success()
+        return .done()
     }
     
     func envlist(request: Request) throws -> Response {
@@ -63,11 +63,11 @@ struct ConfController: RouteCollection {
         var env = try request.content.decode(ProtoConfItem.self)
         env.uid = request.uid
         try ConfMapper.shared.updateItem(env: env)
-        return .success()
+        return .done()
     }
     
     func envdelete(request: Request) throws -> Response {
         try ConfMapper.shared.deleteItem(itemid: request.parameters.intValue("id"))
-        return .success()
+        return .done()
     }
 }

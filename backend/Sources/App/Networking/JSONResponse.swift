@@ -10,7 +10,17 @@ import Vapor
 import Proto
 import SwiftyJSON
 
-extension Response {    
+extension Response {
+    
+    class func done() -> Response {
+        let d: Data? = nil
+        return success(d)
+    }
+    
+    class func success(_ data: String? = nil) -> Response {
+        return .success(data?.data(using: .utf8))
+    }
+    
     class func success(_ data: Data? = nil) -> Response {
         do {
             let r: Data = try JSONEncoder().encode(ProtoResult(entry: data as Any))

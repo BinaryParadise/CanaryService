@@ -9,6 +9,7 @@ import Foundation
 import Proto
 import SwiftyJSON
 import Vapor
+import PerfectSQLite
 
 class MockController: RouteCollection {
     var token: String?
@@ -39,12 +40,12 @@ class MockController: RouteCollection {
                 
                 param.post("update") { request -> Response in
                     try MockMapper.updateParam(param: request.content.decode(ProtoMockParam.self))
-                    return .success()
+                    return .done()
                 }
                 
                 param.post("delete", ":id") { request -> Response in
                     try MockMapper.deleteParam(paramid: request.parameters.intValue("id"))
-                    return .success()
+                    return .done()
                 }
             }
         }
@@ -66,7 +67,7 @@ class MockController: RouteCollection {
             }
             return .success(try JSONEncoder().encode(groups))
         }
-        return .success()
+        return .done()
     }
     
     func list(request: Request) throws -> Response {
@@ -78,17 +79,17 @@ class MockController: RouteCollection {
     func update(request: Request) throws -> Response {
         let mock = try request.content.decode(ProtoMock.self)
         try MockMapper.update(mock: mock)
-        return .success()
+        return .done()
     }
     
     func active(request: Request) throws -> Response {
         try MockMapper.activeMock(mockid: request.content.intValue("mockid"), enabled: false)
-        return .success()
+        return .done()
     }
     
     func delete(request: Request) throws -> Response {
         try MockMapper.deleteMock(mockid: request.parameters.intValue("id"))
-        return .success()
+        return .done()
     }
     
     func groupList(request: Request) throws -> Response {
@@ -98,12 +99,12 @@ class MockController: RouteCollection {
     
     func groupUpdate(request: Request) throws -> Response {
         try MockMapper.updateGroup(request.content.decode(ProtoMockGroup.self))
-        return .success()
+        return .done()
     }
     
     func groupDelete(request: Request) throws -> Response {
         try MockMapper.deleteGroup(request.parameters.intValue("id"))
-        return .success()
+        return .done()
     }
     
     func sceneList(request: Request) throws -> Response {
@@ -128,17 +129,17 @@ class MockController: RouteCollection {
     
     func updateScene(request: Request) throws -> Response {
         try MockMapper.updateScene(scene: request.content.decode(ProtoMockScene.self))
-        return .success()
+        return .done()
     }
     
     func deleteScene(request: Request) throws -> Response {
         try MockMapper.deleteScene(sceneid: request.parameters.intValue("id"))
-        return .success()
+        return .done()
     }
     
     func activeScene(request: Request) throws -> Response {
         let dict = try request.body.dictionary()
         try MockMapper.activeScene(dict.intValue("sceneid"), enabled: dict.boolValue("enabled"), mockid: dict.intValue("mockid"))
-        return .success()
+        return .done()
     }
 }

@@ -31,7 +31,7 @@ public struct Paging: Codable {
 
 public struct ContentFilter: Middleware {
     /// 无需鉴权白名单
-    let whiteList = ["/channel", "/conf/full", "/info", "/user/login", "/net/snapshot", "/mock/app/scene", "/log/snapshot/"]
+    let whiteList = ["/channel", "/info", "/user/login", "/net/snapshot", "/mock/app/scene", "/log/snapshot/"]
     /// 需指定角色权限
     let adminList = ["/user/add", "/user/update", "/user/role/list"]
     var contextPath: String = ""

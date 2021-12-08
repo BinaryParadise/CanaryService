@@ -32,7 +32,13 @@ struct ConfController: RouteCollection {
     }
     
     func full(request: Request) throws -> Response {
-        let rs = try ConfMapper.shared.findFull(pid: request.pid)
+        var pid = request.pid
+        let appkey = request.query.stringValue("appkey")
+        if appkey.count > 0 {
+            guard let app = try ProjectMapper.shared.findBy(appKey: appkey) else { return .failed(.unauthorized)}
+            pid = app.id
+        }
+        let rs = try ConfMapper.shared.findFull(pid: pid)
         return .success(try JSONEncoder().encode(rs))
     }
     

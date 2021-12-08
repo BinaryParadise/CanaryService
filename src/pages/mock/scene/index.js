@@ -117,7 +117,7 @@ class MockScenePage extends React.Component {
         var newR = { sceneid: record.id, enabled: active, mockid: record.mockid }
         return axios.post('/mock/scene/active', newR).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
             this.props.location.state = newR
@@ -149,7 +149,7 @@ class MockScenePage extends React.Component {
                 this.props.location.state = { ...this.mock(), sceneid: null }
                 this.queryAll()
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         });
     }
@@ -157,7 +157,7 @@ class MockScenePage extends React.Component {
     onDeleteScene(item) {
         return axios.post('/mock/scene/delete/' + item.id).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
             this.queryAll()

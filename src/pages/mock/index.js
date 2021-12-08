@@ -124,7 +124,7 @@ export default class MockIndexPage extends React.Component {
     onActive = (record) => {
         return axios.post('/mock/active', { mockid: record.id }).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
             this.queryAll()
@@ -141,7 +141,7 @@ export default class MockIndexPage extends React.Component {
                 message.success("保存成功")
                 this.queryAll()
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         })
     }

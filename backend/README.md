@@ -26,6 +26,10 @@ dnf install docker -y
 docker run -itd --privileged --restart=always --interactive --tty \
 -p 10010:9001 --name swiftfun swift:5.3.3-centos8 /sbin/init
 
+# 中文显示
+
+yum install langpacks-zh_CN.noarch
+
 # 自启动服务
 podman generate systemd --new --files --name swiftfun
 

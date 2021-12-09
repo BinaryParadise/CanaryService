@@ -53,7 +53,6 @@ class DBManager {
     }
     
     func query(statement: String, args: [Any] = []) throws -> [[String : AnyHashable]]? {
-        sema.wait()
         log(statement: statement, args: args)
         var result: [[String : AnyHashable]] = []
         do {
@@ -81,9 +80,7 @@ class DBManager {
                 }
                 result.append(map)
             })
-            sema.signal()
         } catch {
-            sema.signal()
             throw error
         }
         return result.count > 0 ? result : []

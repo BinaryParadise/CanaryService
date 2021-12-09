@@ -22,7 +22,7 @@ export default class NetLogPage extends React.Component {
 
     generateUrl = () => {
         const { data } = this.props
-        return axios.post('/log/snapshot/add', data).then(result => {
+        return axios.post('/snapshot/add', data).then(result => {
             if (result.code == 0) {
                 CopyToClipboard(window.location.origin + '/log/snapshot/' + data.identify)
                 message.success('复制成功')

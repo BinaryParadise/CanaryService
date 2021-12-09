@@ -13,7 +13,7 @@ struct HomeController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.get(use: index)
         
-        let log = routes.grouped("log", "snapshot")
+        let log = routes.grouped("snapshot")
         log.post("add", use: addSnapshot)
         log.get("view", ":identify", use: snapshot)
     }
@@ -52,16 +52,21 @@ struct HomeController: RouteCollection {
     }
     
     func snapshot(request: Request) throws -> Response {
-        let data = try DBManager.shared.query(statement: "SELECT * FROM APISnapshot WHERE identify=:1", args: [request.parameters.get("identify") as Any])?.first
+        guard let idenfity = request.parameters.get("identify") else {
+            return .failed(.param)
+        }
+        guard let data = try DBManager.shared.query(statement: "SELECT * FROM APISnapshot WHERE identify=:1", args: [idenfity])?.first else {
+            return .failed(.nodata)
+        }
         if request.headers.first(name: .xRequestedWith) == "XMLHttpRequest" {
-            return .success(data?["data"] as? String)
+            return .success(data["data"] as? String)
         } else {
             let response = Response(status: .ok, version: .http1_1, headers: .init(), body: .init(string: """
                     <html>
                     <head>
                         <title>接口请求响应快照 - 金丝雀</title>
                         <meta property="og:title" content="接口请求响应快照" />
-                        <meta property="og:url" content="\(data?["url"] as? String ?? "")" />
+                        <meta property="og:url" content="\(data["url"] as? String ?? "")" />
                         <meta property="og:description" content="可查看请求和响应的详细数据" />
                     </head>
                     <body>Open Graph Data</body>

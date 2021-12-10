@@ -19,18 +19,6 @@ class WebSocketController: RouteCollection {
         routes.get("device", use: deviceList)
     }
     
-    func shouldUpgrade(request: Request) -> EventLoopFuture<HTTPHeaders?> {
-        guard let deviceId = request.parameters.get("deviceid") else {
-            return request.eventLoop.makeFailedFuture(ProtoError.denied)
-        }
-        if request.headers.first(name: "app-secret") == nil {
-            if !clients.keys.contains(deviceId) {
-                return request.eventLoop.makeFailedFuture(ProtoError.denied)
-            }
-        }
-        return request.eventLoop.makeSucceededFuture([:])
-    }
-    
     func onUpgrade(request: Request, webSocket: WebSocket) {
         let deviceId = request.parameters.get("deviceid") ?? ""
         if let _ = request.headers.first(name: "app-secret") {
@@ -103,7 +91,7 @@ class DTSClientHandler {
                     if let device = self.device {
                         clients[device.deviceId] = self
                         self.device?.update = Date().timeIntervalSince1970 * 1000
-                        LogInfo("设备\(isNew ? "连接":"更新"): \(device.deviceId), 【\(clients.count)】在线")
+                        LogDebug("设备\(isNew ? "连接":"更新"): \(device.deviceId), 【\(clients.count)】在线")
                     }
                 case .log:
                     DispatchQueue.global().async {
@@ -156,7 +144,7 @@ class DTSWebHandler {
         if let d = n.readData(length: n.readableBytes), let str = String(data: d, encoding: .utf8) {
             let msg = ProtoMessage(type: .connected, msg: "设备连接成功!")
             webSocket.send(raw: msg.encodedData()!, opcode: .binary)
-            LogInfo("来自Web监听消息: \(str)")
+            LogWarn("来自Web监听消息: \(str)")
         }
     }
 }

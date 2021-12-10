@@ -14,7 +14,7 @@ let package = Package(
         //.package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", .upToNextMinor(from: "5.0.0")),
         .package(name: "SwiftyJSON", path: "../common/SwiftyJSON"),
         .package(name: "PerfectSQLite", path: "../common/Perfect-SQLite"),
-        .package(url: "https://github.com/BinaryParadise/Canary.git", .upToNextMinor(from: "0.8.0")),
+        .package(url: "https://github.com/BinaryParadise/Canary.git", .upToNextMinor(from: "0.8.2")),
         .package(url: "https://github.com/vapor/vapor.git", .upToNextMinor(from: "4.52.0")),
     ], targets: [
         .target(name: "Run", dependencies: ["App"]),

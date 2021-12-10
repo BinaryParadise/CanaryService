@@ -26,7 +26,7 @@ class WebSocketController: RouteCollection {
             clients[deviceId] = handler
             handler.handleSession(request: request, socket: webSocket)
         } else {
-            if var device = clients[deviceId] {
+            if let device = clients[deviceId] {
                 let handler = DTSWebHandler(deviceId: deviceId)
                 device.observe[handler.identify] = handler
                 handler.handleSession(request: request, socket: webSocket)
@@ -108,6 +108,7 @@ class DTSClientHandler {
     func forwardLog(data: [UInt8]) {
         guard let client = clients[device?.deviceId ?? ""] else { return }
         client.observe.forEach { (key: String, value: DTSWebHandler) in
+            LogDebug("消息转发到: \(value.identify)")
             value.socket?.send(raw: data, opcode: .binary)
         }
     }
@@ -138,8 +139,9 @@ class DTSWebHandler {
     
     func handleMessage(webSocket: WebSocket, buffer: ByteBuffer) {
         var n = buffer
-        if let _ = n.readData(length: n.readableBytes) {
+        if let d = n.readData(length: n.readableBytes), let str = String(data: d, encoding: .utf8) {
             //TODO: 读取数据
+            LogInfo("来自Web监听消息: \(str)")
         }
     }
 }

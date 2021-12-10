@@ -14,6 +14,7 @@ export default {
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)
+      this.sendMessage({ action: 'ok' });
       context.onMessage({ code: 0, type: 1, msg: '连接成功!' })
     }
 

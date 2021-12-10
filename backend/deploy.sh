@@ -1,11 +1,11 @@
 A="$1"
-dest="--linux"
+dest="--macos"
 name="canary"
 if [ "$A" = "$dest" ]
 then
-  name="x86_64-unknown-linux-gnu"
-else
   name="x86_64-apple-macosx"
+else
+  name="x86_64-unknown-linux-gnu"
 fi
 git reset --hard
 git pull

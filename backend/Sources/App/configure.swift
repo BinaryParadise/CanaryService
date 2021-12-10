@@ -10,6 +10,7 @@ import Vapor
 
 
 public func startServe() throws {
+    LogWarn("ver 0.8.5")
     LogDebug("\(CommandLine.arguments)")
     //ServerArgument.main()
 

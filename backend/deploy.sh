@@ -10,6 +10,9 @@ fi
 git reset --hard
 git pull
 rm -f Package.resolved
+if [ - d ".build"]; then
+  rm -rf .build/$name
+fi
 swift build
 if [ -f ".build/release/Run" ];then
     cp -r .build/release/Run release/$name

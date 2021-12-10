@@ -9,8 +9,8 @@ import Foundation
 import Vapor
 
 
-public func startServe() throws {
-    LogWarn("ver 0.8.5")
+public func startServe(_ ver: String) throws {
+    LogWarn("\(ver)")
     LogDebug("\(CommandLine.arguments)")
     //ServerArgument.main()
 

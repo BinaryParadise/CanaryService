@@ -4,7 +4,6 @@ import URL from 'url'
 export default {
   messagers: [],
   create: function (deviceid) {
-    console.log(URL.parse(wsPath))
     if (URL.parse(wsPath).protocol == null) {
       let apiURL = URL.parse(baseURI).host ? URL.parse(baseURI) : window.location
       this.url = (apiURL.protocol == "http:" ? "ws://" : "wss://") + apiURL.hostname + (apiURL.port ? ":" + apiURL.port : "") + wsPath + '/web/' + deviceid
@@ -14,8 +13,7 @@ export default {
     var context = this
     this.onOpen = () => {
       console.info('[WS]onopen：', context.url)
-      this.sendMessage({ action: 'ok' });
-      context.onMessage({ code: 0, type: 1, msg: '连接成功!' })
+      this.sendMessage({ type: 2, msg: 'handshake' });
     }
 
     this.sendMessage = obj => {
@@ -38,39 +36,44 @@ export default {
     this.addReceiver(onMessage)
     var context = this
     if (this.sock === undefined || this.sock.readyState === 3) {
-      var sock =
-        WebSocket === undefined ? new window.MozWebSocket(this.url) : new WebSocket(this.url)
-      sock.binaryType = 'arraybuffer'
-      window.wssock = sock
-      sock.onopen = this.onOpen
+      try {
+        var sock =
+          WebSocket === undefined ? new window.MozWebSocket(this.url) : new WebSocket(this.url)
+        sock.binaryType = 'arraybuffer'
+        window.wssock = sock
+        sock.onopen = this.onOpen
 
-      sock.onmessage = event => {
-        if (event.data instanceof ArrayBuffer) {
-          var dataStr = Buffer.from(event.data).toString()
-          var obj = JSON.parse(dataStr)
-          context.onMessage(obj)
+        sock.onmessage = event => {
+          if (event.data instanceof ArrayBuffer) {
+            var dataStr = Buffer.from(event.data).toString()
+            var obj = JSON.parse(dataStr)
+            context.onMessage(obj)
+          }
         }
-      }
-      sock.onerror = e => {
-        console.error(e);
-        if (sock.readyState === 3) {
-          setTimeout(function () {
-            context.connect.apply(context)
-          }, 10000)
+        sock.onerror = e => {
+          if (sock.readyState === 3) {
+            context.onMessage({ code: 1, type: 0, msg: "服务器连接失败，10秒后自动重连" })
+            setTimeout(function () {
+              context.connect.apply(context)
+            }, 10000)
+          }
         }
-      }
-      sock.onclose = e => {
-        if (e.code != 1000) {
-          console.error(e)
-          context.onMessage({ code: 1, type: 0, msg: "服务连接已断开，10秒稍后自动重连" })
-          setTimeout(function () {
-            context.connect.apply(context)
-          }, 10000)
-        } else {
-          console.info("[WS]正常关闭")
+        sock.onclose = e => {
+          if (e.code == 1000) {
+            console.info("[WS]正常关闭")
+          } else {
+            console.error(e)
+            let msgs = { 1001: "设备已断开，10秒稍后自动重连", 1012: "设备未连接，10秒后自动重连" }
+            context.onMessage({ code: 2, type: 0, msg: msgs[e.code] || e.code.toString() })
+            setTimeout(function () {
+              context.connect.apply(context)
+            }, 10000)
+          }
         }
+        this.sock = sock
+      } catch (error) {
+        console.error(error)
       }
-      this.sock = sock
     }
   },
   close: function () {

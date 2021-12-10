@@ -19,6 +19,18 @@ class WebSocketController: RouteCollection {
         routes.get("device", use: deviceList)
     }
     
+    func shouldUpgrade(request: Request) -> EventLoopFuture<HTTPHeaders?> {
+        guard let deviceId = request.parameters.get("deviceid") else {
+            return request.eventLoop.makeFailedFuture(ProtoError.denied)
+        }
+        if request.headers.first(name: "app-secret") == nil {
+            if !clients.keys.contains(deviceId) {
+                return request.eventLoop.makeFailedFuture(ProtoError.denied)
+            }
+        }
+        return request.eventLoop.makeSucceededFuture([:])
+    }
+    
     func onUpgrade(request: Request, webSocket: WebSocket) {
         let deviceId = request.parameters.get("deviceid") ?? ""
         if let _ = request.headers.first(name: "app-secret") {
@@ -30,6 +42,8 @@ class WebSocketController: RouteCollection {
                 let handler = DTSWebHandler(deviceId: deviceId)
                 device.observe[handler.identify] = handler
                 handler.handleSession(request: request, socket: webSocket)
+            } else {
+                _ = webSocket.close(code: .unknown(1012))
             }
         }
     }
@@ -140,7 +154,8 @@ class DTSWebHandler {
     func handleMessage(webSocket: WebSocket, buffer: ByteBuffer) {
         var n = buffer
         if let d = n.readData(length: n.readableBytes), let str = String(data: d, encoding: .utf8) {
-            //TODO: 读取数据
+            let msg = ProtoMessage(type: .connected, msg: "设备连接成功!")
+            webSocket.send(raw: msg.encodedData()!, opcode: .binary)
             LogInfo("来自Web监听消息: \(str)")
         }
     }

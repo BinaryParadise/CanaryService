@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Popconfirm, List, message, Modal } from 'antd'
+import { Form, Input, Select, Popconfirm, List, message, Modal, Row, Col, Button } from 'antd'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { AuthUser } from '@/common/util'
 import axios from '@/component/axios'
 
 const formItemLayout = {
     labelCol: {
-        xs: { span: 3 },
-        sm: { span: 3 },
+        xs: { span: 4 },
+        sm: { span: 4 },
     },
     wrapperCol: {
         xs: { span: 18 },
@@ -17,16 +17,20 @@ const formItemLayout = {
 };
 
 const paddingItemLayout = {
+    labelCol: {
+        xs: { span: 4 },
+        sm: { span: 4 },
+    },
     wrapperCol: {
-        xs: { offset: 6 },
-        sm: { offset: 3 }
-    }
+        xs: { span: 18 },
+        sm: { span: 18 },
+    },
 }
 
 class MockEditForm extends React.Component {
     formRef = React.createRef()
     state = {
-        groups: [{ id: 0, name: "默认" }],
+        groups: [{ id: null }],
         visible: false,
         data: this.props.data
     }
@@ -47,15 +51,16 @@ class MockEditForm extends React.Component {
                 return
             }
             const { data } = this.state
-            this.setState({ groups: result.data, data: { ...data, groupid: data.groupid || result.data[0].id } })
-            if (data.id == undefined && this.formRef.current) {
-                this.formRef.current.setFieldsValue({ "groupid": data.groupid })
+            var gid = result.data.length > 0 ? result.data[0].id : null
+            this.setState({ groups: result.data, data: { ...data, groupid: data.groupid || gid } })
+            if (this.formRef.current) {
+                this.formRef.current.setFieldsValue({ "groupid": this.state.data.groupid })
             }
         })
     }
 
     onAddGroup = () => {
-        const { gname } = this.state
+        var gname = this.formRef.current.getFieldValue("gname")
         if ((gname || "") == "") {
             message.error("请输入分类名称")
             return
@@ -66,7 +71,7 @@ class MockEditForm extends React.Component {
                 message.error(result.msg)
                 return
             }
-            this.formRef.current.setFieldsValue({ groupname: '' })
+            this.formRef.current.setFieldsValue({ groupname: '', gname: '' })
             this.queryAll()
         })
     }
@@ -74,7 +79,7 @@ class MockEditForm extends React.Component {
     onDeleteGroup(item) {
         return axios.post('/mock/group/delete/' + item.id).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
             this.queryAll()
@@ -101,13 +106,12 @@ class MockEditForm extends React.Component {
                 message.success("保存成功")
                 callback()
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         });
     }
 
     onGroupChanged = (value) => {
-        this.formRef.current.setFieldsValue({ groupid: value })
     };
 
     methodSelector = (<Form.Item name="method" style={{ width: 80 }} noStyle>
@@ -131,10 +135,9 @@ class MockEditForm extends React.Component {
                 destroyOnClose={true}
             >
                 <Form ref={this.formRef}
-                    initialValues={{ ...data, method: data.method || "GET", groupname: "", groupid: data.groupid || 0 }}
+                    initialValues={{ ...data, method: data.method || "GET", groupname: "" }}
                     layout="horizontal"
                     onValuesChange={(changedValues, allValues) => {
-                        console.log(changedValues)
                     }}
                     {...formItemLayout}>
                     {
@@ -149,25 +152,35 @@ class MockEditForm extends React.Component {
                     <Form.Item name="path" rules={[{ required: true, message: '请输入路径!' }]} label="方法/路径">
                         <Input addonBefore={this.methodSelector} style={{ width: '100%' }} placeholder="请输入路径，以相对路径/开头，并支持路径参数,例入{param0}、{param1}..." />
                     </Form.Item>
-                    <Form.Item name="groupid" rules={[{ required: true, message: '请选择分类' }]} label="接口分类">
-                        <div><Select onChange={this.onGroupChanged} defaultValue={data.groupid || 0} placeholder="请选择分类" style={{ width: 245 }}>
-                            {
-                                groups.map(item => (
-                                    <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
-                                ))
-                            }
-                        </Select><a style={{ marginLeft: 8 }} onClick={() => this.showGroup(visible)}>管理分类</a></div>
+                    <Form.Item label="接口分类">
+                        <Row gutter={8}>
+                            <Col span={12}>
+                                <Form.Item name="groupid" rules={[{ required: true, message: '请选择分类' }]}>
+                                    <Select onChange={this.onGroupChanged} placeholder="请选择分类" style={{ width: '100%' }}>
+                                        {
+                                            groups.map(item => (
+                                                <Select.Option key={item.id} value={item.id}>{item.name}</Select.Option>
+                                            ))
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                            <Col>
+                                <Button onClick={() => this.showGroup(visible)}>管理分类</Button>
+                            </Col>
+                        </Row>
                     </Form.Item>
 
-                    <Form.Item name="groupname" hidden={!visible} {...paddingItemLayout}>
-                        <div>
+                    <Form.Item label=" " hidden={!visible}>
+                        <Form.Item name="gname">
                             <Input allowClear addonAfter={<a onClick={() => this.onAddGroup()}>新增</a>} onChange={this.onGroupChanged} placeholder="新分类名称" />
-                            <List dataSource={groups} renderItem={item => (
-                                item.id > 0 && <List.Item key={item.id} actions={[<Popconfirm title="确认删除?" onConfirm={() => this.onDeleteGroup(item)}><DeleteOutlined></DeleteOutlined></Popconfirm>]}>
-                                    {item.name}
-                                </List.Item>
-                            )}>
-                            </List></div>
+                        </Form.Item>
+                        <List dataSource={groups} renderItem={item => (
+                            item.id > 0 && <List.Item key={item.id} actions={[<Popconfirm title="确认删除?" onConfirm={() => this.onDeleteGroup(item)}><DeleteOutlined></DeleteOutlined></Popconfirm>]}>
+                                {item.name}
+                            </List.Item>
+                        )}>
+                        </List>
                     </Form.Item>
 
                 </Form >

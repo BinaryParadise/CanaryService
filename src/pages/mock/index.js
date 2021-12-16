@@ -12,7 +12,7 @@ export default class MockIndexPage extends React.Component {
         loading: false,
         listData: [],
         queryParam: {
-            groupid: null,
+            groupid: 0,
             pageSize: 200,
             pageNum: 1
         },
@@ -20,7 +20,7 @@ export default class MockIndexPage extends React.Component {
         groups: [],
         group: {
             name: "全部分类",
-            id: null
+            id: 0
         }
     }
 
@@ -124,7 +124,7 @@ export default class MockIndexPage extends React.Component {
     onActive = (record) => {
         return axios.post('/mock/active', { mockid: record.id }).then(result => {
             if (result.code != 0) {
-                message.error(result.error)
+                message.error(result.msg)
                 return
             }
             this.queryAll()
@@ -141,7 +141,7 @@ export default class MockIndexPage extends React.Component {
                 message.success("保存成功")
                 this.queryAll()
             } else {
-                message.error(result.error)
+                message.error(result.msg)
             }
         })
     }
@@ -151,7 +151,7 @@ export default class MockIndexPage extends React.Component {
     }
 
     render() {
-        const { loading, listData, editItem } = this.state
+        const { loading, listData, editItem, groups } = this.state
         var columns = this.filtersColumns()
         return (
             <Layout>

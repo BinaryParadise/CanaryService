@@ -3,7 +3,7 @@ import styles from './index.less';
 import React from 'react'
 
 import { Layout, Drawer, Menu, Avatar, Row, Col, Button, Modal, Select, message, Dropdown, ConfigProvider, Empty } from 'antd';
-import { ContainerOutlined, HddOutlined, LinkOutlined, ProjectOutlined, SettingOutlined, ToolOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
+import { ContainerOutlined, HddOutlined, LinkOutlined, ProjectOutlined, SettingOutlined, ToolOutlined, UnorderedListOutlined, UserOutlined, FunnelPlotOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import axios from '../component/axios'
 import { AuthUser, Auth } from '../common/util'
@@ -142,7 +142,7 @@ class BasicLayout extends React.Component {
               </Menu.Item>
               <Menu.Item key="/device">
                 <HddOutlined></HddOutlined>
-                <span>设备列表</span>
+                <span>在线设备</span>
               </Menu.Item>
               <Menu.Item key="/source" hidden={true}>
                 <LinkOutlined></LinkOutlined>

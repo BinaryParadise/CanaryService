@@ -86,7 +86,7 @@ export default class ProjectPage extends React.Component {
                 this.setState({ listData: dataSource.filter(item => item.id !== record.id) });
                 message.success("刪除成功");
             } else {
-                message.error(result.error);
+                message.error(result.msg);
             }
         })
     }
@@ -97,7 +97,7 @@ export default class ProjectPage extends React.Component {
                 message.success("重置成功");
                 this.getAppList()
             } else {
-                message.error(result.error);
+                message.error(result.msg);
             }
         })
     }

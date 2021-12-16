@@ -1,6 +1,0 @@
-{
-    "name": "127.0.0.1",
-    "port": 9001,
-    "path": "/api",
-    "sqlite": "canary.db"
-}

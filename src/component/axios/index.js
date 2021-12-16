@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import paramsUtil from './params'
 import { baseURI } from '../../common/config'
-import {history} from 'umi'
+import { history } from 'umi'
 import { notification } from 'antd'
 
 axios.withCredentials = true;
@@ -41,6 +41,10 @@ const instance = axios.create({
     let token = (user || {}).token
     if (token != undefined) {
       header["Canary-Access-Token"] = token
+      if (this.method == 'post' && data != undefined && user.app != null) {
+        data.uid = user.id
+        data.appid = user.app.id
+      }
     }
     // 文件上传
     const isMultiPart = header['Content-Type'] === 'multipart/form.js-data'
@@ -88,7 +92,12 @@ instance.interceptors.response.use(
   },
   error => {
     if (error.response) {
-      throwHttpError('请求异常：' + error.response.data)
+      if (error.response.status == 401) {
+        localStorage.removeItem("user")
+        history.push('/login')
+      } else {
+        throwHttpError('请求异常：' + error.response.data)
+      }
     }
 
     if (error.request) {

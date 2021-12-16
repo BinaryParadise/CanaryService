@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Select, Radio, Modal } from 'antd'
+import { Form, Input, Select, Radio, Modal, message } from 'antd'
 import axios from '@/component/axios'
 
 const { Option, OptGroup } = Select
@@ -45,9 +45,11 @@ class EnvEditForm extends React.Component {
   }
 
   onFinished = (values) => {
+    values.updateTime = 0
     return axios.post(`/conf/update/${values.id}`, values).then(result => {
       if (result.code == 0) {
         message.success("保存成功")
+        this.setState({ data: { visible: false } })
         if (this.onClose) {
           this.onClose()
         }

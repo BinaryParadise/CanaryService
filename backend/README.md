@@ -1,6 +1,6 @@
 # CanaryBackend
 
-推荐使用`Docker`
+推荐使用`Docker`, 实体机环境不方便搭建，而且可能遇到无法解决的问题
 
 # CentOS 8
 
@@ -26,13 +26,17 @@ dnf install docker -y
 docker run -itd --privileged --restart=always --interactive --tty \
 -p 10010:9001 --name swiftfun swift:5.3.3-centos8 /sbin/init
 
+# 中文显示
+
+yum install langpacks-zh_CN.noarch
+
 # 自启动服务
 podman generate systemd --new --files --name swiftfun
 
 # 启动容器
 docker start swiftfun
 # 容器终端
-docker exec -it swift /bin/bash
+docker exec -it swiftfun /bin/bash
 ```
 
 

@@ -82,7 +82,7 @@ export default class LoggerMonitor extends React.Component {
                 return '🌐【MOCK场景:' + decodeURI(obj.responsefields['Scene-Name']) + "】" + obj.method + ' ' + obj.url
             }
         }
-        return obj.message;
+        return obj.msg;
     }
 
     scrollToBottom = () => {
@@ -200,8 +200,8 @@ export default class LoggerMonitor extends React.Component {
     onMessage = (obj) => {
         if (obj.code != 0) {
             this.setState({ avaiable: false })
-            notification['error']({
-                message: '错误',
+            notification[obj.code == 1 ? 'error' : 'warning']({
+                message: obj.code == 1 ? '错误' : '提醒',
                 description:
                     obj.msg,
             });

@@ -32,6 +32,14 @@ export default defineConfig({
           component: '../pages/device'
         },
         {
+          path: '/crash/:deviceid',
+          component: '../pages/crash'
+        },
+        {
+          path: '/crash/info/:id',
+          component: '../pages/crash/crashlog'
+        },
+        {
           path: '/env',
           component: '../pages/envconfig'
         },

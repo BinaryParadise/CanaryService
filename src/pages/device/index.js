@@ -8,6 +8,7 @@ import { Resizable } from 'react-resizable';
 import { Link } from 'react-router-dom'
 import ExtraPage from './component/extra'
 import WebSocket from '@/component/websocket'
+import moment from 'moment';
 
 export default class IndexPage extends React.Component {
   state = {
@@ -64,10 +65,18 @@ export default class IndexPage extends React.Component {
         }
       },
       {
+        title: '最后更新',
+        dataIndex: 'update',
+        width: 155,
+        render: (text) => {
+          return moment(text).format('YYYY-MM-DD HH:mm:ss')
+        }
+      },
+      {
         title: '操作',
         key: 'action',
         render: (text, record) => {
-          return (<Link to={routerURL('/device/monitor', record)}>日志监控</Link>);
+          return (<span><Link to={routerURL('/device/monitor', record)}>实时监控</Link><a style={{ marginLeft: 6 }} href={'/crash/' + record.deviceId}>崩溃日志</a></span>);
         }
       }
     ],
@@ -82,6 +91,7 @@ export default class IndexPage extends React.Component {
     this.setState({
       visible: true,
       device,
+      key: Math.random(),
       isProfile
     });
   };
@@ -122,7 +132,7 @@ export default class IndexPage extends React.Component {
         <Breadcrumb.Item>
           <a href="/">首页</a>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>设备列表</Breadcrumb.Item>
+        <Breadcrumb.Item>在线设备</Breadcrumb.Item>
       </Breadcrumb>
       <Button style={{ width: 125, marginBottom: 6 }} type="primary" onClick={this.getDeviceList}>刷新</Button>
       <Table
@@ -136,6 +146,7 @@ export default class IndexPage extends React.Component {
         onClose={() => this.setState({ visible: false })}
         visible={this.state.visible}
         device={this.state.device}
+        key={this.state.key}
         isProfile={this.state.isProfile}></ExtraPage>
     </Layout>;
   }

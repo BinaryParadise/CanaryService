@@ -34,7 +34,7 @@ export default class ExtraPage extends React.Component {
             <Descriptions column={1} size='middle' layout="horizontal" bordered>
                 {
                     Object.keys(data).map((key) => {
-                        return <Descriptions.Item label={key}>
+                        return <Descriptions.Item label={key} key={key}>
                             <ReactJson name={false} src={data[key]} collapseStringsAfterLength={50}></ReactJson>
                         </Descriptions.Item>
                     })}

@@ -8,6 +8,8 @@
 import Foundation
 import Vapor
 import Proto
+import AsyncHTTPClient
+import SwiftyJSON
 
 struct HomeController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
@@ -16,6 +18,12 @@ struct HomeController: RouteCollection {
         let log = routes.grouped("snapshot")
         log.post("add", use: addSnapshot)
         log.get("view", ":identify", use: snapshot)
+        
+        let crash = routes.grouped("crash")
+        crash.get(":deviceid", use: crashList)
+        crash.get("info", ":crashid", use: crashInfo)
+        crash.put(":deviceid", use: addCrash)
+        crash.delete(":crashid", use: deleteCrash)
     }
     func index(request: Request) throws -> Response {
         let response = Response(status: .ok, version: .http1_1, headers: [:], body: .init(string: """
@@ -75,5 +83,30 @@ struct HomeController: RouteCollection {
             response.headers.replaceOrAdd(name: .contentType, value: "text/html; charset=utf8")
             return response
         }
+    }
+    
+    func crashList(request: Request) throws -> Response {
+        guard let deviceid = request.parameters.get("deviceid") else {
+            return .failed(.param)
+        }
+        let ret = try CrashMapper.fetch(deviceid: deviceid)
+        return .success(try JSON(ret as Any).rawData())
+    }
+    
+    func addCrash(request: Request) throws -> Response {
+        if let d = request.body.string, let id = request.parameters.get("deviceid") {
+            try CrashMapper.insert(crash: d, deviceid: id)
+            return .done()
+        }
+        return .failed(.param)
+    }
+    
+    func crashInfo(request: Request) throws -> Response {
+        let ret = try CrashMapper.fetch(cid: request.parameters.intValue("crashid"))
+        return .success(try JSON(ret as Any).rawData())
+    }
+    
+    func deleteCrash(request: Request) throws -> Response {
+        return .failed(.param)
     }
 }

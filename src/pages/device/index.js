@@ -76,7 +76,7 @@ export default class IndexPage extends React.Component {
         title: '操作',
         key: 'action',
         render: (text, record) => {
-          return (<Link to={routerURL('/device/monitor', record)}>日志监控</Link>);
+          return (<span><Link to={routerURL('/device/monitor', record)}>实时监控</Link><a style={{ marginLeft: 6 }} href={'/crash/' + record.deviceId}>崩溃日志</a></span>);
         }
       }
     ],
@@ -132,7 +132,7 @@ export default class IndexPage extends React.Component {
         <Breadcrumb.Item>
           <a href="/">首页</a>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>设备列表</Breadcrumb.Item>
+        <Breadcrumb.Item>在线设备</Breadcrumb.Item>
       </Breadcrumb>
       <Button style={{ width: 125, marginBottom: 6 }} type="primary" onClick={this.getDeviceList}>刷新</Button>
       <Table

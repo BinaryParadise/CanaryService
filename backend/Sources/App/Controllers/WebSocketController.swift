@@ -13,6 +13,8 @@ import Vapor
 /// 设备列表
 var clients: [String : DTSClientHandler] = [:]
 
+let AppSecretKey = "Canary-App-Secret"
+
 class WebSocketController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.webSocket("channel", ":platform", ":deviceid", maxFrameSize: WebSocketMaxFrameSize(integerLiteral: 1 << 16), onUpgrade: onUpgrade)
@@ -21,7 +23,7 @@ class WebSocketController: RouteCollection {
     
     func onUpgrade(request: Request, webSocket: WebSocket) {
         let deviceId = request.parameters.get("deviceid") ?? ""
-        if let _ = request.headers.first(name: "app-secret") {
+        if let _ = request.headers.first(name: AppSecretKey) {
             let handler = DTSClientHandler()
             clients[deviceId] = handler
             handler.handleSession(request: request, socket: webSocket)
@@ -54,22 +56,23 @@ class DTSClientHandler {
     func handleSession(request: Request, socket: WebSocket) {
         self.socket = socket
         if !socket.isClosed {
-            appSecret = request.headers.first(name: "app-secret")
+            appSecret = request.headers.first(name: AppSecretKey)
             LogInfo("handshake: \(appSecret ?? "")")
             socket.onBinary(handleMessage)
-            socket.onClose.whenComplete { r in
-                switch r {
-                case .success():
-                    if let device = self.device {
-                        let client = clients.removeValue(forKey: device.deviceId)
-                        client?.observe.forEach({ (key: String, value: DTSWebHandler) in
-                            _ = value.socket?.close(code: .goingAway)
-                        })
-                        LogInfo("设备离线: \(device.deviceId)【\(clients.count)】在线")
-                        self.socket = nil
-                    }
-                case .failure(_):
-                    break
+            socket.onPing { ws in
+                ws.send(raw: 1.encodedData() ?? Data(), opcode: .pong)
+            }
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                socket.send(raw: ProtoMessage(type: .connected, msg: "设备连接成功.").encodedData()!, opcode: .binary)
+            }
+            socket.onClose.whenComplete { r in                
+                if let device = self.device {
+                    let client = clients.removeValue(forKey: device.deviceId)
+                    client?.observe.forEach({ (key: String, value: DTSWebHandler) in
+                        _ = value.socket?.close(code: .goingAway)
+                    })
+                    LogInfo("设备离线: \(device.deviceId)【\(clients.count)】在线")
+                    self.socket = nil
                 }
             }
         }
@@ -102,7 +105,7 @@ class DTSClientHandler {
                     break
                 }
             } catch {
-                LogError("\(error)")
+                LogError("\(error) \(data.hexEncodedString(uppercase: true))")
             }
         }
     }
@@ -132,6 +135,9 @@ class DTSWebHandler {
         if !socket.isClosed {
             LogInfo("Web监听设备: \(deviceId)")
             socket.onBinary(handleMessage)
+            socket.onPing { ws in
+                LogInfo("")
+            }
             socket.onClose.whenComplete { r in
                 clients[self.deviceId]?.observe.removeValue(forKey: self.identify)
                 LogInfo("Web离线: \(self.deviceId)")

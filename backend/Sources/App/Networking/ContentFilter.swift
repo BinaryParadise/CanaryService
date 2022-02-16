@@ -132,13 +132,13 @@ extension URLQueryContainer {
         return 0
     }
     
-    func stringValue(_ name: String) -> String {
+    func stringValue(_ name: String) -> String? {
         do {
             return try get(String.self, at: name)
         } catch {
             LogError("\(error)")
         }
-        return ""
+        return nil
     }
 }
 

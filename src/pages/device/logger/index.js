@@ -82,7 +82,7 @@ export default class LoggerMonitor extends React.Component {
                 return '🌐【MOCK场景:' + decodeURI(obj.responsefields['Scene-Name']) + "】" + obj.method + ' ' + obj.url
             }
         }
-        return obj.msg;
+        return obj.message;
     }
 
     scrollToBottom = () => {

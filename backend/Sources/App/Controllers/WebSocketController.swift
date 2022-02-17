@@ -10,9 +10,7 @@ import Proto
 import SwiftyJSON
 import Vapor
 
-/// 设备列表
-var clients: [String : DTSClientHandler] = [:]
-
+var mgr = ClientSessionManager()
 let AppSecretKey = "Canary-App-Secret"
 
 class WebSocketController: RouteCollection {
@@ -25,10 +23,10 @@ class WebSocketController: RouteCollection {
         let deviceId = request.parameters.get("deviceid") ?? ""
         if let _ = request.headers.first(name: AppSecretKey) {
             let handler = DTSClientHandler()
-            clients[deviceId] = handler
+            mgr.add(deviceId: deviceId, session: handler)
             handler.handleSession(request: request, socket: webSocket)
         } else {
-            if let device = clients[deviceId] {
+            if let device = mgr.getSession(deviceId: deviceId) {
                 let handler = DTSWebHandler(deviceId: deviceId)
                 device.observe[handler.identify] = handler
                 handler.handleSession(request: request, socket: webSocket)
@@ -36,11 +34,15 @@ class WebSocketController: RouteCollection {
                 _ = webSocket.close(code: .unknown(1012))
             }
         }
+        do {
+            mgr.unlock()
+        }
     }
     
     func deviceList(request: Request) throws -> Response {
-        let devices = clients.values.compactMap { handler in
-            handler.device
+        let devices = mgr.allDevices()
+        defer {
+            mgr.unlock()
         }
         return .success(try JSONEncoder().encode(devices))
     }
@@ -67,11 +69,12 @@ class DTSClientHandler {
             }
             socket.onClose.whenComplete { r in                
                 if let device = self.device {
-                    let client = clients.removeValue(forKey: device.deviceId)
+                    let client = mgr.removeSession(deviceId: device.deviceId)
+                    mgr.unlock()
                     client?.observe.forEach({ (key: String, value: DTSWebHandler) in
                         _ = value.socket?.close(code: .goingAway)
                     })
-                    LogInfo("设备离线: \(device.deviceId)【\(clients.count)】在线")
+                    LogInfo("设备离线: \(device.deviceId)【\(mgr.count)】在线")
                     self.socket = nil
                 }
             }
@@ -92,9 +95,10 @@ class DTSClientHandler {
                     let isNew = self.device == nil
                     self.device = try JSONDecoder().decode(ProtoDevice.self, from: msg.data?.rawData() ?? Data())
                     if let device = self.device {
-                        clients[device.deviceId] = self
+                        mgr.add(deviceId: device.deviceId, session: self)
+                        mgr.unlock()
                         self.device?.update = Date().timeIntervalSince1970 * 1000
-                        LogDebug("设备\(isNew ? "连接":"更新"): \(device.deviceId), 【\(clients.count)】在线")
+                        LogDebug("设备\(isNew ? "连接":"更新"): \(device.deviceId), 【\(mgr.count)】在线")
                     }
                 case .log:
                     DispatchQueue.global().async {
@@ -111,10 +115,14 @@ class DTSClientHandler {
     }
     
     func forwardLog(data: [UInt8]) {
-        guard let client = clients[device?.deviceId ?? ""] else { return }
-        client.observe.forEach { (key: String, value: DTSWebHandler) in
-            LogDebug("消息转发到: \(value.identify)")
-            value.socket?.send(raw: data, opcode: .binary)
+        if let client = mgr.getSession(deviceId: device?.deviceId ?? "") {
+            client.observe.forEach { (key: String, value: DTSWebHandler) in
+                LogDebug("消息转发到: \(value.identify)")
+                value.socket?.send(raw: data, opcode: .binary)
+            }
+        }
+        do {
+            mgr.unlock()
         }
     }
 }
@@ -139,7 +147,8 @@ class DTSWebHandler {
                 LogInfo("")
             }
             socket.onClose.whenComplete { r in
-                clients[self.deviceId]?.observe.removeValue(forKey: self.identify)
+                mgr.getSession(deviceId: self.deviceId)?.observe.removeValue(forKey: self.identify)
+                mgr.unlock()
                 LogInfo("Web离线: \(self.deviceId)")
             }
         }
@@ -152,5 +161,43 @@ class DTSWebHandler {
             webSocket.send(raw: msg.encodedData()!, opcode: .binary)
             LogWarn("来自Web监听消息: \(str)")
         }
+    }
+}
+
+/// 客户端会话管理，保证线程安全
+class ClientSessionManager {
+    private var clients: [String : DTSClientHandler] = [:]
+    private var _lock: NSLock = NSLock();
+    var count: Int {
+        _lock.lock()
+        defer { _lock.unlock()}
+        return clients.count
+    }
+    
+    func add(deviceId: String, session: DTSClientHandler) {
+        _lock.lock()
+        clients[deviceId] = session
+    }
+    
+    func getSession(deviceId: String) -> DTSClientHandler? {
+        _lock.lock()
+        return clients[deviceId]
+    }
+    
+    func allDevices() -> [ProtoDevice] {
+        _lock.lock()
+        let devices = clients.values.compactMap { handler in
+            handler.device
+        }
+        return devices
+    }
+    
+    func removeSession(deviceId: String) -> DTSClientHandler? {
+        _lock.lock()
+        return clients.removeValue(forKey: deviceId)
+    }
+    
+    func unlock() {
+        _lock.unlock()
     }
 }

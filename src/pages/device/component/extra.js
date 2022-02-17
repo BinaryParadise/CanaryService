@@ -18,7 +18,7 @@ export default class ExtraPage extends React.Component {
         }
 
         const title = isProfile ? "额外信息" : "IP详细信息"
-        const data = isProfile ? device.profile : { "地址列表": device.ipAddrs }
+        const data = isProfile ? (device.profile || {}) : { "地址列表": device.ipAddrs }
 
         return (<Drawer
             width={isProfile ? 800 : 600}

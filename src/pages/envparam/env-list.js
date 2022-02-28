@@ -23,7 +23,7 @@ const EditableCell = ({ editable, value, onChange, column }) => (
     {editable ?
       <Input style={{ margin: '-5px 0' }} value={value} onChange={e => onChange(e.target.value)} />
       :
-      AdjustContent(value, 50)}
+      AdjustContent(value, 25)}
   </div>
 )
 

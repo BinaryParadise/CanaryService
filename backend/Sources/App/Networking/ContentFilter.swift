@@ -42,33 +42,33 @@ public struct ContentFilter: Middleware {
     }
     
     public func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
-        if !canRequest(request: request) {
-            return request.eventLoop.makeSucceededFuture(Response(status: .unauthorized, version: .http1_1, headers: .init(), body: .empty))
-        }
-        if permissionDenied(request: request) {
-            return request.eventLoop.makeSucceededFuture(Response(status: .unauthorized, version: .http1_1, headers: .init(), body: .empty))
-        }
-        let response = next.respond(to: request).flatMapErrorThrowing { error in
-            return .failed(.custom(error.localizedDescription))
-        }
-        response.whenSuccess { r in
-            if !r.headers.contains(name: .contentType) {                
-                r.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf8")
+        var response: EventLoopFuture<Response>
+        if unauthorized(request: request) || permissionDenied(request: request) {
+            response = request.eventLoop.makeSucceededFuture(.failed(.unauthorized))
+        } else {
+            response = next.respond(to: request).flatMapErrorThrowing { error in
+                return .failed(.custom(error.localizedDescription))
             }
         }
+        
+        response.whenSuccess({ r in
+            if !r.headers.contains(name: .contentType) {
+                r.headers.replaceOrAdd(name: .contentType, value: "application/json; charset=utf8")
+            }
+        })
         return response
     }
     
-    func canRequest(request: Request) -> Bool {
+    func unauthorized(request: Request) -> Bool {
         let ctxPath = String(request.url.path[contextPath.endIndex...])
         if ctxPath == "/" {
-            return true
+            return false
         }
         let contain = whiteList.contains { str in
             ctxPath.starts(with: str)
         }
         if contain {
-            return true //无需登录
+            return false //无需登录
         } else {
             let token = request.headers.first(name: AccessToken) ?? ""
             var user = request.session.data.get(key: "user", type: ProtoUser.self)
@@ -86,7 +86,7 @@ public struct ContentFilter: Middleware {
                 request.session.data["userid"] = String(user.id)
                 request.session.data["user"] = String(data: user.encodedData() ?? Data(), encoding: .utf8)
             }
-            return user != nil
+            return user == nil
         }
     }
     
